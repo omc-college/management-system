@@ -1,0 +1,73 @@
+openapi: "3.0.3"
+info:
+  version: 0.0.1
+  title: Identity management service
+  description: Web Servie which handling all calls related to Users
+  contact:
+    name: Pupkin Vasiliy
+    email: pupkin@pupkin.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+paths:
+  /signup:
+    post:
+      description: this endpint handles user registartion requests, sent from signup form
+      operationId: signUp
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '200':
+          description: pet response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    SignupRequest:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+        - password
+      properties:
+        firstName:
+          type: string
+          maxLength: 255
+          description: Users first name
+        lastName:
+          type: string
+          maxLength: 255
+          description: Users last name
+        email:
+          type: string
+          format: email
+          description: Users email
+        password:
+          type: string
+          format: password
+          description: Users password
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
