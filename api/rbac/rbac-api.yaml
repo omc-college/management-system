@@ -43,7 +43,32 @@ paths:
                   application/json:
                      schema:
                         $ref: '#/components/schemas/Error'
+      post:
+         description: Creates new role
+         operationId: createRole
+         requestBody:
+            required: true
+            content:
+               application/json:
+                  schema:
+                     $ref: '#/components/schemas/Role'
+         responses:
+            '200':
+               description: Role is created
+            default:
+               description: unexpected error
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/Error'
    /roles/{id}:
+      parameters:
+          - name: id 
+            in: path
+            required: true
+            description: The id of the role
+            schema:
+               type: string
       get:
          description: Returns role by id
          operationId: getRole
@@ -60,21 +85,15 @@ paths:
                   application/json:
                      schema:
                         $ref: '#/components/schemas/Error'
-      post:
-         description: Creates new role
-         operationId: createRole
-         responses:
-            '200':
-               description: Role is created
-            default:
-               description: unexpected error
-               content:
-                  application/json:
-                     schema:
-                        $ref: '#/components/schemas/Error'
       put:
          description: Updates role by id
          operationId: updateRole
+         requestBody:
+            required: true
+            content:
+               application/json:
+                  schema:
+                     $ref: '#/components/schemas/Role'
          responses:
             '200':
                description: Role is updated
@@ -130,7 +149,7 @@ components:
                   $ref: '#/components/schemas/Endpoint'
             isAccessGranted:
                type: boolean
-               description: Has the role access to this feature
+               description: Indicates whether a role has access to the feature
       Endpoint:
          type: object
          properties:
