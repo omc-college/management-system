@@ -1,0 +1,174 @@
+openapi: "3.0.3"
+info:
+   version: 0.0.1
+   title: Role based access control service
+   description: Web Service which handles all calls related to Roles
+   license:
+      name: Apache 2.0
+      url: https://www.apache.org/licenses/LICENSE-2.0.html        
+paths:
+   /roletmpl:
+      get:
+         description: Returns role template
+         operationId: getRoleTemplate
+         responses:
+            '200':
+               description: Role template response
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/RoleTemplate'
+            default:
+               description: unexpected error
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/Error'
+   /roles:
+      get:
+         description: Returns all roles
+         operationId: getAllRoles
+         responses:
+            '200':
+               description: All roles response
+               content:
+                  application/json:
+                     schema:
+                        type: array
+                        items:
+                           $ref: '#/components/schemas/Role'
+            default:
+               description: unexpected error
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/Error'
+   /roles/{id}:
+      get:
+         description: Returns role by id
+         operationId: getRole
+         responses:
+            '200':
+               description: Role response
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/Role'
+            default:
+               description: unexpected error
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/Error'
+      post:
+         description: Creates new role
+         operationId: createRole
+         responses:
+            '200':
+               description: Role is created
+            default:
+               description: unexpected error
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/Error'
+      put:
+         description: Updates role by id
+         operationId: updateRole
+         responses:
+            '200':
+               description: Role is updated
+            default:
+               description: unexpected error
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/Error'
+      delete:
+         description: Deletes role by id
+         operationId: deleteRole
+         responses:
+            '200':
+               description: Role is deleted
+            default:
+               description: unexpected error
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/Error'
+components:
+   schemas:
+      Role:
+         type: object
+         properties:
+            id: 
+               type: string
+               maxLength: 255
+               description: Role id
+            name:
+               type: string
+               maxLength: 255
+               description: Role name
+            entries:
+               type: array
+               items:
+                  $ref: '#/components/schemas/FeatureEntry'
+      FeatureEntry:
+         type: object
+         properties:
+            id:
+               type: string
+               maxLength: 255
+               description: Feature id
+            name:
+               type: string
+               maxLength: 255
+               description: Feature name
+            endpoints:
+               type: array
+               items:
+                  $ref: '#/components/schemas/Endpoint'
+            isAccessGranted:
+               type: boolean
+               description: Has the role access to this feature
+      Endpoint:
+         type: object
+         properties:
+            id:
+               type: string
+               maxLength: 255
+               description: Endpoint id
+            path:
+               type: string
+               maxLength: 255
+               description: Endpoint path
+            method:
+               type: string
+               maxLength: 255
+               description: Endpoint method
+      RoleTemplate:
+         type: object
+         properties:
+            id: 
+               type: string
+               maxLength: 255
+               description: Role template id
+            name:
+               type: string
+               maxLength: 255
+               description: Role template name
+            entries:
+               type: array
+               items:
+                  $ref: '#/components/schemas/FeatureEntry'
+      Error:
+         type: object
+         required:
+         - code
+         - message
+         properties:
+            code:
+               type: integer
+               format: int32
+            message:
+               type: string
