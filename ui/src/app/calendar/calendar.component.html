@@ -1,0 +1,60 @@
+<div class="days" *ngIf="!showMonths">
+  <div class="day">S</div>
+  <div class="day">M</div>
+  <div class="day">T</div>
+  <div class="day">W</div>
+  <div class="day">T</div>
+  <div class="day">F</div>
+  <div class="day">S</div>
+
+  <div id="calendar">
+    <button
+      *ngFor="let day of daysForRender"
+      type="button"
+      class="block"
+      [class.chosen]="day.date() === selectedDate.date() && day.month() === selectedDate.month()"
+      [class.primary]="day.month() !== selectedDate.month()"
+      (click)="changeDate(day.year(), day.month(), day.date())"
+    >
+      {{ day.date() }}
+    </button>
+  </div>
+</div>
+
+<div class="months" *ngIf="showMonths">
+  <button
+    *ngFor="let mon of months; let i = index"
+    type="button"
+    class="monthBlock"
+    [value]="i"
+    (click)="changeDate(selectedDate.year(), i, selectedDate.date()); this.showMonths = !this.showMonths"
+  >
+    {{ mon }}
+  </button>
+</div>
+
+<div id="buttons">
+  <button
+    type="button"
+    class="nav"
+    (click)="changeDate(selectedDate.year(), +selectedDate.month() + 1, selectedDate.date())"
+  >
+    >
+  </button>
+  <button
+    type="button"
+    class="nav"
+    (click)="changeDate(selectedDate.year(), selectedDate.month() - 1, selectedDate.date())"
+  >
+    <
+  </button>
+  <input
+    type="number"
+    [value]="selectedDate.year()"
+    placeholder="{{ selectedDate.year() }}"
+    (keyup.enter)="changeDate($event.target.value, selectedDate.month(), selectedDate.date())"
+  />
+  <button type="button" id="monthBtn" (click)="showMonths = !showMonths">
+    {{ months[selectedDate.month()] }}
+  </button>
+</div>
