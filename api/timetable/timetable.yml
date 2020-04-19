@@ -1,0 +1,1120 @@
+openapi: "3.0.3"
+info:
+  version: 0.0.1
+  title: Timetabling
+  description: Web module which manages timetabling and resources
+  contact:
+    name: Vashchuk Andriy, Kyrychok Mykola
+    email: Vashuk2001@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+paths:
+
+#-------------------------------------lesson----------------------------------------------------------------
+                
+  /lesson:
+    get:
+      summary: Returns a list of lessons
+      operationId: giveLessons
+      parameters:
+        - name: subject
+          in: query
+          description: name of subject to filter by
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: lecturers
+          in: query
+          description: name of lecturers to filter by
+          required: false
+          style: form
+          schema:
+            type: array
+            items:
+              type: string
+        - name: groups
+          in: query
+          description: name of groups to filter by
+          required: false
+          style: form
+          schema:
+            type: array
+            items:
+              type: string
+        - name: startAt
+          in: query
+          description: when lesson starts
+          required: false
+          style: form
+          schema:
+            type: string
+            format: date-time
+        - name: endAt
+          in: query
+          description: when lesson ends
+          required: false
+          style: form
+          schema:
+            type: string
+            format: date-time
+        - name: room
+          in: query
+          description: number of room to filter by
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: from
+          in: query
+          description: number where starts to search
+          required: false
+          style: form
+          schema:
+            type: integer
+        - name: to
+          in: query
+          description: number where stops to search
+          required: false
+          style: form
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lesson's response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/lesson'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      summary: Adds a new lesson. Duplicates aren't allowed
+      operationId: addLesson
+      requestBody:
+        description: Lesson to add
+        required: true
+        content:
+          application/json:
+            schema:
+              description: We are adding only ids for saving space on a storrage
+              type: object
+              required: 
+                - subjectId
+                - lecturersId
+                - groupsId
+                - startAt
+                - endAt
+                - roomId
+              properties:
+                subjectId:
+                  type: string
+                  maxLength: 255
+                  readOnly: true
+                lecturersId:
+                  type: array
+                  items: 
+                    type: string
+                    maxLength: 255
+                    readOnly: true
+                groupsId: 
+                  type: array
+                  items:
+                    type: string
+                    maxLength: 255
+                    readOnly: true
+                startAt:
+                  type: string
+                  format: date-time
+                endAt:
+                  type: string
+                  format: date-time
+                roomId:
+                  type: string
+                  maxLength: 255
+                  readOnly: true
+                resources:
+                  $ref: '#/components/schemas/resources'
+              example: {
+                subjectId: '0',
+                lecturersId: ['3'],
+                groupsId: ['81','82'],
+                startAt: '2020-06-21T09:00:00Z',
+                endAt: '2020-06-21T10:20:00Z',
+                roomId: '33',
+                resources: {
+                  projector: true,
+                  otherStuff: ['screen', 'desk']
+                }
+              }
+      
+      responses:
+        '200':
+          description: lesson response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/lesson'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+#-------------------------------------------lesson/{id}-----------------------------------------------------
+                
+  /lesson/{id}:
+    get:
+      summary: return a single lesson based on the ID supplied
+      operationId: giveOneLesson
+      parameters:
+        - name: id
+          in: path
+          description: id of subject to find
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      responses:
+        '200':
+          description: Lesson's response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/lesson'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+    put:
+      summary: updates a single lesson based on the ID supplied
+      operationId: updateLesson
+      parameters:
+        - name: id
+          in: path
+          description: id of subject to find
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      requestBody:
+        description: 'Fields to update (properties to change: subject, lecturer, group, room, resources, startAt, endAt)'
+        required: true
+        content:
+          application/json:
+            schema:
+              description: We are adding only ids for saving space on a storrage
+              type: object
+              properties:
+                subjectId:
+                  type: string
+                  maxLength: 255
+                  readOnly: true
+                lecturersId:
+                  type: array
+                  items: 
+                    type: string
+                    maxLength: 255
+                    readOnly: true
+                groupsId: 
+                  type: array
+                  items:
+                    type: string
+                    maxLength: 255
+                    readOnly: true
+                startAt:
+                  type: string
+                  format: date-time
+                endAt:
+                  type: string
+                  format: date-time
+                roomId:
+                  type: string
+                  maxLength: 255
+                  readOnly: true
+                resources:
+                  $ref: '#/components/schemas/resources'
+              example: {
+                subjectId: '0',
+                groupsId: ['81','82'],
+                roomId: '33',
+              }
+      responses:
+        '200':
+          description: lesson updated!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/lesson'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+    delete:
+      summary: deletes a single lesson based on the ID supplied
+      operationId: deleteLesson
+      parameters:
+        - name: id
+          in: path
+          description: ID of lesson to delete
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      responses:
+        '204':
+          description: lesson deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+#------------------------------------------lecturer---------------------------------------------------------
+                
+  /lecturer:
+    get:
+      summary: Returns a list of lecturers
+      operationId: giveLecturers
+      parameters:
+        - name: firstName
+          in: query
+          description: name of lecturer
+          required: false
+          style: form
+          schema:
+            type: string
+            maxLength: 255
+        - name: lastName
+          in: query
+          description: lastName of lecturer
+          required: false
+          style: form
+          schema:
+            type: string
+            maxLength: 255
+        - name: surname
+          in: query
+          description: surname of lecturer
+          required: false
+          style: form
+          schema:
+            type: string
+            maxLength: 255
+        - name: from
+          in: query
+          description: number where starts to search
+          required: false
+          style: form
+          schema:
+            type: integer
+        - name: to
+          in: query
+          description: number where stops to search
+          required: false
+          style: form
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: "if in query you type 'firstName: John' the result will be: "
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/lecturer'
+                example: [
+                  {
+                    id: '4',
+                    firstName: 'John',
+                    lastName: 'Lennon',
+                    surname: 'Antonovich'
+                  },
+                  {
+                    id: '24',
+                    firstName: 'John',
+                    lastName: 'Raymon',
+                    surname: 'Noname'
+                  }
+                  ]
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      summary: Adds a new lecturer. Duplicates aren't allowed
+      operationId: addLecturer
+      requestBody:
+        description: Lecturer to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/lecturer'
+            example: {
+              firstname: 'Andriy',
+              lastname: 'H',
+              surname: 'GS'
+            }
+      
+      responses:
+        '200':
+          description: lecturer response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/lecturer'
+              example: {
+              id: '37',
+              firstname: 'Andriy',
+              lastname: 'H',
+              surname: 'GS'
+            }
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+#-----------------------------------------------lecturer/{id}-----------------------------------------------
+                
+  /lecturer/{id}:
+    get:
+      summary: Returns a single lecturer based on the ID suplied
+      operationId: giveOneLecturer
+      parameters:
+        - name: id
+          in: path
+          description: id of lecturer to find
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      responses:
+        '200':
+          description: Lecturer's response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/lecturer'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+    put:
+      summary: updates a single lecturer based on the ID supplied
+      operationId: updateLecturer
+      parameters:
+        - name: id
+          in: path
+          description: id of room to find
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      requestBody:
+        description: Fields to update(firstName, lastName, surname are allowed)
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstname:
+                  type: string
+                  maxLength: 255
+                lastName:
+                  type: string
+                  maxLength: 255
+                surname:
+                  type: string
+                  maxLength: 255
+              example: {
+                firstname: 'Marceline',
+                surname: 'Saymon'
+              }
+      responses:
+        '200':
+          description: lecturer updated!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/lecturer'
+              example: {
+                id: '4',
+                firstname: 'Marceline',
+                lastname: 'Lennon',
+                surname: 'Saymon'
+              }
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+    delete:
+      summary: deletes a single lecturer based on the ID supplied
+      operationId: deleteLecturer
+      parameters:
+        - name: id
+          in: path
+          description: ID of lecturer to delete
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      responses:
+        '204':
+          description: lecturer deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+
+#--------------------------------------room----------------------------------------------------------------
+                
+  /room:
+    get:
+      summary: Returns a list of rooms
+      operationId: giveRooms
+      parameters:
+        - name: room
+          in: query
+          description: number of room to filter by
+          required: false
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Room's response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/room'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      summary: Adds a new room. Duplicates aren't allowed
+      operationId: addRoom
+      requestBody:
+        description: Room to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/room'
+            example: 
+              room: '204A'
+      
+      responses:
+        '200':
+          description: room response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/room'
+              example: {
+                id: '24',
+                room: '204A'
+              }
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+#--------------------------------------------room/{id}-----------------------------------------------------
+                
+  /room/{id}:
+    get:
+      summary: Returns a single room based on the ID suplied
+      operationId: giveOneRoom
+      parameters:
+        - name: id
+          in: path
+          description: id of subject to find
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      responses:
+        '200':
+          description: Room's response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/room'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+    put:
+      summary: updates a single room based on the ID supplied
+      operationId: updateRoom
+      parameters:
+        - name: id
+          in: path
+          description: id of room to find
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      requestBody:
+        description: Fields to update
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+              maxLength: 255
+              example: 
+                room: '54C'
+      responses:
+        '200':
+          description: room updated!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/room'
+              example: {
+                id: '33',
+                room: '54C'
+              }
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+    delete:
+      summary: deletes a single room based on the ID supplied
+      operationId: deleteRoom
+      parameters:
+        - name: id
+          in: path
+          description: ID of lesson to delete
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      responses:
+        '204':
+          description: room deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+#--------------------------------------group----------------------------------------------------------------
+                
+  /group:
+    get:
+      summary: Returns a list of groups
+      operationId: giveGroups
+      parameters:
+        - name: name
+          in: query
+          description: name of group to filter by
+          required: false
+          style: form
+          schema:
+            type: string
+            maxLength: 255
+      responses:
+        '200':
+          description: Group's response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/group'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      summary: Adds a new group. Duplicates aren't allowed
+      operationId: addGroup
+      requestBody:
+        description: Group to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/group'
+            example: {
+              name: 'SD-31'
+            }
+      
+      responses:
+        '200':
+          description: group response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/group'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+#--------------------------------------------group/{id}-----------------------------------------------------
+                
+  /group/{id}:
+    get:
+      summary: Returns a single group based on the ID suplied
+      operationId: giveOneGroup
+      parameters:
+        - name: id
+          in: path
+          description: id of subject to find
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      responses:
+        '200':
+          description: Group's response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/group'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+    put:
+      summary: updates a single group based on the ID supplied
+      operationId: updateGroup
+      parameters:
+        - name: id
+          in: path
+          description: id of group to find
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      requestBody:
+        description: Fields to update
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+              maxLength: 255
+              example: 
+                name: 'PP-41'
+      responses:
+        '200':
+          description: group updated!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/group'
+              example: {
+                id: '0',
+                name: 'PP-41'
+              }
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+    delete:
+      summary: deletes a single group based on the ID supplied
+      operationId: deleteGroup
+      parameters:
+        - name: id
+          in: path
+          description: ID of group to delete
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      responses:
+        '204':
+          description: group deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+#--------------------------------------subject--------------------------------------------------------------
+                
+  /subject:
+    get:
+      summary: Returns a list of subjects
+      operationId: giveSubjects
+      parameters:
+        - name: name
+          in: query
+          description: name of subject to filter by
+          required: false
+          style: form
+          schema:
+            type: string
+            maxLength: 255
+      responses:
+        '200':
+          description: Subject's response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/subject'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      summary: Adds a new subject. Duplicates aren't allowed
+      operationId: addSubject
+      requestBody:
+        description: Subject to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/subject'
+            example: {
+              name: 'Math'
+            }
+      
+      responses:
+        '200':
+          description: subject response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/subject'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+#--------------------------------------------subject/{id}---------------------------------------------------
+                
+  /subject/{id}:
+    get:
+      summary: Returns a single subject based on the ID suplied
+      operationId: giveOneSubject
+      parameters:
+        - name: id
+          in: path
+          description: id of subject to find
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      responses:
+        '200':
+          description: Subject's response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/subject'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+    put:
+      summary: updates a single subject based on the ID supplied
+      operationId: updateSubject
+      parameters:
+        - name: id
+          in: path
+          description: id of group to find
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      requestBody:
+        description: Fields to update
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+              maxLength: 255
+              example: 
+                name: 'English'
+      responses:
+        '200':
+          description: subject updated!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/subject'
+              example: {id: '45', nameOfSubject: 'English'}
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+    delete:
+      summary: deletes a single subject based on the ID supplied
+      operationId: deleteSubject
+      parameters:
+        - name: id
+          in: path
+          description: ID of subject to delete
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      responses:
+        '204':
+          description: subject deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error'
+                
+#--------------------------------------components-----------------------------------------------------------
+          
+components:
+  schemas:
+    room:
+      type: object
+      required:
+        - id
+        - room
+      properties:
+        id:
+          type: string
+          maxLength: 255
+          readOnly: true
+        room:
+          type: string
+          maxLength: 255
+      example: {
+        id: '33',
+        room: '33'
+      }
+      
+    lecturer:
+      required: 
+        - id
+        - firstName
+        - lastName
+        - surname
+      properties:
+        id:
+          type: string
+          maxLength: 255
+          readOnly: true
+        firstName:
+          type: string
+          maxLength: 255
+        lastName:
+          type: string
+          maxLength: 255
+        surname: 
+          type: string
+          maxLength: 255
+      example: {
+        id: '4',
+        firstName: 'John',
+        lastName: 'Lennon',
+        surname: 'Antonovich'
+      }
+        
+    group:
+      type: object
+      required: 
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          maxLength: 255
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+      example: 
+        {
+          id: '0',
+          name: 'SD-31'
+        }
+          
+    subject:
+      type: object
+      required:
+        - id
+        - nameOfSubject
+      properties:
+        id:
+          type: string
+          maxLength: 255
+          readOnly: true
+        nameOfSubject:
+          type: string
+          maxLength: 255
+      example: {
+        id: '45',
+        nameOfSubject: 'Math'
+      }
+        
+    lesson:
+      description: Object which contains name of subject, room, lecturer, resources
+      type: object
+      required: 
+        - id
+        - subject
+        - lecturers
+        - groups
+        - startAt
+        - endAt
+        - room
+      properties:
+        id:
+          type: string
+          maxLength: 255
+          readOnly: true
+        subject:
+          $ref: '#/components/schemas/subject'
+        lecturers:
+          type: array
+          items:
+            $ref: '#/components/schemas/lecturer'
+        groups: 
+          type: array
+          items:
+            $ref: '#/components/schemas/group'
+        startAt:
+          type: string
+          format: date-time
+        endAt:
+          type: string
+          format: date-time
+        room:
+          $ref: '#/components/schemas/room'
+        resources:
+          $ref: '#/components/schemas/resources'
+      example: {
+        id: '45',
+        subject: {id: '0', nameOfSubject: 'Programming'},
+        lecturers: [{id: '3',firstName: 'Petro',lastName: 'Peturra',surname: 'Petrovich'}],
+        groups: [{id: '81', name: '8A'}, {id: '82', name: '8B'}],
+        startAt: '2020-06-21T09:00:00Z',
+        endAt: '2020-06-21T10:20:00Z',
+        room: {id: '33', room: '201C'},
+        resources: {
+          projector: true,
+          otherStuff: ['notebooks', 'board']
+        }
+      }
+       
+    error:
+      type: object
+      required:
+        - id
+        - code
+        - message
+      properties:
+        id:
+          type: string
+          maxLength: 255
+          readOnly: true
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+      example: 
+        {
+          id: '55',
+          code: 505,
+          message: 'Something went wrong'
+        }
+         
+    resources: 
+      description: Other optional stuffs (beta)
+      type: object
+      properties:
+        projector:
+          type: boolean
+        otherStuff:
+          type: array
+          items:
+            type: string
+      example: {
+        projector: true,
+        otherStuff: ['barbels', 'volleyball ball']
+      } 
+          
+  responses:
+    404NotFound:
+      description: The specified resource was not found.
+    403Forbidden:
+      description: You\'ve no permission on this resource
+    401Unauthorized:
+      description: Please sign-in to get this resource
+    500InternalServerError:
+      description: Server error
+    503Unavailable:
+      description: Service unavailable in this moment
