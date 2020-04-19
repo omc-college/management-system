@@ -1,0 +1,48 @@
+<app-calendar></app-calendar>
+<form id="findLesons">
+   <div class="part">
+      <input type="date" id="from" />
+      <input type="date" id="to" />
+   </div>
+   <div class="part">
+      <select name="Group" id="Group">
+         <option value="">SD-31</option>
+         <option value="">SD-32</option>
+         <option value="">FD-21</option>
+         <option value="">FF-11</option>
+      </select>
+      <button type="button" class="plus">+</button>
+      <button type="button" class="new">New</button>
+   </div>
+   <div class="part">
+      <select name="Teacher" id="Teacher">
+         <option value="">Vasya</option>
+         <option value="">Petya</option>
+         <option value="">Sasha</option>
+         <option value="">Nastya</option>
+      </select>
+      <button type="button" class="plus">+</button>
+      <button type="button" class="new">New</button>
+   </div>
+   <div class="part">
+      <select name="Subject" id="Subject">
+         <option value="">Programming</option>
+         <option value="">Math</option>
+         <option value="">English</option>
+      </select>
+      <button type="button" class="plus">+</button>
+      <button type="button" class="new">New</button>
+   </div>
+   <div class="part">
+      <select name="Room" id="Room">
+         <option value="">37</option>
+         <option value="">201A</option>
+         <option value="">33B</option>
+         <option value="">58</option>
+      </select>
+      <button type="button" class="plus">+</button>
+      <button type="button" class="new">New</button>
+   </div>
+   <button type="button" id="find">Find</button>
+</form>
+<div *ngIf="error.id" id="error">Error {{ error.code }}, {{ error.message }}</div>

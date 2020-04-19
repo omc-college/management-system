@@ -1,0 +1,67 @@
+$wh: 70px
+$el: calc(100% - #{$wh})
+button
+    width: 50px
+    height: 50px
+    border: 0px
+    img
+        width: 100%
+        height: 100%
+    &:active
+        img
+            width: 90%
+            height: 90%
+            margin: 5%
+
+#right
+    margin-top: 10px
+#down
+    margin-left: 10px
+#time
+    width: 100%
+    height: $wh
+#divider
+    width: $wh
+    height: $wh
+.timestamp
+    width: calc(#{$el} / 8)
+    height: 100%
+    p
+        font-size: 1.4em
+        margin-top: 40px
+        margin-left: 10px
+#week
+    width: $wh
+    height: $el
+.weekstamp
+    width: 100%
+    height: calc(calc( 100% - 50px ) / 6 )
+    padding-top: 40px
+    p
+        width: 100%
+        height: 100%
+        text-align: center
+        font-size: 2em
+#timetable
+    width: $el
+    height: $el
+    border-top: 1px solid black
+    border-left: 1px solid black
+.lesson
+    width: (100%/8)
+    height: (100% / 6)
+    border: 1px solid black
+    border-top: 0px
+    border-left: 0px
+    padding: 15px
+.subject, .room
+    width: 60%
+    overflow: hidden
+.subject
+    font-size: 2.2em
+    font-weight: 700
+.room
+    font-size: 1.5em
+    padding-top: 5px
+.chosen
+    border: 2px solid black
