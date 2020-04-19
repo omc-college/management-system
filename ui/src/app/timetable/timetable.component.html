@@ -1,0 +1,40 @@
+<div id="time">
+   <div id="divider"></div>
+   <div class="timestamp"><p>8.30-9.15</p></div>
+   <div class="timestamp"><p>9.25-10.10</p></div>
+   <div class="timestamp"><p>10.30-11.15</p></div>
+   <div class="timestamp"><p>11.35-12.20</p></div>
+   <div class="timestamp"><p>12.30-13.15</p></div>
+   <div class="timestamp"><p>13.25-14.10</p></div>
+   <div class="timestamp"><p>14.20-15.05</p></div>
+   <div class="timestamp">
+      <p>15.20-16.05</p>
+      <button type="button" id="right">
+         <img src="../../assets/img/right.svg" />
+      </button>
+   </div>
+</div>
+
+<div id="week">
+   <div class="weekstamp"><p>M</p></div>
+   <div class="weekstamp"><p>T</p></div>
+   <div class="weekstamp"><p>W</p></div>
+   <div class="weekstamp"><p>T</p></div>
+   <div class="weekstamp"><p>F</p></div>
+   <div class="weekstamp"><p>S</p></div>
+   <button type="button" id="down">
+      <img src="../../assets/img/down.svg" />
+   </button>
+</div>
+
+<div id="timetable">
+   <div
+      class="lesson"
+      [class.chosen]="lesson.startAt === selectedLesson"
+      (click)="selectLesson(lesson.startAt)"
+      *ngFor="let lesson of lessons"
+   >
+      <div class="subject">{{ lesson.subject.nameOfSubject }}</div>
+      <div class="room">{{ lesson.room.room }}</div>
+   </div>
+</div>

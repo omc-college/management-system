@@ -1,0 +1,72 @@
+<div class="days" *ngIf="!switcher">
+   <div class="day">S</div>
+   <div class="day">M</div>
+   <div class="day">T</div>
+   <div class="day">W</div>
+   <div class="day">T</div>
+   <div class="day">F</div>
+   <div class="day">S</div>
+
+   <div id="calendar">
+      <button
+         *ngFor="let day of beforeDays"
+         type="button"
+         class="block primary"
+         value="{{ day }}"
+         (click)="changeDay(day); changeDate(SelectedDate.getFullYear(), SelectedDate.getMonth())"
+      >
+         {{ day.getDate() }}
+      </button>
+
+      <button
+         *ngFor="let day of days"
+         [class.chosen]="day === SelectedDate"
+         type="button"
+         class="block"
+         value="{{ day }}"
+         (click)="changeDay(day)"
+      >
+         {{ day.getDate() }}
+      </button>
+
+      <button
+         *ngFor="let day of afterDays"
+         type="button"
+         class="block primary"
+         value="{{ day }}"
+         (click)="changeDay(day); changeDate(SelectedDate.getFullYear(), SelectedDate.getMonth())"
+      >
+         {{ day.getDate() }}
+      </button>
+   </div>
+</div>
+
+<div class="months" *ngIf="switcher">
+   <button
+      *ngFor="let mon of months; let i = index"
+      type="button"
+      class="monthBlock"
+      [value]="i"
+      (click)="changeDate(this.SelectedDate.getFullYear(), i); this.switcher = !this.switcher"
+   >
+      {{ mon }}
+   </button>
+</div>
+
+<div id="buttons">
+   <button type="button" class="nav" (click)="changeDate(this.SelectedDate.getFullYear(), SelectedDate.getMonth() + 1)">
+      >
+   </button>
+   <button type="button" class="nav" (click)="changeDate(this.SelectedDate.getFullYear(), SelectedDate.getMonth() - 1)">
+      <
+   </button>
+   <input
+      type="number"
+      [value]="SelectedDate.getFullYear()"
+      placeholder="{{ SelectedDate.getFullYear() }}"
+      (keyup.enter)="changeDate($event.target.value, SelectedDate.getMonth())"
+   />
+   <button type="button" id="monthBtn" (click)="switcher = !switcher">
+      {{ months[SelectedDate.getMonth()] }}
+   </button>
+</div>
