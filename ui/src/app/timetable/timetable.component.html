@@ -1,0 +1,44 @@
+<div id="time">
+  <div id="divider">
+    <button type="button" id="right" [class.left]="showFirstShift !== false" (click)="getTimestamp()">
+      <img src="../../assets/img/right.svg" />
+    </button>
+  </div>
+  <div class="timestamp" *ngFor="let timestamp of timestamps; trackBy: trackByMethod">
+    <p>{{ timestamp }}</p>
+  </div>
+</div>
+
+<div id="week">
+  <div class="weekstamp"><p>M</p></div>
+  <div class="weekstamp"><p>T</p></div>
+  <div class="weekstamp"><p>W</p></div>
+  <div class="weekstamp"><p>T</p></div>
+  <div class="weekstamp"><p>F</p></div>
+  <div class="weekstamp unique">
+    <p>S</p>
+    <button
+      type="button"
+      id="down"
+      (click)="setSelectedDate(selectedDate.year(), selectedDate.month(), +selectedDate.date() + 7)"
+    >
+      <img src="../../assets/img/down.svg" />
+    </button>
+  </div>
+</div>
+
+<div id="timetable">
+  <div
+    class="lesson"
+    [class.chosen]="
+      lesson.startAt.year() === selectedDate.year() &&
+      lesson.startAt.month() === selectedDate.month() &&
+      lesson.startAt.date() === selectedDate.date()
+    "
+    (click)="setSelectedDate(lesson.startAt.year(), lesson.startAt.month(), lesson.startAt.date())"
+    *ngFor="let lesson of lessons; trackBy: trackByMethod"
+  >
+    <div class="subject">{{ lesson.subject.nameOfSubject }}</div>
+    <div class="room">{{ lesson.room.room }}</div>
+  </div>
+</div>
