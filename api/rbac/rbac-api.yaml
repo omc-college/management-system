@@ -121,8 +121,7 @@ components:
          type: object
          properties:
             id: 
-               type: string
-               maxLength: 255
+               type: integer
                description: Role id
             name:
                type: string
@@ -136,8 +135,7 @@ components:
          type: object
          properties:
             id:
-               type: string
-               maxLength: 255
+               type: integer
                description: Feature id
             name:
                type: string
@@ -147,15 +145,11 @@ components:
                type: array
                items:
                   $ref: '#/components/schemas/Endpoint'
-            isAccessGranted:
-               type: boolean
-               description: Indicates whether a role has access to the feature
       Endpoint:
          type: object
          properties:
             id:
-               type: string
-               maxLength: 255
+               type: integer
                description: Endpoint id
             path:
                type: string
@@ -169,8 +163,7 @@ components:
          type: object
          properties:
             id: 
-               type: string
-               maxLength: 255
+               type: integer
                description: Role template id
             name:
                type: string
