@@ -34,6 +34,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /sessions:
+    post:
+      description: User login 
+      operationId: login
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successfull autorization
+          content:
+            'application/json':
+               schema:
+                $ref: '#/components/schemas/Token'
+        default:
+          description: unexpected error
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Error'
+  /sessions/refresh:
+    post:
+     operationId: refreshToken
+     description: Function token refresh
+     responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            'application/json':
+               schema:
+                $ref: '#/components/schemas/Token'
+        default:
+          description: unexpected error
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     SignupRequest:
@@ -60,6 +99,27 @@ components:
           type: string
           format: password
           description: Users password
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: Users email
+        password:
+          type: string
+          format: password
+          description: Users password
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+       - token
     Error:
       type: object
       required:
