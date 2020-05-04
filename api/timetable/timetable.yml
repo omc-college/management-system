@@ -194,7 +194,7 @@ paths:
                 $ref: '#/components/schemas/error'
                 
     put:
-      summary: updates a single lesson based on the ID supplied
+      summary: replaces a single lesson based on the ID supplied
       operationId: updateLesson
       parameters:
         - name: id
