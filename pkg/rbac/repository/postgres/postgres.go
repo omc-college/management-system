@@ -6,6 +6,7 @@ import (
 
 	_ "github.com/jackc/pgx"
 	_ "github.com/jackc/pgx/stdlib"
+
 	"github.com/omc-college/management-system/pkg/rbac/models"
 )
 
@@ -22,7 +23,7 @@ func NewRolesRepository(dsn string) (*RolesRepository, error) {
 }
 
 func GetAllRoles(repository *RolesRepository) ([]models.Role, error) {
-	query := `SELECT roles.id, roles.name, features.id, features.name, endpoints.id, endpoints.path, endpoints.method
+	query := `SELECT roles.id, roles.name, features.id, features.name, feature.description, endpoints.id, endpoint.name, endpoints.path, endpoints.method
 			  FROM roles LEFT JOIN roles_to_features
 			  ON roles.id = roles_to_features.role_id
 			  LEFT JOIN features
@@ -32,9 +33,6 @@ func GetAllRoles(repository *RolesRepository) ([]models.Role, error) {
 			  LEFT JOIN endpoints
 			  ON features_to_endpoints.endpoint_id = endpoints.id`
 
-	var genericRoles []models.Role
-	var genericFeatures []models.FeatureEntry
-	var genericEndpoints []models.Endpoint
 	var isRoleExisting bool
 	var isFeatureExisting bool
 
@@ -53,7 +51,7 @@ func GetAllRoles(repository *RolesRepository) ([]models.Role, error) {
 		isRoleExisting = false
 		isFeatureExisting = false
 
-		err := rows.Scan(&tmpRole.ID, &tmpRole.Name, &tmpFeature.ID, &tmpFeature.Name, &tmpEndpoint.ID, &tmpEndpoint.Path, &tmpEndpoint.Method)
+		err := rows.Scan(&tmpRole.ID, &tmpRole.Name, &tmpFeature.ID, &tmpFeature.Name, &tmpFeature.Description, &tmpEndpoint.ID, &tmpEndpoint.Name, &tmpEndpoint.Path, &tmpEndpoint.Method)
 		if err != nil {
 			return []models.Role{}, ScanError{scanErrorMessage, err}
 		}
@@ -78,26 +76,11 @@ func GetAllRoles(repository *RolesRepository) ([]models.Role, error) {
 		return []models.Role{}, ScanError{scanErrorMessage, err}
 	}
 
-	for _, tmpRole := range tmpRoles {
-		genericFeatures = []models.FeatureEntry{}
-		for _, tmpFeature := range tmpRole.Entries {
-			genericEndpoints = []models.Endpoint{}
-			for _, tmpEndpoint := range tmpFeature.Endpoints {
-				genericEndpoint := models.Endpoint{ID: tmpEndpoint.ID, Path: tmpEndpoint.Path, Method: tmpEndpoint.Method}
-				genericEndpoints = append(genericEndpoints, genericEndpoint)
-			}
-			genericFeature := models.FeatureEntry{ID: tmpFeature.ID, Name: tmpFeature.Name, Endpoints: genericEndpoints}
-			genericFeatures = append(genericFeatures, genericFeature)
-		}
-		genericRole := models.Role{ID: tmpRole.ID, Name: tmpRole.Name, Entries: genericFeatures}
-		genericRoles = append(genericRoles, genericRole)
-	}
-
-	return genericRoles, nil
+	return toRoles(tmpRoles), nil
 }
 
 func GetRole(repository *RolesRepository, id int) (models.Role, error) {
-	query := `SELECT roles.id, roles.name, features.id, features.name, endpoints.id, endpoints.path, endpoints.method
+	query := `SELECT roles.id, roles.name, features.id, features.name, features.description, endpoints.id, endpoint.name, endpoints.path, endpoints.method
 			  FROM roles LEFT JOIN roles_to_features
 			  ON roles.id = roles_to_features.role_id
 			  LEFT JOIN features
@@ -108,8 +91,6 @@ func GetRole(repository *RolesRepository, id int) (models.Role, error) {
 			  ON features_to_endpoints.endpoint_id = endpoints.id
 			  WHERE roles.id = $1`
 
-	var genericFeatures []models.FeatureEntry
-	var genericEndpoints []models.Endpoint
 	var isFeatureExisting bool
 	var tmpRole role
 	tmpRole.Entries = make(map[int]featureEntry)
@@ -125,7 +106,7 @@ func GetRole(repository *RolesRepository, id int) (models.Role, error) {
 
 		isFeatureExisting = false
 
-		err = rows.Scan(&tmpRole.ID, &tmpRole.Name, &tmpFeature.ID, &tmpFeature.Name, &tmpEndpoint.ID, &tmpEndpoint.Path, &tmpEndpoint.Method)
+		err = rows.Scan(&tmpRole.ID, &tmpRole.Name, &tmpFeature.ID, &tmpFeature.Name, &tmpFeature.Description, &tmpEndpoint.ID, &tmpEndpoint.Name, &tmpEndpoint.Path, &tmpEndpoint.Method)
 		if err != nil {
 			return models.Role{}, ScanError{scanErrorMessage, err}
 		}
@@ -149,80 +130,7 @@ func GetRole(repository *RolesRepository, id int) (models.Role, error) {
 		return models.Role{}, ScanError{scanErrorMessage, err}
 	}
 
-	genericFeatures = []models.FeatureEntry{}
-	for _, tmpFeature := range tmpRole.Entries {
-		genericEndpoints = []models.Endpoint{}
-		for _, tmpEndpoint := range tmpFeature.Endpoints {
-			genericEndpoint := models.Endpoint{ID: tmpEndpoint.ID, Path: tmpEndpoint.Path, Method: tmpEndpoint.Method}
-			genericEndpoints = append(genericEndpoints, genericEndpoint)
-		}
-		genericFeature := models.FeatureEntry{ID: tmpFeature.ID, Name: tmpFeature.Name, Endpoints: genericEndpoints}
-		genericFeatures = append(genericFeatures, genericFeature)
-	}
-	genericRole := models.Role{ID: tmpRole.ID, Name: tmpRole.Name, Entries: genericFeatures}
-
-	return genericRole, nil
-}
-
-func GetRoleTemplate(repository *RolesRepository) (models.Role, error) {
-	query := `SELECT features.id, features.name, endpoints.id, endpoints.path, endpoints.method
-			  FROM features LEFT JOIN features_to_endpoints
-			  ON features.id = features_to_endpoints.feature_id
-			  LEFT JOIN endpoints
-			  ON features_to_endpoints.endpoint_id = endpoints.id`
-
-	rows, err := repository.DB.Query(query)
-	if err != nil {
-		return models.Role{}, QueryError{queryErrorMessage, err}
-	}
-
-	var genericFeatures []models.FeatureEntry
-	var genericEndpoints []models.Endpoint
-	var isFeatureExisting bool
-	var tmpRoleTemplate role
-	var tmpFeatures = make(map[int]featureEntry)
-
-	// Get all features and connect them to endpoints
-	for rows.Next() {
-		var tmpFeature featureEntry
-		var tmpEndpoint endpoint
-
-		isFeatureExisting = false
-
-		err := rows.Scan(&tmpFeature.ID, &tmpFeature.Name, &tmpEndpoint.ID, &tmpEndpoint.Method, &tmpEndpoint.Path)
-		if err != nil {
-			return models.Role{}, ScanError{scanErrorMessage, err}
-		}
-
-		_, isFeatureExisting = tmpFeatures[tmpFeature.ID]
-		if !isFeatureExisting {
-			tmpFeature.Endpoints = make(map[int]endpoint)
-			tmpFeatures[tmpFeature.ID] = tmpFeature
-		}
-
-		tmpFeatures[tmpFeature.ID].Endpoints[tmpEndpoint.ID] = tmpEndpoint
-	}
-
-	err = rows.Err()
-	if err != nil {
-		return models.Role{}, ScanError{scanErrorMessage, err}
-	}
-
-	tmpRoleTemplate.Entries = tmpFeatures
-
-	genericFeatures = []models.FeatureEntry{}
-	for _, tmpFeature := range tmpRoleTemplate.Entries {
-		genericEndpoints = []models.Endpoint{}
-		for _, tmpEndpoint := range tmpFeature.Endpoints {
-			genericEndpoint := models.Endpoint{ID: tmpEndpoint.ID, Path: tmpEndpoint.Path, Method: tmpEndpoint.Method}
-			genericEndpoints = append(genericEndpoints, genericEndpoint)
-		}
-		genericFeature := models.FeatureEntry{ID: tmpFeature.ID, Name: tmpFeature.Name, Endpoints: genericEndpoints}
-		genericFeatures = append(genericFeatures, genericFeature)
-	}
-	genericRoleTemplate := models.Role{ID: tmpRoleTemplate.ID, Name: tmpRoleTemplate.Name, Entries: genericFeatures}
-
-	return genericRoleTemplate, nil
+	return toRole(tmpRole), nil
 }
 
 func CreateRole(repository *RolesRepository, role models.Role) error {
@@ -316,4 +224,214 @@ func DeleteRole(repository *RolesRepository, id int) error {
 	}
 
 	return nil
+}
+
+func GetRoleTmpl(repository *RolesRepository) (models.RoleTmpl, error) {
+	query := `SELECT features.id, features.name, features.description, endpoints.id, endpoints.name, endpoints.path, endpoints.method
+			  FROM features LEFT JOIN features_to_endpoints
+			  ON features.id = features_to_endpoints.feature_id
+			  LEFT JOIN endpoints
+			  ON features_to_endpoints.endpoint_id = endpoints.id`
+
+	rows, err := repository.DB.Query(query)
+	if err != nil {
+		return models.RoleTmpl{}, QueryError{queryErrorMessage, err}
+	}
+
+	var isFeatureExisting bool
+	var tmpRoleTmpl roleTmpl
+	var tmpFeatures = make(map[int]featureEntry)
+
+	// Get all features and connect them to endpoints
+	for rows.Next() {
+		var tmpFeature featureEntry
+		var tmpEndpoint endpoint
+
+		isFeatureExisting = false
+
+		err := rows.Scan(&tmpFeature.ID, &tmpFeature.Name, &tmpFeature.Description, &tmpEndpoint.ID, &tmpEndpoint.Name, &tmpEndpoint.Method, &tmpEndpoint.Path)
+		if err != nil {
+			return models.RoleTmpl{}, ScanError{scanErrorMessage, err}
+		}
+
+		_, isFeatureExisting = tmpFeatures[tmpFeature.ID]
+		if !isFeatureExisting {
+			tmpFeature.Endpoints = make(map[int]endpoint)
+			tmpFeatures[tmpFeature.ID] = tmpFeature
+		}
+
+		tmpFeatures[tmpFeature.ID].Endpoints[tmpEndpoint.ID] = tmpEndpoint
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return models.RoleTmpl{}, ScanError{scanErrorMessage, err}
+	}
+
+	tmpRoleTmpl.Entries = tmpFeatures
+
+	return toRoleTmpl(tmpRoleTmpl), nil
+}
+
+func CreateRoleTmpl(repository *RolesRepository, roleTmpl models.RoleTmpl) error {
+	var addedEndpoints []models.Endpoint
+	var isEndpointExisting bool
+	var currentFeatureId int
+	var currentEndpointId int
+	var isFeatureUpdated bool
+	var existingFeatures map[string]bool = make(map[string]bool)
+
+	getFeaturesNamesQuery := "SELECT name FROM features"
+	createFeatureQuery := "INSERT INTO features(name, description) VALUES ($1, $2) RETURNING (id)"
+	updateFeatureQuery := "UPDATE features SET description = $1 WHERE name = $2 RETURNING (id)"
+
+	createEndpointQuery := "INSERT INTO endpoints(name, path, method) VALUES ($1, $2, $3) RETURNING (id)"
+	deleteEndpointQuery := "DELETE FROM endpoints WHERE name = $1"
+	getEndpointIdQuery := "SELECT id FROM endpoints WHERE name = $1"
+
+	createConnectionQuery := "INSERT INTO features_to_endpoints(feature_id, endpoint_id) VALUES ($1, $2)"
+	deleteConnectionsQuery := "DELETE FROM features_to_endpoints WHERE feature_id = $1"
+
+	rows, err := repository.DB.Query(getFeaturesNamesQuery)
+	if err != nil {
+		return QueryError{queryErrorMessage, err}
+	}
+
+	// make a set of existing features
+	for rows.Next() {
+		var featureName string
+
+		err := rows.Scan(&featureName)
+		if err != nil {
+			return ScanError{scanErrorMessage, err}
+		}
+
+		existingFeatures[featureName] = true
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return ScanError{scanErrorMessage, err}
+	}
+
+	// iterate features
+	for _, feature := range roleTmpl.Entries {
+		isFeatureUpdated = false
+
+		_, isFeatureUpdated = existingFeatures[feature.Name]
+		if isFeatureUpdated {
+			// update feature's description
+			err := repository.DB.QueryRow(updateFeatureQuery, feature.Description, feature.Name).Scan(&currentFeatureId)
+			if err != nil {
+				return QueryError{queryErrorMessage, err}
+			}
+
+			// delete feature's connections
+			_, err = repository.DB.Exec(deleteConnectionsQuery, currentFeatureId)
+			if err != nil {
+				return QueryError{queryErrorMessage, err}
+			}
+		} else {
+			// create new feature
+			err := repository.DB.QueryRow(createFeatureQuery, feature.Name, feature.Description).Scan(&currentFeatureId)
+			if err != nil {
+				return QueryError{queryErrorMessage, err}
+			}
+		}
+
+		// iterate endpoints
+		for _, endpoint := range feature.Endpoints {
+			// delete endpoint of existing feature
+			if isFeatureUpdated {
+				_, err := repository.DB.Exec(deleteEndpointQuery, endpoint.Name)
+				if err != nil {
+					return QueryError{queryErrorMessage, err}
+				}
+
+				for existingEndpointIndex := range addedEndpoints {
+					addedEndpoints = append(addedEndpoints[:existingEndpointIndex], addedEndpoints[existingEndpointIndex+1:]...)
+				}
+			}
+
+			// check whether endpoint exists
+			isEndpointExisting = false
+			for _, existingEndpoint := range addedEndpoints {
+				if existingEndpoint.Name == endpoint.Name {
+					isEndpointExisting = true
+					break
+				}
+			}
+
+			if !isEndpointExisting {
+				// add endpoint to db
+				err := repository.DB.QueryRow(createEndpointQuery, endpoint.Name, endpoint.Path, endpoint.Method).Scan(&currentEndpointId)
+				if err != nil {
+					return QueryError{queryErrorMessage, err}
+				}
+
+				// add endpoint to endpoints slice
+				addedEndpoints = append(addedEndpoints, endpoint)
+			} else {
+				// get current endpoint's id from db
+				err := repository.DB.QueryRow(getEndpointIdQuery, endpoint.Name).Scan(&currentEndpointId)
+				if err != nil {
+					return QueryError{queryErrorMessage, err}
+				}
+			}
+
+			// add connection between current feature and endpoint
+			_, err := repository.DB.Exec(createConnectionQuery, currentFeatureId, currentEndpointId)
+			if err != nil {
+				return QueryError{queryErrorMessage, err}
+			}
+		}
+	}
+
+	return nil
+}
+
+func toRoles(tmpRoles map[int]role) (genericRoles []models.Role) {
+	for _, tmpRole := range tmpRoles {
+		genericRoles = append(genericRoles, toRole(tmpRole))
+	}
+
+	return genericRoles
+}
+
+func toRole(tmpRole role) (genericRole models.Role) {
+	var genericFeatures []models.FeatureEntry
+	var genericEndpoints []models.Endpoint
+
+	genericFeatures = []models.FeatureEntry{}
+	for _, tmpFeature := range tmpRole.Entries {
+		genericEndpoints = []models.Endpoint{}
+		for _, tmpEndpoint := range tmpFeature.Endpoints {
+			genericEndpoint := models.Endpoint{ID: tmpEndpoint.ID, Path: tmpEndpoint.Path, Method: tmpEndpoint.Method}
+			genericEndpoints = append(genericEndpoints, genericEndpoint)
+		}
+		genericFeature := models.FeatureEntry{ID: tmpFeature.ID, Name: tmpFeature.Name, Endpoints: genericEndpoints}
+		genericFeatures = append(genericFeatures, genericFeature)
+	}
+	genericRole = models.Role{ID: tmpRole.ID, Name: tmpRole.Name, Entries: genericFeatures}
+
+	return genericRole
+}
+
+func toRoleTmpl(tmpRoleTmpl roleTmpl) (genericRoleTmpl models.RoleTmpl) {
+	var genericFeatures []models.FeatureEntry
+	var genericEndpoints []models.Endpoint
+
+	genericFeatures = []models.FeatureEntry{}
+	for _, tmpFeature := range tmpRoleTmpl.Entries {
+		genericEndpoints = []models.Endpoint{}
+		for _, tmpEndpoint := range tmpFeature.Endpoints {
+			genericEndpoint := models.Endpoint{Name: tmpEndpoint.Name, Path: tmpEndpoint.Path, Method: tmpEndpoint.Method}
+			genericEndpoints = append(genericEndpoints, genericEndpoint)
+		}
+		genericFeature := models.FeatureEntry{Name: tmpFeature.Name, Description: tmpFeature.Description, Endpoints: genericEndpoints}
+		genericFeatures = append(genericFeatures, genericFeature)
+	}
+	genericRoleTmpl = models.RoleTmpl{Entries: genericFeatures}
+
+	return genericRoleTmpl
 }
