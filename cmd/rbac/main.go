@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
-	routers "github.com/omc-college/management-system/pkg/rbac/api/routers"
-	postgres "github.com/omc-college/management-system/pkg/rbac/repository/postgres"
 	log "github.com/sirupsen/logrus"
+
+	"github.com/omc-college/management-system/pkg/rbac/api/routers"
+	"github.com/omc-college/management-system/pkg/rbac/repository/postgres"
 )
 
 func main() {

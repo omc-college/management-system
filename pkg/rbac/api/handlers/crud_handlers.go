@@ -9,9 +9,10 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-	"github.com/omc-college/management-system/pkg/rbac/models"
-	postgres "github.com/omc-college/management-system/pkg/rbac/repository/postgres"
 	log "github.com/sirupsen/logrus"
+
+	"github.com/omc-college/management-system/pkg/rbac/models"
+	"github.com/omc-college/management-system/pkg/rbac/repository/postgres"
 )
 
 type RolesHandler struct {
@@ -196,7 +197,7 @@ func (repository *RolesHandler) DeleteRole(w http.ResponseWriter, r *http.Reques
 func (repository *RolesHandler) GetRoleTemplate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	roleTemplate, err := postgres.GetRoleTemplate(repository.RolesRepository)
+	roleTemplate, err := postgres.GetRoleTmpl(repository.RolesRepository)
 	if err != nil {
 		handleError(err, w)
 		return
