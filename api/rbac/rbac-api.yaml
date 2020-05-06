@@ -131,6 +131,7 @@ components:
                type: array
                items:
                   $ref: '#/components/schemas/FeatureEntry'
+
       FeatureEntry:
          type: object
          properties:
@@ -141,16 +142,25 @@ components:
                type: string
                maxLength: 255
                description: Feature name
+            description:
+               type: string
+               maxLength: 255
+               description: Feature description
             endpoints:
                type: array
                items:
                   $ref: '#/components/schemas/Endpoint'
+
       Endpoint:
          type: object
          properties:
             id:
                type: integer
                description: Endpoint id
+            name:
+               type: string
+               maxLength: 255
+               description: Endpoint name
             path:
                type: string
                maxLength: 255
@@ -159,20 +169,15 @@ components:
                type: string
                maxLength: 255
                description: Endpoint method
+
       RoleTemplate:
          type: object
          properties:
-            id: 
-               type: integer
-               description: Role template id
-            name:
-               type: string
-               maxLength: 255
-               description: Role template name
             entries:
                type: array
                items:
                   $ref: '#/components/schemas/FeatureEntry'
+
       Error:
          type: object
          required:

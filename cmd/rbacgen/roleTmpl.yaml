@@ -1,0 +1,136 @@
+entries:
+- name: groupsManagement
+  description: Add, update and delete groups
+  endpoints:
+  - name: giveGroups
+    path: /group
+    method: GET
+  - name: addGroup
+    path: /group
+    method: POST
+  - name: deleteGroup
+    path: /group/{id}
+    method: DELETE
+  - name: giveOneGroup
+    path: /group/{id}
+    method: GET
+  - name: updateGroup
+    path: /group/{id}
+    method: PUT
+- name: subjectsReading
+  description: Get information about subjects
+  endpoints:
+  - name: giveSubjects
+    path: /subject
+    method: GET
+  - name: giveOneSubject
+    path: /subject/{id}
+    method: GET
+- name: subjectsManagement
+  description: Add, update and delete subjects
+  endpoints:
+  - name: giveSubjects
+    path: /subject
+    method: GET
+  - name: addSubject
+    path: /subject
+    method: POST
+  - name: deleteSubject
+    path: /subject/{id}
+    method: DELETE
+  - name: giveOneSubject
+    path: /subject/{id}
+    method: GET
+  - name: updateSubject
+    path: /subject/{id}
+    method: PUT
+- name: groupsReading
+  description: Get information about groups
+  endpoints:
+  - name: giveGroups
+    path: /group
+    method: GET
+  - name: giveOneGroup
+    path: /group/{id}
+    method: GET
+- name: lecturersReading
+  description: Get information about lecturers
+  endpoints:
+  - name: giveLecturers
+    path: /lecturer
+    method: GET
+  - name: giveOneLecturer
+    path: /lecturer/{id}
+    method: GET
+- name: lecturersManagement
+  description: Add, update and delete lecturers
+  endpoints:
+  - name: giveLecturers
+    path: /lecturer
+    method: GET
+  - name: addLecturer
+    path: /lecturer
+    method: POST
+  - name: deleteLecturer
+    path: /lecturer/{id}
+    method: DELETE
+  - name: giveOneLecturer
+    path: /lecturer/{id}
+    method: GET
+  - name: updateLecturer
+    path: /lecturer/{id}
+    method: PUT
+- name: lessonsReading
+  description: Get information about lessons
+  endpoints:
+  - name: giveOneLesson
+    path: /lesson/{id}
+    method: GET
+  - name: giveLessons
+    path: /lesson
+    method: GET
+- name: roomsReading
+  description: Get information about rooms
+  endpoints:
+  - name: giveOneRoom
+    path: /room/{id}
+    method: GET
+  - name: giveRooms
+    path: /room
+    method: GET
+- name: roomsManagement
+  description: Add, update and delete rooms
+  endpoints:
+  - name: giveOneRoom
+    path: /room/{id}
+    method: GET
+  - name: updateRoom
+    path: /room/{id}
+    method: PUT
+  - name: deleteRoom
+    path: /room/{id}
+    method: DELETE
+  - name: giveRooms
+    path: /room
+    method: GET
+  - name: addRoom
+    path: /room
+    method: POST
+- name: lessonsManagement
+  description: Add, update and delete lessons
+  endpoints:
+  - name: giveLessons
+    path: /lesson
+    method: GET
+  - name: addLesson
+    path: /lesson
+    method: POST
+  - name: giveOneLesson
+    path: /lesson/{id}
+    method: GET
+  - name: updateLesson
+    path: /lesson/{id}
+    method: PUT
+  - name: deleteLesson
+    path: /lesson/{id}
+    method: DELETE

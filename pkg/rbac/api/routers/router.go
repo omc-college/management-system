@@ -5,8 +5,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	handlers "github.com/omc-college/management-system/pkg/rbac/api/handlers"
-	postgres "github.com/omc-college/management-system/pkg/rbac/repository/postgres"
+	"github.com/omc-college/management-system/pkg/rbac/api/handlers"
+	"github.com/omc-college/management-system/pkg/rbac/repository/postgres"
 )
 
 // NewCrudRouter Inits RBAC CRUD service router
