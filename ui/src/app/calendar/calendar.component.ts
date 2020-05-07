@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injectable } from '@angular/core';
 
 @Component({
    selector: 'app-calendar',
    templateUrl: './calendar.component.html',
    styleUrls: ['./calendar.component.sass'],
+})
+@Injectable({
+   providedIn: 'root',
 })
 export class CalendarComponent implements OnInit {
    readonly months: string[] = [

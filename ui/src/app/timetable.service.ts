@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { Lesson } from './lesson';
+import { LESSONS } from './mock-lessons';
 
 @Injectable({
-  providedIn: 'root'
+   providedIn: 'root',
 })
 export class TimetableService {
-
-  constructor() { }
+   constructor() {}
+   getLessons(): Observable<Lesson[]> {
+      return of(LESSONS);
+   }
 }

@@ -1,20 +1,26 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Injectable } from '@angular/core';
+import { TimetableService } from '../timetable.service';
 import { Lesson } from '../lesson';
-import { LESSONS } from '../mock-lessons';
-import { from } from 'rxjs';
 
 @Component({
    selector: 'app-timetable',
    templateUrl: './timetable.component.html',
    styleUrls: ['./timetable.component.sass'],
 })
+@Injectable({
+   providedIn: 'root',
+})
 export class TimetableComponent implements OnInit {
-   @Input() selectedDate: Date;
-   lessons: Lesson[] = LESSONS;
+   selectedDate: Date;
+   lessons: Lesson[];
    selectedLesson: Date;
-   constructor() {}
+   constructor(private timetableService: TimetableService) {}
    ngOnInit(): void {
       this.selectLesson(this.selectedDate);
+      this.getLessons();
+   }
+   getLessons(): void {
+      this.timetableService.getLessons().subscribe((lessons) => (this.lessons = lessons));
    }
    selectLesson(lid: Date): void {
       this.selectedLesson = lid;
