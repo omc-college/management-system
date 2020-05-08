@@ -1,0 +1,153 @@
+openapi: "3.0.3"
+info:
+  version: 0.0.1
+  title: Sign-Up Flow
+  description: Web service which provides an ability to register user credentials
+  contact:
+    name: Taras Melnyk, Sviatoslav Gurlenko, Dmitriy Rudoy
+    email: taras.melnyk.aka.krimyllex@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+paths:
+  /signup:
+    post:
+      description: This endpoint handles user registartion requests, sent from sign-up form
+      operationId: signUp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '200':
+          description: Registration successful, to complete registration confirm your email with token 
+          content:
+            application/json:
+              schema:
+                type: string
+                items:
+                  $ref: '#/components/schemas/SignupResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /email_validation:
+    post:
+      description: This endpoint validates user's entered email 
+      operationId: emailVerify
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailVerRequest'
+      responses:
+        '200':
+          description: Email verified
+          content:
+            application/json:   
+              schema: 
+                type: object
+                items:
+                  $ref: '#/components/schemas/EmailVerResponse'
+        default:
+          description: User with this email has already registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /end_of_reg:    
+    get:
+      description: To complete the registration you need to confirm your email with token
+      operationId: GetToken
+      responses:
+        '200':
+          description: Registration completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignupResponseWithToken'
+        default:
+          description: User did not confirm his email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    SignupRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          maxLength: 255
+          description: User's first name
+        lastName:
+          type: string
+          maxLength: 255
+          description: User's last name
+        email:
+          type: string
+          format: email
+          description: User's email
+        password:
+          type: string
+          format: password
+          description: User's password
+      required:
+        - firstName
+        - lastName
+        - email
+        - password
+    SignupResponse:
+      type: object                                    
+      properties:
+        message: 
+          type: string
+          description: Registration successful, to complete registration confirm your email with token 
+      required:
+       - message
+    SignupResponseWithToken:
+      type: object                                    
+      properties:
+        message: 
+          type: string
+          description: Registration successfuly completed
+      required:
+       - message
+    EmailVerRequest:
+      type: object                                    
+      properties:
+        email:
+          type: string
+          description: User's email
+      required: 
+       - email
+    EmailVerResponse:
+      type: object                                    
+      properties:
+        message: 
+          type: string
+          description: Response that user's email is verified 
+      required: 
+       - message
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+       - token
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+      required:
+       - code
+       - message
