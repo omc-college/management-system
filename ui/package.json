@@ -10,7 +10,7 @@
       "fix:other": "npm run prettier --write",
       "fix:code": "npm run test:code --fix",
       "fix": "npm run fix:code && npm run fix:other",
-      "prettier": "prettier \"**/*.{json,md,scss,yaml,yml}\"",
+      "prettier": "prettier --write \"**/*.ts\"",
       "test:other": "npm run prettier --list-different",
       "test:code": "eslint --ignore-path .gitignore --ignore-path .prettierignore --ext .js,.jsx .",
       "test": "npm run test:other && npm run test:code"
@@ -28,6 +28,7 @@
       "@typescript-eslint/eslint-plugin": "^2.31.0",
       "@typescript-eslint/parser": "^2.31.0",
       "eslint": "^6.8.0",
+      "moment": "^2.25.3",
       "rxjs": "~6.5.4",
       "tslib": "^1.10.0",
       "zone.js": "~0.10.2"

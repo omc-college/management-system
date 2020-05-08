@@ -1,5 +1,5 @@
 export interface Error {
-   id: string;
-   code: number;
-   message: string;
+  id: string;
+  code: number;
+  message: string;
 }

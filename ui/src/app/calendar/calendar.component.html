@@ -1,4 +1,4 @@
-<div class="days" *ngIf="!switcher">
+<div class="days" *ngIf="!showMonths">
    <div class="day">S</div>
    <div class="day">M</div>
    <div class="day">T</div>
@@ -9,64 +9,52 @@
 
    <div id="calendar">
       <button
-         *ngFor="let day of beforeDays"
-         type="button"
-         class="block primary"
-         value="{{ day }}"
-         (click)="changeDay(day); changeDate(SelectedDate.getFullYear(), SelectedDate.getMonth())"
-      >
-         {{ day.getDate() }}
-      </button>
-
-      <button
-         *ngFor="let day of days"
-         [class.chosen]="day === SelectedDate"
+         *ngFor="let day of daysForRender"
          type="button"
          class="block"
-         value="{{ day }}"
-         (click)="changeDay(day)"
+         [class.chosen]="day.date() === selectedDate.date() && day.month() === selectedDate.month()"
+         [class.primary]="day.month() !== selectedDate.month()"
+         (click)="changeDate(day.year(), day.month(), day.date())"
       >
-         {{ day.getDate() }}
-      </button>
-
-      <button
-         *ngFor="let day of afterDays"
-         type="button"
-         class="block primary"
-         value="{{ day }}"
-         (click)="changeDay(day); changeDate(SelectedDate.getFullYear(), SelectedDate.getMonth())"
-      >
-         {{ day.getDate() }}
+         {{ day.date() }}
       </button>
    </div>
 </div>
 
-<div class="months" *ngIf="switcher">
+<div class="months" *ngIf="showMonths">
    <button
       *ngFor="let mon of months; let i = index"
       type="button"
       class="monthBlock"
       [value]="i"
-      (click)="changeDate(this.SelectedDate.getFullYear(), i); this.switcher = !this.switcher"
+      (click)="changeDate(selectedDate.year(), i, selectedDate.date()); this.showMonths = !this.showMonths"
    >
       {{ mon }}
    </button>
 </div>
 
 <div id="buttons">
-   <button type="button" class="nav" (click)="changeDate(this.SelectedDate.getFullYear(), SelectedDate.getMonth() + 1)">
+   <button
+      type="button"
+      class="nav"
+      (click)="changeDate(selectedDate.year(), +selectedDate.month() + 1, selectedDate.date())"
+   >
       >
    </button>
-   <button type="button" class="nav" (click)="changeDate(this.SelectedDate.getFullYear(), SelectedDate.getMonth() - 1)">
+   <button
+      type="button"
+      class="nav"
+      (click)="changeDate(selectedDate.year(), selectedDate.month() - 1, selectedDate.date())"
+   >
       <
    </button>
    <input
       type="number"
-      [value]="SelectedDate.getFullYear()"
-      placeholder="{{ SelectedDate.getFullYear() }}"
-      (keyup.enter)="changeDate($event.target.value, SelectedDate.getMonth())"
+      [value]="selectedDate.year()"
+      placeholder="{{ selectedDate.year() }}"
+      (keyup.enter)="changeDate($event.target.value, selectedDate.month(), selectedDate.date())"
    />
-   <button type="button" id="monthBtn" (click)="switcher = !switcher">
-      {{ months[SelectedDate.getMonth()] }}
+   <button type="button" id="monthBtn" (click)="showMonths = !showMonths">
+      {{ months[selectedDate.month()] }}
    </button>
 </div>
