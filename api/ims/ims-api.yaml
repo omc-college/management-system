@@ -2,34 +2,28 @@ openapi: "3.0.3"
 info:
   version: 0.0.1
   title: Identity management service
-  description: Web Servie which handling all calls related to Users
+  description: Web service which handling all calls related to Users
   contact:
-    name: Pupkin Vasiliy
-    email: pupkin@pupkin.io
+    name: Taras Melnyk, Sviatoslav Gurlenko, Dmytro Rudoy
+    email: taras.melnyk.aka.krimyllex@gmail.com
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 paths:
   /signup:
     post:
-      description: this endpint handles user registartion requests, sent from signup form
+      description: This endpoint handles user registartion requests, sent from sign-up form
       operationId: signUp
       requestBody:
         content:
-          'application/json':
+          application/json:
             schema:
               $ref: '#/components/schemas/SignupRequest'
       responses:
         '200':
-          description: pet response
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Pet'
+          description: Sign up request successful, to complete registration confirm your email with token
         default:
-          description: unexpected error
+          description: Unexpected error
           content:
             application/json:
               schema:
@@ -40,79 +34,118 @@ paths:
       operationId: login
       requestBody:
         content:
-          'application/json':
+          application/json:
             schema:
               $ref: '#/components/schemas/LoginRequest'
       responses:
         '200':
-          description: Successfull autorization
+          description: Successful authorization
           content:
-            'application/json':
-               schema:
+            application/json:
+              schema:
                 $ref: '#/components/schemas/Token'
         default:
           description: unexpected error
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/Error'
   /sessions/refresh:
     post:
-     operationId: refreshToken
-     description: Function token refresh
-     responses:
+      operationId: refreshToken
+      description: Function that refreshes the token 
+      responses:
         '200':
-          description: Token refreshed successfully
+          description: Token successfully refreshed
           content:
-            'application/json':
-               schema:
+            application/json:
+              schema:
                 $ref: '#/components/schemas/Token'
         default:
           description: unexpected error
           content:
-            'application/json':
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /email/available:
+    get:
+      description: This endpoint compares user's entered email with existing emails and displays an error if there is the same in DB
+      operationId: emailAvailable
+      parameters:
+        - in: query
+          name: email
+          schema:
+            type: string
+            format: email
+          description: Compared email
+      responses:
+        '200':
+          description: Email is not occupied
+        '409':
+          description: User with this email has already registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/emailVerificationToken/verify:    
+    get:
+      description: To complete the registration you need to confirm your email with token
+      operationId: emailVerificationToken
+      parameters:
+        - in: query
+          name: token
+          schema:
+            type: string
+          description: Token that you need to complete the registration
+      responses:
+        '200':
+          description: Registration completed
+        default:
+          description: User did not confirm his email
+          content:
+            application/json:
               schema:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
     SignupRequest:
       type: object
+      properties:
+        firstName:
+          type: string
+          maxLength: 255
+          description: User's first name
+        lastName:
+          type: string
+          maxLength: 255
+          description: User's last name
+        email:
+          type: string
+          format: email
+          description: User's email
+        password:
+          type: string
+          format: password
+          description: User's password
       required:
         - firstName
         - lastName
         - email
         - password
+    LoginRequest:
+      type: object
       properties:
-        firstName:
-          type: string
-          maxLength: 255
-          description: Users first name
-        lastName:
-          type: string
-          maxLength: 255
-          description: Users last name
         email:
           type: string
           format: email
-          description: Users email
+          description: User's email
         password:
           type: string
           format: password
-          description: Users password
-    LoginRequest:
-      type: object
+          description: User's password
       required:
         - email
         - password
-      properties:
-        email:
-          type: string
-          format: email
-          description: Users email
-        password:
-          type: string
-          format: password
-          description: Users password
     Token:
       type: object
       properties:
@@ -122,12 +155,12 @@ components:
        - token
     Error:
       type: object
-      required:
-        - code
-        - message
       properties:
         code:
           type: integer
           format: int32
         message:
           type: string
+      required:
+       - code
+       - message
