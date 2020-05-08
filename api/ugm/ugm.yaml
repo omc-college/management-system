@@ -1,0 +1,198 @@
+openapi: "3.0.3"
+info: 
+   version: 0.0.1
+   title: User Managment Module
+   description: User Managment Module
+     
+paths:
+  /users:
+    get:
+      description: Get all users 
+      operationId: GetAllUsers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/User'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      description: Creates a new user in the store.
+      operationId: addUsers
+      requestBody: 
+        description: User to add to the store
+        required: true 
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/{userId}: 
+    get:
+      description: Get one user
+      operationId: find user by id
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user to fetch
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'               
+    put:
+      description: Updates an user in the store.
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user to fetch
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      requestBody: 
+        description: User to update
+        required: true 
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      description: deletes a single user based on the ID supplied
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user to delete
+          required: true
+          schema:
+            type: string
+            maxLength: 255
+      responses:
+        '204':
+          description: user deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - userId
+        - firstName
+        - lastName
+        - email
+        - mobilePhone
+        - createdAt
+        - modifiedAt
+      properties:
+        userId: 
+          type: string
+          maxLength: 255
+          readOnly: true
+        firstName:
+          type: string
+          maxLength: 255   
+        lastName:
+          type: string
+          maxLength: 255
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        mobilePhone:
+          type: string
+          maxLength: 255 
+        createdAt:
+          type: string
+          format: date-time 
+          readOnly: true
+        modifiedAt:  
+          type: string
+          format: date-time
+          readOnly: true
+    Error: 
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
