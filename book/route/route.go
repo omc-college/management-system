@@ -1,4 +1,4 @@
-package route
+package main
 
 import (
 	"database/sql"
@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func route(w http.ResponseWriter, r *http.Request) {
+func main() {
 
 	db, err = sql.Open("pgx", "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable")
 
@@ -18,6 +18,7 @@ func route(w http.ResponseWriter, r *http.Request) {
 
 	defer db.Close()
 	//Init Router
+
 	r = mux.NewRouter()
 
 	//Route Handlers/Endpoints
