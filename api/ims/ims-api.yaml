@@ -39,7 +39,7 @@ paths:
               $ref: '#/components/schemas/LoginRequest'
       responses:
         '200':
-          description: Successful authorization
+          description: Successfull autorization
           content:
             application/json:
               schema:
@@ -53,7 +53,7 @@ paths:
   /sessions/refresh:
     post:
       operationId: refreshToken
-      description: Function that refreshes the token 
+      description: Function that refreshes the token
       responses:
         '200':
           description: Token successfully refreshed
@@ -87,7 +87,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /users/emailVerificationToken/verify:    
+  /users/emailVerificationToken/verify:
     get:
       description: To complete the registration you need to confirm your email with token
       operationId: emailVerificationToken
@@ -134,6 +134,9 @@ components:
         - password
     LoginRequest:
       type: object
+      required:
+        - email
+        - password
       properties:
         email:
           type: string
@@ -143,9 +146,6 @@ components:
           type: string
           format: password
           description: User's password
-      required:
-        - email
-        - password
     Token:
       type: object
       properties:
