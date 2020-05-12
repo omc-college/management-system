@@ -1,7 +1,0 @@
-BEGIN;
-
-DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS email_verification_tokens CASCADE;
-DROP TABLE IF EXISTS credentials CASCADE;
-
-COMMIT;
