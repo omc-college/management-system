@@ -1,0 +1,116 @@
+openapi: 3.0.1
+info:
+    title: Change password
+  description: Change password
+  version: 1.0.0
+servers:
+  - url: 'https://api.example.com'
+paths:
+  /password:
+    post:
+      description: Change password
+      operationId: getChange password
+      responses:
+        '200':
+          description:  Successful Change password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/change password'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /password/passwordvalidation:
+    get:
+      description: validationpassword
+      operationId: validpassword
+      parameters:
+        -   name: password
+            in: query
+          schema:
+            type: string
+          description: check password
+      responses:
+        '200':
+          description: password successfully
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/change password'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /password/token:
+                  post:
+                    operationId: refreshToken
+                    description: Function token refresh
+                    responses:
+                      '200':
+                        description: Token refreshed successfully
+                        content:
+                          'application/json':
+                            schema:
+                              $ref: '#/components/schemas/Token'
+                      default:
+                        description: unexpected error
+                        content:
+                          'application/json':
+                            schema:
+                              $ref: '#/components/schemas/Error'
+ /password/tokenvalidation:
+  get:
+    description: validationtoken
+    operationId: validtoken
+    parameters:
+      -  name: token
+         in: query
+        schema:
+         type: string
+        description: check token
+    responses:
+            '200':
+              description: token successfully
+              content:
+                'application/json':
+                  schema:
+                    $ref: '#/components/schemas/Token'
+            default:
+              description: unexpected error
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    change password:
+      type: object
+      properties:
+        password:
+          type: string
+          format: password
+          description: User's password
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+          required:
+            -code
+          -message
+    Token:
+      type: object
+      properties:
+       token:
+         type: string
+         required:
+              - token
+
