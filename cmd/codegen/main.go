@@ -17,9 +17,12 @@ import (
 func main() {
 	var buffer = bytes.NewBufferString("")
 	var err error
+	var prefix, suffix string
+	suffix = "/"
+	prefix = ".go"
 
 	specPath := flag.String("spec-path", "", "please use --spec-path /path/to/files/located")
-	outputPath := flag.String("output-path", "", "please use --output-path /path/to/files/located")
+	outputPath := flag.String("output-path", "", "please use --output-path show/indicate/point/go")
 
 	flag.Parse()
 
@@ -32,9 +35,9 @@ func main() {
 
 	}
 
-	absPath, err := filepath.Abs(*outputPath)
+	absPath, err := filepath.Abs(*specPath)
 	if err != nil {
-		logrus.Fatalf("can not get absolute path of output directory %s, err: %s", *outputPath, err)
+		logrus.Fatalf("cannot get absolute path of spec-path directory: %s", err.Error())
 	}
 
 	outputDirSlice := strings.Split(filepath.Dir(absPath), "/")
@@ -44,26 +47,42 @@ func main() {
 
 	specBytes, err := ioutil.ReadFile(*specPath)
 	if err != nil {
-		logrus.Fatalf("can not read file %s, err:", *specPath, err)
+		logrus.Fatalf("cannot read file: %s", err.Error())
 	}
 
 	loader := openapi3.NewSwaggerLoader()
 
 	doc, err := loader.LoadSwaggerFromData(specBytes)
 	if err != nil {
-		logrus.Fatalf("can not parse OpenApi spec %s, err:", specBytes, err)
+		logrus.Fatalf("cannot parse OpenApi spec: %s", err.Error())
 	}
 
 	generateNewTypes(doc, buffer)
 
 	formatedTypesSource, err := format.Source(buffer.Bytes())
 	if err != nil {
-		logrus.Fatalf("can not  format source types %s, err:", err)
+		logrus.Fatalf("cannot  format source types: %s", err.Error())
 	}
 
-	newTypesFile, err := os.Create(*outputPath)
+	if _, err := os.Stat(*outputPath); os.IsNotExist(err) {
+		os.MkdirAll(*outputPath, 0700)
+	}
 	if err != nil {
-		logrus.Fatalf("can not create the named file %s, err:", *outputPath, err)
+		logrus.Fatalf("cannot  create new folder: %s", err.Error())
+	}
+
+	fileName := filepath.Base(*specPath)
+	if err != nil {
+		logrus.Fatalf("cannot returns the last element of path: %s", err.Error())
+	}
+
+	outputName := strings.Split(strings.TrimSuffix(fileName, filepath.Ext(fileName)), "-")
+
+	outputFileName := suffix + outputName[0] + prefix
+
+	newTypesFile, err := os.Create(*outputPath + outputFileName )
+	if err != nil {
+		logrus.Fatalf("cannot create the named file: %s", err.Error())
 	}
 	defer newTypesFile.Close()
 
@@ -100,6 +119,14 @@ func resolveGoType(v *openapi3.Schema, buffer *bytes.Buffer) string {
 		return "string"
 	case "integer":
 		return "int"
+	case "int32":
+		return "int"
+	case "boolean":
+		return "bool"
+	case "int64":
+		return "int"
+	case "object":
+		return "interface{}"
 	case "array":
 		items := strings.Split(v.Items.Ref, "/")
 		return fmt.Sprintf("[]%s", items[len(items)-1])
@@ -109,6 +136,6 @@ func resolveGoType(v *openapi3.Schema, buffer *bytes.Buffer) string {
 }
 
 func generateJsonTag(name string) string {
-	name = strings.ToLower(name)
+	name = strings.ToLower(name[:1]) + name[1:]
 	return fmt.Sprintf("`json:\"%s\"`", name)
 }
