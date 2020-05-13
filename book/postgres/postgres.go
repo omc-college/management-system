@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
-	 "github.com/omc-college/management-system/book/route"
 	"io/ioutil"
 	"net/http"
 )
@@ -17,17 +16,17 @@ type Book struct {
 }
 
 //Init database and error vars
-var db *sql.DB
-var err error
+var Db *sql.DB
+var Err error
 var books []Book
 
 //Get All Books
-func getBooks(w http.ResponseWriter, r *http.Request) {
+func GetBooks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var books []Book
 
-	result, err := db.Query("SELECT id,title  from Books")
+	result, err := Db.Query("SELECT id,title  from Books")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -49,11 +48,11 @@ func getBooks(w http.ResponseWriter, r *http.Request) {
 }
 
 //Get Single Book
-func getBook(w http.ResponseWriter, r *http.Request) {
+func GetBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r) //Get params
 
-	result, err := db.Query("SELECT  FROM Books WHERE ID = $1", params["ID"])
+	result, err := Db.Query("SELECT id,title FROM Books WHERE ID = $1", params["ID"])
 	if err != nil {
 		panic(err.Error())
 	}
@@ -73,7 +72,7 @@ func getBook(w http.ResponseWriter, r *http.Request) {
 }
 
 //Create a New Book
-func createBook(w http.ResponseWriter, r *http.Request) {
+func CreateBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	body, err := ioutil.ReadAll(r.Body)
@@ -84,7 +83,7 @@ func createBook(w http.ResponseWriter, r *http.Request) {
 	keyVal := make(map[string]string)
 	json.Unmarshal(body, &keyVal)
 
-	result, err := db.Query("INSERT INTO Books(ID,Title) VALUES(2,2)")
+	result, err := Db.Query("INSERT INTO Books(ID,Title) VALUES($1,$1)")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -96,7 +95,7 @@ func createBook(w http.ResponseWriter, r *http.Request) {
 }
 
 //Update Book
-func updateBook(w http.ResponseWriter, r *http.Request) {
+func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
@@ -108,7 +107,7 @@ func updateBook(w http.ResponseWriter, r *http.Request) {
 	keyVal := make(map[string]string)
 	json.Unmarshal(body, &keyVal)
 
-	result, err := db.Query("UPDATE Books SET Title = $3  WHERE ID = $1")
+	result, err := Db.Query("UPDATE Books SET Title = $1  WHERE ID = $1")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -120,11 +119,11 @@ func updateBook(w http.ResponseWriter, r *http.Request) {
 }
 
 //Delete Book
-func deleteBook(w http.ResponseWriter, r *http.Request) {
+func DeleteBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 
-	result, err := db.Query("DELETE FROM Books WHERE ID = $1")
+	result, err := Db.Query("DELETE FROM Books WHERE ID = $1")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -134,4 +133,3 @@ func deleteBook(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Book with ID = %s was deleted", params["ID"])
 
 }
-
