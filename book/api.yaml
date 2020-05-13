@@ -6,10 +6,10 @@ info:
 servers:
   - url: 'https://api.example.com'
 paths:
-  /password:
-    post:
+  /changepassword:
+    put:
       description: Change password
-      operationId: getChange password
+      operationId: postChange password
       responses:
         '200':
           description:  Successful Change password
@@ -23,7 +23,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /password/passwordvalidation:
+ /password/passwordvalidation:
     get:
       description: validationpassword
       operationId: validpassword
@@ -46,13 +46,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /password/token:
-                  post:
-                    operationId: refreshToken
-                    description: Function token refresh
+ /password/token:
+                  put:
+                    operationId: newToken
+                    description: Function newToken
                     responses:
                       '200':
-                        description: Token refreshed successfully
+                        description: new Token  successfully
                         content:
                           'application/json':
                             schema:
