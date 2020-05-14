@@ -17,3 +17,7 @@ type Claims struct {
 	Role  string `json:"role"`
 	jwt.StandardClaims
 }
+type Credentials struct {
+	PasswordHash string
+	Salt         string
+}

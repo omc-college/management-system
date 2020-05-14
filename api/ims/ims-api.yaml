@@ -30,7 +30,7 @@ paths:
                 $ref: '#/components/schemas/Error'
   /sessions:
     post:
-      description: User login 
+      description: User login
       operationId: login
       requestBody:
         content:
@@ -106,149 +106,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /users:
-    get:
-      description: Get all users
-      operationId: GetAllUsers
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+  /password:
     post:
-      description: Creates a new user in the store.
-      operationId: AddUser
+      description: This endpoint handles change password
+      operationId: change password
       requestBody:
-        description: User to add to the store
-        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/ChangePassword'
       responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
+        '200':
+          description:  Successful new password
         '409':
-          description: Conflict
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '422':
-          description: Unprocessable entity
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          description: User with this password has already registered
         default:
           description: unexpected error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /users/{UserID}:
-    get:
-      description: Get one user
-      operationId: GetUser
-      parameters:
-        - name: UserID
-          in: path
-          description: ID of user to fetch
-          required: true
-          schema:
-            type: integer
-            format: int32
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    put:
-      description: Updates an user in the store.
-      operationId: UpdateUser
-      parameters:
-        - name: UserID
-          in: path
-          description: ID of user to fetch
-          required: true
-          schema:
-            type: integer
-            format: int32
-      requestBody:
-        description: User to update
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    delete:
-      description: deletes a single user based on the ID supplied
-      operationId: DeleteUser
-      parameters:
-        - name: UserID
-          in: path
-          description: ID of user to delete
-          required: true
-          schema:
-            type: integer
-            format: int32
-      responses:
-        '204':
-          description: user deleted
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
 components:
   schemas:
     SignupRequest:
@@ -289,49 +166,27 @@ components:
           type: string
           format: password
           description: User's password
+    ChangePassword:
+      type: object
+      properties:
+        current password:
+          type: string
+          format:  password
+          description: User's password
+        new password:
+          type: string
+          format: password
+          description: User's new password
+      required:
+        - current password
+        - new password
     Token:
       type: object
       properties:
         token:
           type: string
       required:
-       - token
-    User:
-      type: object
-      required:
-        - userId
-        - firstName
-        - lastName
-        - email
-        - mobilePhone
-        - createdAt
-        - modifiedAt
-      properties:
-        UserID:
-          type: integer
-          format: int32
-          readOnly: true
-        FirstName:
-          type: string
-          maxLength: 255
-        LastName:
-          type: string
-          maxLength: 255
-        Email:
-          type: string
-          format: email
-          maxLength: 255
-        MobilePhone:
-          type: string
-          maxLength: 255
-        CreatedAt:
-          type: string
-          format: date-time
-          readOnly: true
-        ModifiedAt:
-          type: string
-          format: date-time
-          readOnly: true
+        - token
     Error:
       type: object
       properties:
@@ -341,5 +196,5 @@ components:
         message:
           type: string
       required:
-       - code
-       - message
+        - code
+        - message
