@@ -1,27 +1,19 @@
 <header>
-   <button type="button" id="services">
-      <img src="../../assets/img/otherServices.svg" />
-   </button>
-   <div id="logo">
-      <div id="imgLogo">
-         <img src="../../assets/img/logo.svg" />
-      </div>
-      <div id="logoName">
-         <div>Time</div>
-         <div id="logoSpan">Table</div>
-      </div>
-   </div>
-   <button type="button" id="account">
-      <img src="../../assets/img/user.svg" />
-   </button>
-   <button type="button" id="settings">
-      <img src="../../assets/img/settings.png" />
-   </button>
-   <div id="search">
-      <button type="button" id="searchBtn">
-         <img src="../../assets/img/search.svg" />
-      </button>
-      <input type="text" id="searchInp" placeholder="Search" />
-      <button type="button" id="plusProperty">+</button>
-   </div>
+  <button type="button" id="services">
+    <img src="../../assets/img/otherServices.svg" />
+  </button>
+  <div id="logo">
+    <div id="imgLogo">
+      <img src="../../assets/img/logo.svg" />
+    </div>
+    <div id="logoName">
+      <div>Time</div>
+      <div id="logoSpan">Table</div>
+    </div>
+  </div>
+  <button type="button" id="account">
+    <img src="../../assets/img/user.svg" />
+  </button>
+  <button *ngIf="!AddLessonBtnState" type="button" id="addLesson" (click)="addLesson()">New lesson</button>
+  <button *ngIf="AddLessonBtnState" type="button" id="addLesson" (click)="addLesson()">Back</button>
 </header>

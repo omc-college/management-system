@@ -1,8 +1,8 @@
 import * as moment from 'moment';
-import {Group} from './iGroup';
-import {User} from './iUser';
-import {Room} from './iRoom';
-import {iSubject} from './iSubject';
+import {Group} from './Group';
+import {User} from './User';
+import {Room} from './Room';
+import {iSubject} from './Subject';
 export interface Lesson {
   readonly id: string;
   subject: iSubject;

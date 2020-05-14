@@ -1,4 +1,4 @@
 export interface iSubject {
-  readonly id: string;
+  id: string;
   nameOfSubject: string;
 }

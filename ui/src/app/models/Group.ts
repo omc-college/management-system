@@ -1,4 +1,4 @@
 export interface Group {
-  readonly id: string;
+  id: string;
   name: string;
 }
