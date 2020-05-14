@@ -2,18 +2,18 @@ import {Injectable} from '@angular/core';
 import {InMemoryDbService} from 'angular-in-memory-web-api';
 import * as moment from 'moment';
 
-import {Lesson} from './iLesson';
-import {Group} from './iGroup';
-import {Room} from './iRoom';
-import {iSubject} from './iSubject';
-import {User} from './iUser';
+import {Lesson} from './models/Lesson';
+import {Group} from './models/Group';
+import {Room} from './models/Room';
+import {iSubject} from './models/Subject';
+import {User} from './models/User';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InMemoryDataService implements InMemoryDbService {
   createDb() {
-    const LESSONS: Lesson[] = [
+    const lessons: Lesson[] = [
       {
         id: '1',
         subject: {
@@ -243,7 +243,7 @@ export class InMemoryDataService implements InMemoryDbService {
         },
       },
     ];
-    const USERS: User[] = [
+    const users: User[] = [
       {
         id: '1',
         firstName: 'Andriy',
@@ -287,7 +287,7 @@ export class InMemoryDataService implements InMemoryDbService {
         role: 'parent',
       },
     ];
-    const GROUPS: Group[] = [
+    const groups: Group[] = [
       {
         id: '131',
         name: 'SD-31',
@@ -313,7 +313,7 @@ export class InMemoryDataService implements InMemoryDbService {
         name: 'OO-12',
       },
     ];
-    const ROOMS: Room[] = [
+    const rooms: Room[] = [
       {
         id: '2011',
         room: '201A',
@@ -355,7 +355,7 @@ export class InMemoryDataService implements InMemoryDbService {
         room: '4',
       },
     ];
-    const SUBJECTS: iSubject[] = [
+    const subjects: iSubject[] = [
       {
         id: '11',
         nameOfSubject: 'Programming',
@@ -377,15 +377,15 @@ export class InMemoryDataService implements InMemoryDbService {
         nameOfSubject: 'Ukrainian language',
       },
       {
-        id: '11',
+        id: '16',
         nameOfSubject: 'History',
       },
       {
-        id: '11',
+        id: '17',
         nameOfSubject: 'Literature',
       },
     ];
-    const TIMESTAMP1: string[] = [
+    const timestamp1: string[] = [
       '8.30-9.15',
       '9.25-10.10',
       '10.30-11.15',
@@ -395,7 +395,7 @@ export class InMemoryDataService implements InMemoryDbService {
       '14.20-15.05',
       '15.20-16.05',
     ];
-    const TIMESTAMP2: string[] = [
+    const timestamp2: string[] = [
       '14.20-15.05',
       '15.20-16.05',
       '16.15-17.00',
@@ -405,7 +405,7 @@ export class InMemoryDataService implements InMemoryDbService {
       '20.10-20.55',
       '21.05-21.50',
     ];
-    return {LESSONS, GROUPS, ROOMS, SUBJECTS, USERS, TIMESTAMP1, TIMESTAMP2};
+    return {lessons, groups, rooms, subjects, users, timestamp1, timestamp2};
   }
 
   // Overrides the genId method to ensure that a hero always has an id.

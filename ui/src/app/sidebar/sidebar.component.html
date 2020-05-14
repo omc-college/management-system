@@ -12,8 +12,8 @@
     <button type="button" class="new" *ngIf="showGroups" (click)="showGroups = !showGroups">New</button>
 
     <input type="text" id="Group" *ngIf="!showGroups" placeholder="New group" />
-    <button type="button" class="new" *ngIf="!showGroups" (click)="showGroups = !showGroups">Add</button>
-    <button type="button" class="new back" *ngIf="!showGroups" (click)="showGroups = !showGroups">Back</button>
+    <button type="button" class="new" *ngIf="!showGroups" (click)="showGroups = !showGroups">Back</button>
+    <button type="button" class="new back" *ngIf="!showGroups" (click)="showGroups = !showGroups">Add</button>
   </div>
 
   <div class="part">
@@ -24,32 +24,30 @@
     <button type="button" class="new" *ngIf="showLecturers" (click)="showLecturers = !showLecturers">New</button>
 
     <input type="text" id="teacher" *ngIf="!showLecturers" placeholder="New lecturer" />
-    <button type="button" class="new" *ngIf="!showLecturers" (click)="showLecturers = !showLecturers">Add</button>
-    <button type="button" class="new back" *ngIf="!showLecturers" (click)="showLecturers = !showLecturers">Back</button>
+    <button type="button" class="new" *ngIf="!showLecturers" (click)="showLecturers = !showLecturers">Back</button>
+    <button type="button" class="new back" *ngIf="!showLecturers" (click)="showLecturers = !showLecturers">Add</button>
   </div>
 
   <div class="part">
     <select name="Subject" id="subject" *ngIf="showSubjects">
       <option *ngFor="let subject of subjects">{{ subject.nameOfSubject }}</option>
     </select>
-    <button type="button" class="plus" *ngIf="showSubjects">+</button>
     <button type="button" class="new" *ngIf="showSubjects" (click)="showSubjects = !showSubjects">New</button>
 
     <input type="text" id="subject" *ngIf="!showSubjects" placeholder="New subject" />
-    <button type="button" class="new" *ngIf="!showSubjects" (click)="showSubjects = !showSubjects">Add</button>
-    <button type="button" class="new back" *ngIf="!showSubjects" (click)="showSubjects = !showSubjects">Back</button>
+    <button type="button" class="new" *ngIf="!showSubjects" (click)="showSubjects = !showSubjects">Back</button>
+    <button type="button" class="new back" *ngIf="!showSubjects" (click)="showSubjects = !showSubjects">Add</button>
   </div>
 
   <div class="part">
     <select name="Room" id="room" *ngIf="showRooms">
       <option *ngFor="let room of rooms">{{ room.room }}</option>
     </select>
-    <button type="button" class="plus" *ngIf="showRooms">+</button>
     <button type="button" class="new" *ngIf="showRooms" (click)="showRooms = !showRooms">New</button>
 
     <input type="text" id="room" *ngIf="!showRooms" placeholder="New room" />
-    <button type="button" class="new" *ngIf="!showRooms" (click)="showRooms = !showRooms">Add</button>
-    <button type="button" class="new back" *ngIf="!showRooms" (click)="showRooms = !showRooms">Back</button>
+    <button type="button" class="new" *ngIf="!showRooms" (click)="showRooms = !showRooms">Back</button>
+    <button type="button" class="new back" *ngIf="!showRooms" (click)="showRooms = !showRooms">Add</button>
   </div>
   <button type="button" id="find">Find</button>
 </form>

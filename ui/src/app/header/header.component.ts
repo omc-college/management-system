@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {TimetableService} from '../timetable.service';
 
 @Component({
   selector: 'app-header',
@@ -6,7 +7,14 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./header.component.sass'],
 })
 export class HeaderComponent implements OnInit {
-  constructor() {}
+  AddLessonBtnState: boolean = false;
+  constructor(private timetableService: TimetableService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.timetableService.getAddLessonComponentState().subscribe(bool => (this.AddLessonBtnState = bool));
+  }
+  addLesson() {
+    this.AddLessonBtnState = !this.AddLessonBtnState;
+    this.timetableService.changeAddLessonComponentState(this.AddLessonBtnState);
+  }
 }

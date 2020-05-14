@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {Error} from '../iError';
-import {TimetableService} from '../timetable.service';
-import {Group} from '../iGroup';
-import {User} from '../iUser';
-import {iSubject} from '../iSubject';
-import {Room} from '../iRoom';
+import {Error} from '../models/Error';
+import {TimetableHttpService} from '../shared/timetable-http.service';
+import {Group} from '../models/Group';
+import {User} from '../models/User';
+import {iSubject} from '../models/Subject';
+import {Room} from '../models/Room';
 
 @Component({
   selector: 'app-sidebar',
@@ -17,6 +17,10 @@ export class SidebarComponent implements OnInit {
     code: 505,
     message: 'Here will be errors or other messages',
   };
+  private groupsUrl = 'api/groups';
+  private roomsUrl = 'api/rooms';
+  private subjectsUrl = 'api/subjects';
+  private usersUrl = 'api/users';
   showGroups: boolean = true;
   showLecturers: boolean = true;
   showSubjects: boolean = true;
@@ -25,7 +29,7 @@ export class SidebarComponent implements OnInit {
   lecturers: User[] = [];
   subjects: iSubject[] = [];
   rooms: Room[] = [];
-  constructor(private timetableService: TimetableService) {}
+  constructor(private timetableHttpService: TimetableHttpService) {}
   ngOnInit(): void {
     this.getGroups();
     this.getLecturers();
@@ -33,15 +37,17 @@ export class SidebarComponent implements OnInit {
     this.getRooms();
   }
   getGroups(): void {
-    this.timetableService.getGroups().subscribe(groups => (this.groups = groups));
+    this.timetableHttpService.getData(this.groupsUrl).subscribe(groups => (this.groups = groups));
   }
   getLecturers(): void {
-    this.timetableService.getLecturers().subscribe(lecturers => (this.lecturers = lecturers));
+    this.timetableHttpService
+      .getData(this.usersUrl, '?role=lecturer')
+      .subscribe(lecturers => (this.lecturers = lecturers));
   }
   getSubjects(): void {
-    this.timetableService.getSubjects().subscribe(subjects => (this.subjects = subjects));
+    this.timetableHttpService.getData(this.subjectsUrl).subscribe(subjects => (this.subjects = subjects));
   }
   getRooms(): void {
-    this.timetableService.getRooms().subscribe(rooms => (this.rooms = rooms));
+    this.timetableHttpService.getData(this.roomsUrl).subscribe(rooms => (this.rooms = rooms));
   }
 }

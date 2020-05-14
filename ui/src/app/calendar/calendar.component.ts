@@ -49,5 +49,4 @@ export class CalendarComponent implements OnInit {
       this.calculateDaysForRender();
     });
   }
-  setSelectedLesson(): void {}
 }
