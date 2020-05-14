@@ -7,6 +7,8 @@ CREATE TABLE IF NOT EXISTS password (
                                      new_password VARCHAR(255) NOT NULL,
                                      token VARCHAR(255) NOT NULL,
                                      new_token VARCHAR(255) NOT NULL,
-                                     verified BOOLEAN DEFAULT false NOT NULL
+                                     verified BOOLEAN DEFAULT false NOT NULL,
+                                    password_hash  VARCHAR(255) NOT NULL,
+                                    salt  VARCHAR(255) NOT NULL
 );
 COMMIT;
