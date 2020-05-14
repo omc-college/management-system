@@ -1,7 +1,8 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import * as moment from 'moment';
 import {TimetableService} from '../timetable.service';
-import {Lesson} from '../iLesson';
+import {Lesson} from '../models/Lesson';
+import {TimetableHttpService} from '../shared/timetable-http.service';
 
 @Component({
   selector: 'app-timetable',
@@ -9,18 +10,25 @@ import {Lesson} from '../iLesson';
   styleUrls: ['./timetable.component.sass'],
 })
 export class TimetableComponent implements OnInit {
-  lessons: Lesson[];
-  selectedDate: moment.Moment = moment();
-  showFirstShift: boolean = true;
+  private lessonsUrl = 'api/lessons';
+  private timestamp1Url = 'api/timestamp1';
+  private timestamp2Url = 'api/timestamp2';
   timestamps: string[] = [];
-  constructor(private timetableService: TimetableService) {}
+  showFirstShift: boolean = true;
+  hideSlider: boolean = true;
+  sliderAddNewState: boolean = false;
+  lessons: Lesson[];
+  selectedLesson: Lesson;
+  selectedDate: moment.Moment = moment();
+  constructor(private timetableService: TimetableService, private timetableHttpService: TimetableHttpService) {}
   ngOnInit(): void {
     this.getLessons();
     this.getSelectedDate();
     this.getTimestamp();
+    this.getAddLessonComponentState();
   }
   getLessons(): void {
-    this.timetableService.getLessons().subscribe(lessons => {
+    this.timetableHttpService.getData(this.lessonsUrl).subscribe(lessons => {
       this.lessons = lessons;
       this.lessons.forEach(lesson => {
         lesson.startAt = moment(lesson.startAt);
@@ -39,11 +47,36 @@ export class TimetableComponent implements OnInit {
   }
   getTimestamp(): void {
     if (this.showFirstShift) {
-      this.timetableService.getTimestamp1().subscribe(timesetamp => (this.timestamps = timesetamp));
+      this.timetableHttpService.getData(this.timestamp1Url).subscribe(timesetamp => (this.timestamps = timesetamp));
     } else {
-      this.timetableService.getTimestamp2().subscribe(timesetamp => (this.timestamps = timesetamp));
+      this.timetableHttpService.getData(this.timestamp2Url).subscribe(timesetamp => (this.timestamps = timesetamp));
     }
     this.showFirstShift = !this.showFirstShift;
+  }
+  deleteLesson(lesson: Lesson): void {
+    this.lessons = this.lessons.filter(l => l !== lesson);
+  }
+  addNewLesson(newLesson: Lesson): void {
+    newLesson.startAt = moment(newLesson.startAt);
+    newLesson.endAt = moment(newLesson.endAt);
+    this.lessons.push(newLesson);
+  }
+  getAddLessonComponentState(): void {
+    this.timetableService.getAddLessonComponentState().subscribe(bool => {
+      this.sliderAddNewState = bool;
+      this.hideSlider = !this.sliderAddNewState;
+    });
+  }
+  hideSliderComponent(hide: boolean) {
+    this.sliderAddNewState = false;
+    this.timetableService.changeAddLessonComponentState(this.sliderAddNewState);
+    this.hideSlider = hide;
+  }
+  showSliderComponent(lesson: Lesson): void {
+    this.sliderAddNewState = false;
+    this.timetableService.changeAddLessonComponentState(this.sliderAddNewState);
+    this.selectedLesson = lesson;
+    this.hideSlider = false;
   }
   trackByMethod(index: number, el: any): number {
     return el.id;

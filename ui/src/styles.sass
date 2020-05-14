@@ -16,6 +16,7 @@ a, button, input
             height: 90%
 html, body, app-root, app-header
     width: 100%
+    overflow: hidden
 html, body, app-root
     height: 100%
 app-header
@@ -27,6 +28,16 @@ app-sidebar
     overflow-x: hidden
 app-timetable
     width: calc( 100% - #{$sidebarWidth} )
+    position: relative
+app-slider-menu
+    position: absolute
+    float: right
+    width: 400px
+    height: 100%
+    background-color: white
+    border-left: 2px solid black
+    right: 0
+    top: 0
 app-calendar
     width: $sidebarWidth - $borderSize
     height: 450px

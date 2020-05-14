@@ -1,0 +1,144 @@
+<div *ngIf="!sliderAddNewState" class="showSlider">
+  <form *ngIf="lesson" class="showInfo">
+    <button type="button" class="hide" (click)="hide()">x</button>
+
+    <div class="form-control">
+      <select class="form-control" name="nameOfSubject" [(ngModel)]="lesson.subject">
+        <option [ngValue]="lesson.subject" disabled>
+          {{ lesson.subject.nameOfSubject }}
+        </option>
+        <option *ngFor="let subject of subjects" [ngValue]="subject">
+          {{ subject.nameOfSubject }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-control">
+      <select class="form-control" name="room" [(ngModel)]="lesson.room">
+        <option [ngValue]="lesson.room" disabled>
+          {{ lesson.room.room }}
+        </option>
+        <option *ngFor="let room of rooms" [ngValue]="room">
+          {{ room.room }}
+        </option>
+      </select>
+    </div>
+    <div class="form-control">
+      <input
+        type="date"
+        id="from"
+        name="from"
+        [value]="lesson.startAt.format('YYYY-MM-DD')"
+        (keyup.enter)="changeStartDate($event.target.value)"
+      />
+      <input
+        type="date"
+        id="to"
+        name="to"
+        [value]="lesson.endAt.format('YYYY-MM-DD')"
+        (keyup.enter)="changeEndDate($event.target.value)"
+      />
+    </div>
+    <div class="form-control">
+      <input
+        type="time"
+        id="timeFrom"
+        name="timeFrom"
+        [value]="lesson.startAt.format('hh:mm')"
+        (keyup.enter)="changeStartTime($event.target.value)"
+      />
+      <input
+        type="time"
+        id="timeTo"
+        name="timeTo"
+        [value]="lesson.endAt.format('hh:mm')"
+        (keyup.enter)="changeEndTime($event.target.value)"
+      />
+    </div>
+    <div class="form-control">
+      <select
+        *ngFor="let lecturer of lesson.lecturers; let i = index"
+        class="form-control"
+        [name]="'nameOfLecturer' + i"
+        [(ngModel)]="lesson.lecturers[i]"
+      >
+        <option [ngValue]="lecturer" disabled> {{ lecturer.firstName }} {{ lecturer.lastName }} </option>
+        <option *ngFor="let lecturer of lecturers" [ngValue]="lecturer">
+          {{ lecturer.firstName }} {{ lecturer.lastName }}
+        </option>
+      </select>
+      <button type="button" class="plus">+</button>
+    </div>
+
+    <div class="form-control">
+      <select
+        *ngFor="let group of lesson.groups; let i = index"
+        class="form-control"
+        [name]="'nameOfGroup' + i"
+        [(ngModel)]="lesson.groups[i]"
+      >
+        <option [ngValue]="group" disabled> {{ group.name }} </option>
+        <option *ngFor="let group of groups" [ngValue]="group">
+          {{ group.name }}
+        </option>
+      </select>
+      <button type="button" class="plus">+</button>
+    </div>
+    <button type="button" id="delete" (click)="deleteLesson()">Delete</button>
+    <button type="button" id="save" (click)="saveLesson()">Save</button>
+  </form>
+</div>
+<!--------------------------------------------------add---------------------------------->
+<div *ngIf="sliderAddNewState">
+  <form class="showInfo">
+    <button type="button" class="hide" (click)="hide()">x</button>
+
+    <div class="form-control">
+      <select class="form-control" name="nameOfSubject" [(ngModel)]="addSubject">
+        <option *ngFor="let subject of subjects" [ngValue]="subject">
+          {{ subject.nameOfSubject }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-control">
+      <select class="form-control" name="room" [(ngModel)]="addRoom">
+        <option *ngFor="let room of rooms" [ngValue]="room">
+          {{ room.room }}
+        </option>
+      </select>
+    </div>
+    <div class="form-control">
+      <input type="date" id="from" name="from" [value]="" [(ngModel)]="addFrom" />
+      <input type="date" id="to" name="to" [value]="" [(ngModel)]="addTo" />
+    </div>
+    <div class="form-control">
+      <input type="time" id="timeFrom" name="timeFrom" [value]="" [(ngModel)]="addTimeFrom" />
+      <input type="time" id="timeTo" name="timeTo" [value]="" [(ngModel)]="addTimeTo" />
+    </div>
+    <div class="form-control">
+      <select class="form-control" name="nameOfLecturer" [(ngModel)]="addLecturer">
+        <option *ngFor="let lecturer of lecturers" [ngValue]="lecturer">
+          {{ lecturer.firstName }} {{ lecturer.lastName }}
+        </option>
+      </select>
+      <button type="button" class="plus">+</button>
+    </div>
+
+    <div class="form-control">
+      <select class="form-control" name="nameOfGroup" [(ngModel)]="addGroup">
+        <option *ngFor="let group of groups" [ngValue]="group">
+          {{ group.name }}
+        </option>
+      </select>
+      <button type="button" class="plus">+</button>
+    </div>
+    <button
+      type="button"
+      id="save"
+      (click)="addNewLesson(addSubject, addRoom, addFrom, addTimeFrom, addTo, addTimeTo, [addLecturer], [addGroup])"
+    >
+      Add
+    </button>
+  </form>
+</div>

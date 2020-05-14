@@ -35,10 +35,22 @@
       lesson.startAt.month() === selectedDate.month() &&
       lesson.startAt.date() === selectedDate.date()
     "
-    (click)="setSelectedDate(lesson.startAt.year(), lesson.startAt.month(), lesson.startAt.date())"
+    (click)="
+      setSelectedDate(lesson.startAt.year(), lesson.startAt.month(), lesson.startAt.date()); showSliderComponent(lesson)
+    "
     *ngFor="let lesson of lessons; trackBy: trackByMethod"
   >
     <div class="subject">{{ lesson.subject.nameOfSubject }}</div>
     <div class="room">{{ lesson.room.room }}</div>
   </div>
 </div>
+<app-slider-menu
+  [class.hide]="hideSlider"
+  [lesson]="selectedLesson"
+  [lessons]="lessons"
+  [sliderAddNewState]="sliderAddNewState"
+  (deletedLesson)="deleteLesson($event)"
+  (addLesson)="addNewLesson($event)"
+  (newStartDate)="setSelectedDate($event.year(), $event.month(), $event.date())"
+  (hideComponent)="hideSliderComponent($event)"
+></app-slider-menu>
