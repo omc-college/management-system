@@ -1,10 +1,11 @@
 package config
 
 import (
-	"github.com/spf13/viper"
 	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/spf13/viper"
 )
 
 //Load is a function that set configuration

@@ -1,0 +1,10 @@
+repository:
+  user: 'postgres'
+  password: 'superuser'
+  host: 'localhost'
+  port: '5432'
+  database: 'roles'
+  sslmode: 'disable'
+rbacgen:
+  specsPaths: 'cmd/rbacgen/timetableApi.yaml'
+  tmplPath: 'cmd/rbacgen/roleTmpl.yaml'
