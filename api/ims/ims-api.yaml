@@ -145,46 +145,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
-  /password/newtoken:
-    get:
-      description: validationToken
-      operationId: validToken
-      parameters:
-        - name: token
-          in: query
-        schema:
-          type: string
-        description: Validation token
-      responses:
-        '200':
-          description: Token successfully
-          content:
-            'application/json':
-              schema:
-                $ref: '#/components/schemas/Token'
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    post:
-      operationId: newtoken
-      description: Function create new Token
-      responses:
-        '200':
-          description: new Token  successfully
-          content:
-            'application/json':
-              schema:
-                $ref: '#/components/schemas/Token'
-        default:
-          description: unexpected error
-          content:
-            'application/json':
-              schema:
-                $ref: '#/components/schemas/Error'
 components:
   schemas:
     SignupRequest:
