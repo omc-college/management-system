@@ -185,6 +185,15 @@ components:
           type: string
           format: password
           description: User's password
+    ChangePassword:
+      type: object
+      required:
+        -password
+      properties:
+        password:
+          type: string
+          format: password
+          description: User's password
     Token:
       type: object
       properties:
@@ -203,12 +212,4 @@ components:
       required:
        - code
        - message
-    ChangePassword:
-     type: object
-     required:
-       -password
-     properties:
-      password:
-        type: string
-        format: password
-        description: User's password
+
