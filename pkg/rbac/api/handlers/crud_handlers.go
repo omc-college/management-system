@@ -9,14 +9,15 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 
 	"github.com/omc-college/management-system/pkg/rbac/models"
 	"github.com/omc-college/management-system/pkg/rbac/repository/postgres"
+	"github.com/omc-college/management-system/pkg/rbac/service"
 )
 
 type RolesHandler struct {
-	RolesRepository *postgres.RolesRepository
+	RolesService service.RolesService
 }
 
 // Handles existing error in handlers
@@ -39,15 +40,17 @@ func handleError(err error, w http.ResponseWriter) {
 		error = models.Error{http.StatusInternalServerError, err.Error()}
 	}
 
-	log.Errorf(error.Message)
+	logrus.Errorf(error.Message)
 	w.WriteHeader(error.Code)
 	json.NewEncoder(w).Encode(error)
 }
 
-func (repository *RolesHandler) GetAllRoles(w http.ResponseWriter, r *http.Request) {
+func (handler *RolesHandler) GetAllRoles(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	roles, err := postgres.GetAllRoles(repository.RolesRepository)
+	var err error
+
+	roles, err := handler.RolesService.GetAllRoles()
 	if err != nil {
 		handleError(err, w)
 		return
@@ -62,23 +65,26 @@ func (repository *RolesHandler) GetAllRoles(w http.ResponseWriter, r *http.Reque
 	w.WriteHeader(http.StatusOK)
 }
 
-func (repository *RolesHandler) GetRole(w http.ResponseWriter, r *http.Request) {
+func (handler *RolesHandler) GetRole(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	var err error
+
 	params := mux.Vars(r)
+
 	if params["id"] == "" {
-		err := fmt.Errorf("id is empty")
+		err = fmt.Errorf("id is empty")
 		handleError(err, w)
 		return
 	}
 
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {
-		handleError(fmt.Errorf("converting id to int error"), w)
+		handleError(err, w)
 		return
 	}
 
-	role, err := postgres.GetRole(repository.RolesRepository, id)
+	role, err := handler.RolesService.GetRole(id)
 	if err != nil {
 		handleError(err, w)
 		return
@@ -93,16 +99,17 @@ func (repository *RolesHandler) GetRole(w http.ResponseWriter, r *http.Request) 
 	w.WriteHeader(http.StatusOK)
 }
 
-func (repository *RolesHandler) CreateRole(w http.ResponseWriter, r *http.Request) {
+func (handler *RolesHandler) CreateRole(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+
+	var role models.Role
+	var err error
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		handleError(err, w)
 		return
 	}
-
-	var role models.Role
 
 	err = json.Unmarshal(body, &role)
 	if err != nil {
@@ -116,7 +123,7 @@ func (repository *RolesHandler) CreateRole(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	err = postgres.CreateRole(repository.RolesRepository, role)
+	err = handler.RolesService.CreateRole(role)
 	if err != nil {
 		handleError(err, w)
 		return
@@ -125,19 +132,23 @@ func (repository *RolesHandler) CreateRole(w http.ResponseWriter, r *http.Reques
 	w.WriteHeader(http.StatusOK)
 }
 
-func (repository *RolesHandler) UpdateRole(w http.ResponseWriter, r *http.Request) {
+func (handler *RolesHandler) UpdateRole(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	var role models.Role
+	var err error
+
 	params := mux.Vars(r)
+
 	if params["id"] == "" {
-		err := fmt.Errorf("id is empty")
+		err = fmt.Errorf("id is empty")
 		handleError(err, w)
 		return
 	}
 
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {
-		handleError(fmt.Errorf("converting id to int error"), w)
+		handleError(err, w)
 		return
 	}
 
@@ -147,7 +158,6 @@ func (repository *RolesHandler) UpdateRole(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	var role models.Role
 	err = json.Unmarshal(body, &role)
 	if err != nil {
 		handleError(err, w)
@@ -160,7 +170,7 @@ func (repository *RolesHandler) UpdateRole(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	err = postgres.UpdateRole(repository.RolesRepository, role, id)
+	err = handler.RolesService.UpdateRole(role, id)
 	if err != nil {
 		handleError(err, w)
 		return
@@ -169,23 +179,26 @@ func (repository *RolesHandler) UpdateRole(w http.ResponseWriter, r *http.Reques
 	w.WriteHeader(http.StatusOK)
 }
 
-func (repository *RolesHandler) DeleteRole(w http.ResponseWriter, r *http.Request) {
+func (handler *RolesHandler) DeleteRole(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	var err error
+
 	params := mux.Vars(r)
+
 	if params["id"] == "" {
-		err := fmt.Errorf("id is empty")
+		err = fmt.Errorf("id is empty")
 		handleError(err, w)
 		return
 	}
 
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {
-		handleError(fmt.Errorf("converting id to int error"), w)
+		handleError(err, w)
 		return
 	}
 
-	err = postgres.DeleteRole(repository.RolesRepository, id)
+	err = handler.RolesService.DeleteRole(id)
 	if err != nil {
 		handleError(err, w)
 		return
@@ -194,16 +207,18 @@ func (repository *RolesHandler) DeleteRole(w http.ResponseWriter, r *http.Reques
 	w.WriteHeader(http.StatusOK)
 }
 
-func (repository *RolesHandler) GetRoleTemplate(w http.ResponseWriter, r *http.Request) {
+func (handler *RolesHandler) GetRoleTmpl(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	roleTemplate, err := postgres.GetRoleTmpl(repository.RolesRepository)
+	var err error
+
+	roleTmpl, err := handler.RolesService.GetRoleTmpl()
 	if err != nil {
 		handleError(err, w)
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(roleTemplate)
+	err = json.NewEncoder(w).Encode(roleTmpl)
 	if err != nil {
 		handleError(err, w)
 		return
