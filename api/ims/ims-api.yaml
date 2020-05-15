@@ -106,6 +106,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /password:
+    get:
+      description: To change password  you need enty current password
+      operationId: verificationCurrentPassword
+      parameters:
+        - name: password
+          in: query
+        schema:
+          type: string
+        description: Entry current password
+      responses:
+        '200':
+          description: Password successfully
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/ChangePassword'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      description: Entry new password
+      operationId: Change password
+      responses:
+        '200':
+          description:  Successful new password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangePassword'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     SignupRequest:
@@ -142,6 +181,15 @@ components:
           type: string
           format: email
           description: User's email
+        password:
+          type: string
+          format: password
+          description: User's password
+    ChangePassword:
+      type: object
+      required:
+        -password
+      properties:
         password:
           type: string
           format: password
