@@ -13,7 +13,7 @@ import (
 func NewCrudRouter(repository *postgres.RolesRepository) *mux.Router {
 	// Init handlers DB wrap
 	var rolesHandler handlers.RolesHandler
-	rolesHandler.RolesRepository = repository
+	rolesHandler.RolesService.RolesRepository = repository
 
 	router := mux.NewRouter()
 
@@ -22,7 +22,7 @@ func NewCrudRouter(repository *postgres.RolesRepository) *mux.Router {
 	router.HandleFunc("/roles/{id}", rolesHandler.GetRole).Methods(http.MethodGet)
 	router.HandleFunc("/roles/{id}", rolesHandler.UpdateRole).Methods(http.MethodPut)
 	router.HandleFunc("/roles/{id}", rolesHandler.DeleteRole).Methods(http.MethodDelete)
-	router.HandleFunc("/roletmpl", rolesHandler.GetRoleTemplate).Methods(http.MethodGet)
+	router.HandleFunc("/roletmpl", rolesHandler.GetRoleTmpl).Methods(http.MethodGet)
 
 	return router
 }
