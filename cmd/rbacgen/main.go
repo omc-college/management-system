@@ -9,6 +9,7 @@ import (
 	flag "github.com/spf13/pflag"
 	"gopkg.in/yaml.v2"
 
+	"github.com/omc-college/management-system/pkg/config"
 	"github.com/omc-college/management-system/pkg/rbac/models"
 	"github.com/omc-college/management-system/pkg/rbac/openapi"
 	"github.com/omc-college/management-system/pkg/rbac/repository/postgres"
@@ -17,24 +18,21 @@ import (
 func main() {
 	var roleTmpl models.RoleTmpl
 	var roleTmplRaw []byte
+	var serviceConfig Config
+	var err error
 
-	// Get DB config
-	userFlag := flag.String("u", "postgres", "user")
-	passwordFlag := flag.String("pw", "superuser", "password")
-	hostFlag := flag.String("h", "localhost", "host")
-	portFlag := flag.String("pt", "5432", "port")
-	databaseFlag := flag.String("db", "roles", "database")
-	sslmodeFlag := flag.String("ssl", "disable", "ssl mode")
-
-	// Get specs path's and output path
-	specs := flag.StringSlice("specs", nil, "Path to specs that should be parsed")
-	tmpl := flag.String("tmpl", "", "Path where to save RBAC template")
+	configPath := flag.StringP("config", "c", "cmd/rbacgen/rbacgen-service-example-config.yaml", "path to service config")
 
 	// Get mode
 	isCreateMode := flag.Bool("create", false, "In this mode utility generates and creates new Role Template and saves into roleTmpl.yaml")
 	isFillMode := flag.Bool("fill", false, "In this mode utility fills DB with features and endpoints from existing Role Template")
 
 	flag.Parse()
+
+	err = config.Load(&serviceConfig, *configPath)
+	if err != nil {
+		logrus.Fatalf("%s", err)
+	}
 
 	// check whether only one mode flag is provided
 	if *isCreateMode == *isFillMode {
@@ -44,13 +42,13 @@ func main() {
 
 	if *isCreateMode {
 		// generate and get new Role Template
-		roleTmpl, err := openapi.GetRoleTmpl(*specs)
+		roleTmpl, err := openapi.GetRoleTmpl(serviceConfig.RBACGenConfig.SpecsPaths)
 		if err != nil {
 			logrus.Fatalf("%s", err)
 		}
 
 		// Creating output file
-		outputFile, err := os.Create(*tmpl)
+		outputFile, err := os.Create(serviceConfig.RBACGenConfig.TmplPath)
 		if err != nil {
 			logrus.Fatalf("%s", err)
 		}
@@ -61,7 +59,7 @@ func main() {
 			logrus.Fatalf("%s", err)
 		}
 
-		err = ioutil.WriteFile(*tmpl, roleTmplRaw, 0644)
+		err = ioutil.WriteFile(serviceConfig.RBACGenConfig.TmplPath, roleTmplRaw, 0644)
 		if err != nil {
 			logrus.Fatalf("%s", err)
 		}
@@ -74,19 +72,15 @@ func main() {
 	}
 	if *isFillMode {
 		// get existing Role Template from file
-		roleTmplRaw, err := ioutil.ReadFile(*tmpl)
+		roleTmplRaw, err := ioutil.ReadFile(serviceConfig.RBACGenConfig.TmplPath)
 		if err != nil {
 			logrus.Fatalf("%s", err)
 		}
 
 		yaml.Unmarshal(roleTmplRaw, &roleTmpl)
 
-		// Form db config
-		dbConfig := fmt.Sprintf("user=%s password=%s host=%s port=%s database=%s sslmode=%s",
-			*userFlag, *passwordFlag, *hostFlag, *portFlag, *databaseFlag, *sslmodeFlag)
-
 		// Open DB
-		repository, err := postgres.NewRolesRepository(dbConfig)
+		repository, err := postgres.NewRolesRepository(serviceConfig.RepositoryConfig)
 		if err != nil {
 			logrus.Fatalf("opening DB error")
 		}

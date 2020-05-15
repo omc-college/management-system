@@ -3,10 +3,12 @@ package postgres
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	_ "github.com/jackc/pgx"
 	_ "github.com/jackc/pgx/stdlib"
 
+	"github.com/omc-college/management-system/pkg/db"
 	"github.com/omc-college/management-system/pkg/rbac/models"
 )
 
@@ -14,7 +16,10 @@ type RolesRepository struct {
 	DB *sql.DB
 }
 
-func NewRolesRepository(dsn string) (*RolesRepository, error) {
+func NewRolesRepository(repositoryConfig db.RepositoryConfig) (*RolesRepository, error) {
+	dsn := fmt.Sprintf("user=%s password=%s host=%s port=%s database=%s sslmode=%s",
+		repositoryConfig.User, repositoryConfig.Password, repositoryConfig.Host, repositoryConfig.Port, repositoryConfig.Database, repositoryConfig.Sslmode)
+
 	db, err := sql.Open("pgx", dsn)
 
 	return &RolesRepository{
@@ -23,7 +28,7 @@ func NewRolesRepository(dsn string) (*RolesRepository, error) {
 }
 
 func GetAllRoles(repository *RolesRepository) ([]models.Role, error) {
-	query := `SELECT roles.id, roles.name, features.id, features.name, feature.description, endpoints.id, endpoint.name, endpoints.path, endpoints.method
+	query := `SELECT roles.id, roles.name, features.id, features.name, features.description, endpoints.id, endpoints.name, endpoints.path, endpoints.method
 			  FROM roles LEFT JOIN roles_to_features
 			  ON roles.id = roles_to_features.role_id
 			  LEFT JOIN features
@@ -80,7 +85,7 @@ func GetAllRoles(repository *RolesRepository) ([]models.Role, error) {
 }
 
 func GetRole(repository *RolesRepository, id int) (models.Role, error) {
-	query := `SELECT roles.id, roles.name, features.id, features.name, features.description, endpoints.id, endpoint.name, endpoints.path, endpoints.method
+	query := `SELECT roles.id, roles.name, features.id, features.name, features.description, endpoints.id, endpoints.name, endpoints.path, endpoints.method
 			  FROM roles LEFT JOIN roles_to_features
 			  ON roles.id = roles_to_features.role_id
 			  LEFT JOIN features
@@ -406,10 +411,10 @@ func toRole(tmpRole role) (genericRole models.Role) {
 	for _, tmpFeature := range tmpRole.Entries {
 		genericEndpoints = []models.Endpoint{}
 		for _, tmpEndpoint := range tmpFeature.Endpoints {
-			genericEndpoint := models.Endpoint{ID: tmpEndpoint.ID, Path: tmpEndpoint.Path, Method: tmpEndpoint.Method}
+			genericEndpoint := models.Endpoint{ID: tmpEndpoint.ID, Name: tmpEndpoint.Name, Path: tmpEndpoint.Path, Method: tmpEndpoint.Method}
 			genericEndpoints = append(genericEndpoints, genericEndpoint)
 		}
-		genericFeature := models.FeatureEntry{ID: tmpFeature.ID, Name: tmpFeature.Name, Endpoints: genericEndpoints}
+		genericFeature := models.FeatureEntry{ID: tmpFeature.ID, Name: tmpFeature.Name, Description: tmpFeature.Description, Endpoints: genericEndpoints}
 		genericFeatures = append(genericFeatures, genericFeature)
 	}
 	genericRole = models.Role{ID: tmpRole.ID, Name: tmpRole.Name, Entries: genericFeatures}
