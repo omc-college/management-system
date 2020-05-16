@@ -1,10 +1,10 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
+    id  SERIAL PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
-	email VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
 	verified BOOLEAN DEFAULT false NOT NULL
 );
 
