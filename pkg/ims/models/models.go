@@ -3,11 +3,15 @@ package models
 import "github.com/dgrijalva/jwt-go"
 
 type Users struct {
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Email     string `json:"email"`
-	Role      string `json:"role"`
-	Verified  bool   `json:"verified"`
+	ID          int    `json:"ID"`
+	FirstName   string `json:"first_name"`
+	LastName    string `json:"last_name"`
+	Email       string `json:"email"`
+	MobilePhone string `json:"mobile_phone"`
+	CreatedAt   string `json:"created_at"`
+	ModifiedAt  string `json:"modified_at"`
+	Role        string `json:"role"`
+	Verified    bool   `json:"verified"`
 }
 
 type Claims struct {
@@ -19,9 +23,14 @@ type Claims struct {
 
 type Credentials struct {
 	PasswordHash string
-	Salt string
+	Salt         string
 }
 
 type EmailVerificationTokens struct {
 	VerificationToken string
+}
+
+type Error struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
 }
