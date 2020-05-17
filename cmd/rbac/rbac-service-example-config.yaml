@@ -5,3 +5,9 @@ repository:
   port: '5432'
   database: 'roles'
   sslmode: 'disable'
+pubsub:
+  clusterid: 'test-cluster'
+  clientid: 'client-id'
+  queuename: 'new-queue'
+  pingsinterval: 20
+  maxunsuccessfulpings: 5
