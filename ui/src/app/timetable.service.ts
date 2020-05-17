@@ -7,15 +7,16 @@ import {TimetableHttpService} from './shared/timetable-http.service';
   providedIn: 'root',
 })
 export class TimetableService {
-  selectedDate$: Subject<moment.Moment> = new Subject<moment.Moment>();
-  AddLessonComponentState$: Subject<boolean> = new Subject<boolean>();
+  private selectedDate$: Subject<Date> = new Subject<Date>();
+  private AddLessonComponentState$: Subject<boolean> = new Subject<boolean>();
+  private progressBarState$: Subject<boolean> = new Subject<boolean>();
 
   constructor(private TimetableHttpService: TimetableHttpService) {}
 
-  getSelectedDate(): Observable<moment.Moment> {
+  getSelectedDate(): Observable<Date> {
     return this.selectedDate$;
   }
-  selectDate(date: moment.Moment): void {
+  selectDate(date: Date): void {
     this.selectedDate$.next(date);
   }
   changeAddLessonComponentState(bool: boolean): void {
@@ -23,5 +24,11 @@ export class TimetableService {
   }
   getAddLessonComponentState(): Observable<boolean> {
     return this.AddLessonComponentState$;
+  }
+  changeProgressBarState(bool: boolean): void {
+    this.progressBarState$.next(bool);
+  }
+  getProgressBarState(): Observable<boolean> {
+    return this.progressBarState$;
   }
 }

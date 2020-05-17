@@ -1,23 +1,15 @@
-$wh: 70px
+$wh: 40px
 $el: calc(100% - #{$wh})
-button
-    width: 50px
-    height: 50px
-    border: 0px
-    img
-        width: 100%
-        height: 100%
-    &:active
-        img
-            width: 90%
-            height: 90%
-            margin: 5%
+*
+    float: left
 
 #right
     margin: 10px
-.left
-    margin: 10px
-    transform: rotate(180deg)
+button
+    width: 40px
+    height: 40px
+    mat-icon
+        width: 100%
 #down
     margin-left: 10px
 #time
@@ -27,23 +19,24 @@ button
     width: $wh
     height: $wh
 .timestamp
-    width: calc(#{$el} / 8)
+    width: calc(calc(100% - #{$wh})/8)
     height: 100%
+    overflow: hidden
     p
         font-size: 1.4em
-        margin-top: 40px
-        margin-left: 10px
+        margin-top: 10px
+        margin-left: 5px
 #week
     width: $wh
     height: $el
 .weekstamp
     width: 100%
-    height: calc(100% / 6 )
-    padding-top: 40px
+    height: calc(calc(100% - 2px*6)/6)
+    padding-top: 10px
     p
         width: 100%
         text-align: center
-        font-size: 2em
+        font-size: 1.7em
 .unique
     padding-top: 20px 
 #timetable
@@ -51,15 +44,21 @@ button
     height: $el
     border-top: 1px solid black
     border-left: 1px solid black
-.lesson
-    width: (100%/8)
-    height: (100% / 6)
+.card
+    width: calc(calc(100% - 2px*8)/8)
+    height: calc(calc(100% - 2px*6)/6)
     border: 1px solid black
-    border-top: 0px
-    border-left: 0px
-    padding: 15px
+    padding: 0px
+    margin: 1px
+    box-sizing: border-box
+    &:hover
+        background-color: rgba(0, 0, 0, 0.04)
+.lesson
+    width: 100%
+    height: 100%
+    padding: 10px
 .subject, .room
-    width: 60%
+    width: 100%
     overflow: hidden
 .subject
     height: 50%
@@ -68,7 +67,11 @@ button
 .room
     font-size: 1.5em
     padding-top: 5px
-.chosen
+.selected
     border: 2px solid black
+    background-color:#3f51b5
+    color: white
+    &:hover
+        background-color:#3f51b5
 .hide
     display: none
