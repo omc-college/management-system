@@ -8,10 +8,12 @@ import {TimetableService} from '../timetable.service';
 })
 export class HeaderComponent implements OnInit {
   AddLessonBtnState: boolean = false;
+  showProgressBar: boolean = false;
   constructor(private timetableService: TimetableService) {}
 
   ngOnInit(): void {
     this.timetableService.getAddLessonComponentState().subscribe(bool => (this.AddLessonBtnState = bool));
+    this.timetableService.getProgressBarState().subscribe(bool => (this.showProgressBar = bool));
   }
   addLesson() {
     this.AddLessonBtnState = !this.AddLessonBtnState;

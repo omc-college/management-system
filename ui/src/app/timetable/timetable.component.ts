@@ -1,9 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import * as moment from 'moment';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {TimetableService} from '../timetable.service';
 import {Lesson} from '../models/Lesson';
 import {TimetableHttpService} from '../shared/timetable-http.service';
-
+const NUMBEROFCARDS = 48;
 @Component({
   selector: 'app-timetable',
   templateUrl: './timetable.component.html',
@@ -17,33 +16,27 @@ export class TimetableComponent implements OnInit {
   showFirstShift: boolean = true;
   hideSlider: boolean = true;
   sliderAddNewState: boolean = false;
-  lessons: Lesson[];
+  lessons: Lesson[] = [];
   selectedLesson: Lesson;
-  selectedDate: moment.Moment = moment();
+  selectedDate: Date = new Date();
+  nextWeek: Date = new Date();
   constructor(private timetableService: TimetableService, private timetableHttpService: TimetableHttpService) {}
   ngOnInit(): void {
-    this.getLessons();
     this.getSelectedDate();
+    this.getLessons();
     this.getTimestamp();
     this.getAddLessonComponentState();
   }
   getLessons(): void {
     this.timetableHttpService.getData(this.lessonsUrl).subscribe(lessons => {
+      lessons.forEach(el => (el.startAt = new Date(el.startAt)));
       this.lessons = lessons;
-      this.lessons.forEach(lesson => {
-        lesson.startAt = moment(lesson.startAt);
-        lesson.endAt = moment(lesson.endAt);
-      });
     });
   }
   getSelectedDate(): void {
-    this.timetableService.getSelectedDate().subscribe(date => (this.selectedDate = date));
-  }
-  setSelectedDate(y: number, m: number, d: number): void {
-    this.selectedDate.year(y);
-    this.selectedDate.month(m);
-    this.selectedDate.date(d);
-    this.timetableService.selectDate(this.selectedDate);
+    this.timetableService.getSelectedDate().subscribe(date => {
+      this.selectedDate = date;
+    });
   }
   getTimestamp(): void {
     if (this.showFirstShift) {
@@ -54,12 +47,15 @@ export class TimetableComponent implements OnInit {
     this.showFirstShift = !this.showFirstShift;
   }
   deleteLesson(lesson: Lesson): void {
-    this.lessons = this.lessons.filter(l => l !== lesson);
+    this.lessons.forEach(el => {
+      if (el === lesson) {
+        el = null;
+      }
+    });
   }
   addNewLesson(newLesson: Lesson): void {
-    newLesson.startAt = moment(newLesson.startAt);
-    newLesson.endAt = moment(newLesson.endAt);
-    this.lessons.push(newLesson);
+    newLesson.startAt = new Date(newLesson.startAt);
+    this.lessons[newLesson.startAt.getDay() * 8 - (8 - +newLesson.lessonNum) - 1] = newLesson;
   }
   getAddLessonComponentState(): void {
     this.timetableService.getAddLessonComponentState().subscribe(bool => {
@@ -67,12 +63,19 @@ export class TimetableComponent implements OnInit {
       this.hideSlider = !this.sliderAddNewState;
     });
   }
+  showAddLessonComponent(): void {
+    this.sliderAddNewState = true;
+    this.timetableService.changeAddLessonComponentState(this.sliderAddNewState);
+    this.hideSlider = false;
+  }
   hideSliderComponent(hide: boolean) {
     this.sliderAddNewState = false;
     this.timetableService.changeAddLessonComponentState(this.sliderAddNewState);
     this.hideSlider = hide;
   }
   showSliderComponent(lesson: Lesson): void {
+    this.selectedDate = lesson.startAt;
+    this.timetableService.selectDate(this.selectedDate);
     this.sliderAddNewState = false;
     this.timetableService.changeAddLessonComponentState(this.sliderAddNewState);
     this.selectedLesson = lesson;

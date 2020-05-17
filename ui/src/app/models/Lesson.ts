@@ -6,9 +6,9 @@ import {iSubject} from './Subject';
 export interface Lesson {
   readonly id: string;
   subject: iSubject;
-  lecturers: User[];
-  groups: Group[];
-  startAt: moment.Moment;
-  endAt: moment.Moment;
+  lecturer: User;
+  group: Group;
+  startAt: Date;
+  lessonNum: string;
   room: Room;
 }

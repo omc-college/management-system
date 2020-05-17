@@ -1,7 +1,10 @@
 <div id="time">
   <div id="divider">
-    <button type="button" id="right" [class.left]="showFirstShift !== false" (click)="getTimestamp()">
-      <img src="../../assets/img/right.svg" />
+    <button mat-icon-button color="primary" *ngIf="!showFirstShift" (click)="getTimestamp()">
+      <mat-icon>arrow_forward_ios</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" *ngIf="showFirstShift" (click)="getTimestamp()">
+      <mat-icon>arrow_back_ios</mat-icon>
     </button>
   </div>
   <div class="timestamp" *ngFor="let timestamp of timestamps; trackBy: trackByMethod">
@@ -17,32 +20,27 @@
   <div class="weekstamp"><p>F</p></div>
   <div class="weekstamp unique">
     <p>S</p>
-    <button
-      type="button"
-      id="down"
-      (click)="setSelectedDate(selectedDate.year(), selectedDate.month(), +selectedDate.date() + 7)"
-    >
-      <img src="../../assets/img/down.svg" />
+    <button mat-icon-button color="primary">
+      <mat-icon>arrow_drop_up</mat-icon>
+    </button>
+    <button mat-icon-button color="primary">
+      <mat-icon>arrow_drop_down</mat-icon>
     </button>
   </div>
 </div>
 
 <div id="timetable">
-  <div
-    class="lesson"
-    [class.chosen]="
-      lesson.startAt.year() === selectedDate.year() &&
-      lesson.startAt.month() === selectedDate.month() &&
-      lesson.startAt.date() === selectedDate.date()
-    "
-    (click)="
-      setSelectedDate(lesson.startAt.year(), lesson.startAt.month(), lesson.startAt.date()); showSliderComponent(lesson)
-    "
-    *ngFor="let lesson of lessons; trackBy: trackByMethod"
+  <mat-card
+    class="card"
+    [class.selected]="lesson === selectedLesson"
+    (click)="showSliderComponent(lesson)"
+    *ngFor="let lesson of lessons"
   >
-    <div class="subject">{{ lesson.subject.nameOfSubject }}</div>
-    <div class="room">{{ lesson.room.room }}</div>
-  </div>
+    <div class="lesson">
+      <div class="subject">{{ lesson.subject.nameOfSubject }}</div>
+      <div class="room">{{ lesson.room.room }}</div>
+    </div>
+  </mat-card>
 </div>
 <app-slider-menu
   [class.hide]="hideSlider"
@@ -51,6 +49,5 @@
   [sliderAddNewState]="sliderAddNewState"
   (deletedLesson)="deleteLesson($event)"
   (addLesson)="addNewLesson($event)"
-  (newStartDate)="setSelectedDate($event.year(), $event.month(), $event.date())"
   (hideComponent)="hideSliderComponent($event)"
 ></app-slider-menu>
