@@ -248,6 +248,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /password:
+    post:
+      description: This endpoint handles change password
+      operationId: ChangePassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+      responses:
+        '200':
+          description:  Successful new password
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   schemas:
@@ -289,6 +307,20 @@ components:
           type: string
           format: password
           description: User's password
+    ChangePasswordRequest:
+      type: object
+      properties:
+        password:
+          type: string
+          format: password
+          description: User's password
+        newPassword:
+          type: string
+          format: password
+          description: User's new password
+      required:
+        - password
+        - newPassword
     Token:
       type: object
       properties:
