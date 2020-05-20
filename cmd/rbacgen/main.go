@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -20,6 +21,8 @@ func main() {
 	var roleTmplRaw []byte
 	var serviceConfig Config
 	var err error
+
+	ctx := context.Background()
 
 	configPath := flag.StringP("config", "c", "cmd/rbacgen/rbacgen-service-example-config.yaml", "path to service config")
 
@@ -86,7 +89,7 @@ func main() {
 		}
 		defer repository.DB.Close()
 
-		err = repository.CreateRoleTmpl(roleTmpl)
+		err = repository.CreateRoleTmpl(ctx, roleTmpl)
 		if err != nil {
 			logrus.Fatalf("%s", err)
 		}
