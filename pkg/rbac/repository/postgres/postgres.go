@@ -27,7 +27,7 @@ func NewRolesRepository(repositoryConfig db.RepositoryConfig) (*RolesRepository,
 	}, err
 }
 
-func GetAllRoles(repository *RolesRepository) ([]models.Role, error) {
+func (repository *RolesRepository) GetAllRoles() ([]models.Role, error) {
 	query := `SELECT roles.id, roles.name, features.id, features.name, features.description, endpoints.id, endpoints.name, endpoints.path, endpoints.method
 			  FROM roles LEFT JOIN roles_to_features
 			  ON roles.id = roles_to_features.role_id
@@ -84,7 +84,7 @@ func GetAllRoles(repository *RolesRepository) ([]models.Role, error) {
 	return toRoles(tmpRoles), nil
 }
 
-func GetRole(repository *RolesRepository, id int) (models.Role, error) {
+func (repository *RolesRepository) GetRole(id int) (models.Role, error) {
 	query := `SELECT roles.id, roles.name, features.id, features.name, features.description, endpoints.id, endpoints.name, endpoints.path, endpoints.method
 			  FROM roles LEFT JOIN roles_to_features
 			  ON roles.id = roles_to_features.role_id
@@ -138,7 +138,7 @@ func GetRole(repository *RolesRepository, id int) (models.Role, error) {
 	return toRole(tmpRole), nil
 }
 
-func CreateRole(repository *RolesRepository, role models.Role) error {
+func (repository *RolesRepository) CreateRole(role models.Role) error {
 	query := `INSERT INTO roles(name) VALUES($1) RETURNING(id)`
 
 	var roleId int
@@ -166,7 +166,7 @@ func CreateRole(repository *RolesRepository, role models.Role) error {
 	return nil
 }
 
-func UpdateRole(repository *RolesRepository, role models.Role, id int) error {
+func (repository *RolesRepository) UpdateRole(role models.Role, id int) error {
 	query := `SELECT FROM roles WHERE id = $1`
 
 	err := repository.DB.QueryRow(query, id).Scan()
@@ -208,7 +208,7 @@ func UpdateRole(repository *RolesRepository, role models.Role, id int) error {
 	return nil
 }
 
-func DeleteRole(repository *RolesRepository, id int) error {
+func (repository *RolesRepository) DeleteRole(id int) error {
 	query := `SELECT FROM roles WHERE id = $1`
 
 	err := repository.DB.QueryRow(query, id).Scan()
@@ -231,7 +231,7 @@ func DeleteRole(repository *RolesRepository, id int) error {
 	return nil
 }
 
-func GetRoleTmpl(repository *RolesRepository) (models.RoleTmpl, error) {
+func (repository *RolesRepository) GetRoleTmpl() (models.RoleTmpl, error) {
 	query := `SELECT features.id, features.name, features.description, endpoints.id, endpoints.name, endpoints.path, endpoints.method
 			  FROM features LEFT JOIN features_to_endpoints
 			  ON features.id = features_to_endpoints.feature_id
@@ -278,7 +278,7 @@ func GetRoleTmpl(repository *RolesRepository) (models.RoleTmpl, error) {
 	return toRoleTmpl(tmpRoleTmpl), nil
 }
 
-func CreateRoleTmpl(repository *RolesRepository, roleTmpl models.RoleTmpl) error {
+func (repository *RolesRepository) CreateRoleTmpl(roleTmpl models.RoleTmpl) error {
 	var addedEndpoints []models.Endpoint
 	var isEndpointExisting bool
 	var currentFeatureId int

@@ -86,7 +86,7 @@ func main() {
 		}
 		defer repository.DB.Close()
 
-		err = postgres.CreateRoleTmpl(repository, roleTmpl)
+		err = repository.CreateRoleTmpl(roleTmpl)
 		if err != nil {
 			logrus.Fatalf("%s", err)
 		}

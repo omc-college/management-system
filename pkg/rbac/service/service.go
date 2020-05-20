@@ -10,7 +10,7 @@ type RolesService struct {
 }
 
 func (service *RolesService) GetAllRoles() (roles []models.Role, err error) {
-	roles, err = postgres.GetAllRoles(service.RolesRepository)
+	roles, err = service.RolesRepository.GetAllRoles()
 	if err != nil {
 		return []models.Role{}, err
 	}
@@ -19,7 +19,7 @@ func (service *RolesService) GetAllRoles() (roles []models.Role, err error) {
 }
 
 func (service *RolesService) GetRole(id int) (role models.Role, err error) {
-	role, err = postgres.GetRole(service.RolesRepository, id)
+	role, err = service.RolesRepository.GetRole(id)
 	if err != nil {
 		return models.Role{}, err
 	}
@@ -28,7 +28,7 @@ func (service *RolesService) GetRole(id int) (role models.Role, err error) {
 }
 
 func (service *RolesService) CreateRole(role models.Role) (err error) {
-	err = postgres.CreateRole(service.RolesRepository, role)
+	err = service.RolesRepository.CreateRole(role)
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func (service *RolesService) CreateRole(role models.Role) (err error) {
 }
 
 func (service *RolesService) UpdateRole(role models.Role, id int) (err error) {
-	err = postgres.UpdateRole(service.RolesRepository, role, id)
+	err = service.RolesRepository.UpdateRole(role, id)
 	if err != nil {
 		return err
 	}
@@ -46,7 +46,7 @@ func (service *RolesService) UpdateRole(role models.Role, id int) (err error) {
 }
 
 func (service *RolesService) DeleteRole(id int) (err error) {
-	err = postgres.DeleteRole(service.RolesRepository, id)
+	err = service.RolesRepository.DeleteRole(id)
 	if err != nil {
 		return err
 	}
@@ -55,7 +55,7 @@ func (service *RolesService) DeleteRole(id int) (err error) {
 }
 
 func (service *RolesService) GetRoleTmpl() (roleTmpl models.RoleTmpl, err error) {
-	roleTmpl, err = postgres.GetRoleTmpl(service.RolesRepository)
+	roleTmpl, err = service.RolesRepository.GetRoleTmpl()
 	if err != nil {
 		return models.RoleTmpl{}, err
 	}
