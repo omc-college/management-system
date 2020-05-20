@@ -56,7 +56,7 @@ func (handler *RolesHandler) GetAllRoles(w http.ResponseWriter, r *http.Request)
 
 	var err error
 
-	roles, err := handler.RolesService.GetAllRoles()
+	roles, err := handler.RolesService.GetAllRoles(r.Context())
 	if err != nil {
 		handleError(err, w)
 		return
@@ -90,7 +90,7 @@ func (handler *RolesHandler) GetRole(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	role, err := handler.RolesService.GetRole(id)
+	role, err := handler.RolesService.GetRole(r.Context(), id)
 	if err != nil {
 		handleError(err, w)
 		return
@@ -129,7 +129,7 @@ func (handler *RolesHandler) CreateRole(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	err = handler.RolesService.CreateRole(role)
+	err = handler.RolesService.CreateRole(r.Context(), role)
 	if err != nil {
 		handleError(err, w)
 		return
@@ -176,7 +176,7 @@ func (handler *RolesHandler) UpdateRole(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	err = handler.RolesService.UpdateRole(role, id)
+	err = handler.RolesService.UpdateRole(r.Context(), role, id)
 	if err != nil {
 		handleError(err, w)
 		return
@@ -204,7 +204,7 @@ func (handler *RolesHandler) DeleteRole(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	err = handler.RolesService.DeleteRole(id)
+	err = handler.RolesService.DeleteRole(r.Context(), id)
 	if err != nil {
 		handleError(err, w)
 		return
@@ -218,7 +218,7 @@ func (handler *RolesHandler) GetRoleTmpl(w http.ResponseWriter, r *http.Request)
 
 	var err error
 
-	roleTmpl, err := handler.RolesService.GetRoleTmpl()
+	roleTmpl, err := handler.RolesService.GetRoleTmpl(r.Context())
 	if err != nil {
 		handleError(err, w)
 		return
