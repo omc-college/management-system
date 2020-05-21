@@ -1,12 +1,23 @@
 package service
 
 import (
+	"encoding/json"
+
+	"github.com/omc-college/management-system/pkg/pubsub"
 	"github.com/omc-college/management-system/pkg/rbac/models"
 	"github.com/omc-college/management-system/pkg/rbac/repository/postgres"
 )
 
 type RolesService struct {
 	RolesRepository *postgres.RolesRepository
+	PubSubRepository *pubsub.GroupClient
+}
+
+func NewRolesService(rolesRepository *postgres.RolesRepository, pubsubRepository *pubsub.GroupClient) *RolesService {
+	return &RolesService{
+		RolesRepository: rolesRepository,
+		PubSubRepository: pubsubRepository,
+	}
 }
 
 func (service *RolesService) GetAllRoles() (roles []models.Role, err error) {
@@ -33,6 +44,21 @@ func (service *RolesService) CreateRole(role models.Role) (err error) {
 		return err
 	}
 
+	msg, err := pubsub.NewEnvelope(role, models.RoleOperationCreate, models.RoleType)
+	if err != nil {
+		return err
+	}
+
+	bytes, err := json.Marshal(msg)
+	if  err != nil {
+		return err
+	}
+
+	err = service.PubSubRepository.Publish(bytes, models.RolesTopicName)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -42,11 +68,38 @@ func (service *RolesService) UpdateRole(role models.Role, id int) (err error) {
 		return err
 	}
 
+	msg, err := pubsub.NewEnvelope(role, models.RoleOperationUpdate, models.RoleType)
+	if err != nil {
+		return err
+	}
+
+	bytes, err := json.Marshal(msg)
+	if  err != nil {
+		return err
+	}
+
+	err = service.PubSubRepository.Publish(bytes, models.RolesTopicName)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (service *RolesService) DeleteRole(id int) (err error) {
 	err = service.RolesRepository.DeleteRole(id)
+	if err != nil {
+		return err
+	}
+
+	msg, err := pubsub.NewEnvelope(id, models.RoleOperationDelete, models.RoleType)
+
+	bytes, err := json.Marshal(msg)
+	if err != nil {
+		return err
+	}
+
+	err = service.PubSubRepository.Publish(bytes, models.RolesTopicName)
 	if err != nil {
 		return err
 	}

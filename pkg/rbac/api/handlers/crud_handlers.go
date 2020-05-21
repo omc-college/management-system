@@ -17,7 +17,13 @@ import (
 )
 
 type RolesHandler struct {
-	RolesService service.RolesService
+	RolesService *service.RolesService
+}
+
+func NewRolesHandler(service *service.RolesService) *RolesHandler {
+	return &RolesHandler{
+		RolesService: service,
+	}
 }
 
 // Handles existing error in handlers
