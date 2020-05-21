@@ -1,21 +1,20 @@
 package routers
 
 import (
-	"github.com/omc-college/management-system/pkg/rbac/api/middleware"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
 	"github.com/omc-college/management-system/pkg/rbac/api/handlers"
-	"github.com/omc-college/management-system/pkg/rbac/repository/postgres"
+	"github.com/omc-college/management-system/pkg/rbac/api/middleware"
+	"github.com/omc-college/management-system/pkg/rbac/service"
 )
 
 // NewCrudRouter Inits RBAC CRUD service router
-func NewCrudRouter(repository *postgres.RolesRepository) *mux.Router {
+func NewCrudRouter(service *service.RolesService) *mux.Router {
 	// Init handlers DB wrap
 	var authorizationMiddleware middleware.AuthorizationMiddleware
-	var rolesHandler handlers.RolesHandler
-	rolesHandler.RolesService.RolesRepository = repository
+	rolesHandler := handlers.NewRolesHandler(service)
 
 	router := mux.NewRouter()
 
