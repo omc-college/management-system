@@ -1,7 +1,7 @@
 package pubsub
 
 import (
-	stan "nats-io/stan.go"
+	stan "github.com/nats-io/stan.go"
 )
 
 //GroupClient contains stan.Conn
