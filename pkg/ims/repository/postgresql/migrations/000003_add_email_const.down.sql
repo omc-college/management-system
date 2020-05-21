@@ -1,0 +1,6 @@
+BEGIN;
+
+ALTER TABLE users 
+DROP CONSTRAINT email;
+
+COMMIT;
