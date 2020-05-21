@@ -26,10 +26,10 @@ func NewUsersRepository(dbPath string) (*UsersRepository, error) {
 	return &UsersRepository{Db: Db}, nil
 }
 
-func GetAllUsers(repository *UsersRepository) ([]models.User, error) {
+func GetAllUsers(repository *UsersRepository) ([]models.Users, error) {
 	query := `SELECT *  FROM users;`
 
-	var users []models.User
+	var users []models.Users
 
 	rows, err := repository.Db.Query(query)
 	if err != nil {
@@ -37,8 +37,8 @@ func GetAllUsers(repository *UsersRepository) ([]models.User, error) {
 	}
 
 	for rows.Next() {
-		var u = models.User{}
-		err := rows.Scan(&u.ID, &u.FirstName, &u.LastName, &u.Email, &u.MobilePhone, &u.CreatedAt, &u.ModifiedAt)
+		var u = models.Users{}
+		err := rows.Scan(&u.ID, &u.FirstName, &u.LastName, &u.Email, &u.MobilePhone, &u.Role, &u.CreatedAt, &u.ModifiedAt)
 		if err != nil {
 			return nil, err
 		}
@@ -53,51 +53,51 @@ func GetAllUsers(repository *UsersRepository) ([]models.User, error) {
 	return users, nil
 }
 
-func GetUser(repository *UsersRepository, UserID int) (models.User, error) {
-	query := `SELECT * FROM users WHERE userid = $1;`
+func GetUser(repository *UsersRepository, ID int) (models.Users, error) {
+	query := `SELECT * FROM users WHERE id = $1;`
 
-	var user = models.User{}
+	var user = models.Users{}
 
-	rows, err := repository.Db.Query(query, UserID)
+	rows, err := repository.Db.Query(query, ID)
 	if err != nil {
-		return models.User{}, err
+		return models.Users{}, err
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.MobilePhone, &user.CreatedAt, &user.ModifiedAt)
+		err = rows.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.MobilePhone, &user.Role, &user.CreatedAt, &user.ModifiedAt)
 		if err != nil {
-			return models.User{}, err
+			return models.Users{}, err
 		}
 	}
 
 	if user.ID == 0 {
-		return models.User{}, ErrNoRows
+		return models.Users{}, ErrNoRows
 	}
 
 	err = rows.Err()
 	if err != nil {
-		return models.User{}, err
+		return models.Users{}, err
 	}
 	return user, nil
 }
 
-func AddUser(repository *UsersRepository, user models.User) error {
-	query := `INSERT INTO users (firstname, lastname, email, mobilephone, createdAt, modifiedAt) 
-    VALUES ($1, $2, $3, $4, current_timestamp, current_timestamp) RETURNING (userid)`
+func AddUser(repository *UsersRepository, user models.Users) error {
+	query := `INSERT INTO users (first_name, last_name, email, mobile_phone, role, created_at, modified_at) 
+    VALUES ($1, $2, $3, $4, $5, current_timestamp, null ) RETURNING (id)`
 
 	var uID int
 
-	err := repository.Db.QueryRow(query, user.FirstName, user.LastName, user.Email, user.MobilePhone).Scan(&uID)
+	err := repository.Db.QueryRow(query, user.FirstName, user.LastName, user.Email, user.MobilePhone, user.Role).Scan(&uID)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func UpdateUser(repository *UsersRepository, user models.User, UserID int) error {
-	query := `SELECT FROM users WHERE userid = $1`
+func UpdateUser(repository *UsersRepository, user models.Users) error {
+	query := `SELECT FROM users WHERE id = $1`
 
-	err := repository.Db.QueryRow(query, UserID).Scan()
+	err := repository.Db.QueryRow(query, user.ID).Scan()
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			err = ErrNoRows
@@ -107,9 +107,9 @@ func UpdateUser(repository *UsersRepository, user models.User, UserID int) error
 		return err
 	}
 
-	query = `UPDATE users SET firstname = $1, lastname= $2, email= $3, mobilephone= $4, modifiedat= current_timestamp WHERE userid = $5`
+	query = `UPDATE users SET first_name = $1, last_name= $2, email= $3, mobile_phone= $4, modified_at= current_timestamp WHERE id = $5`
 
-	_, err = repository.Db.Exec(query, user.FirstName, user.LastName, user.Email, user.MobilePhone, UserID)
+	_, err = repository.Db.Exec(query, user.FirstName, user.LastName, user.Email, user.MobilePhone, user.Role, user.ID)
 	if err != nil {
 		return QueryError{queryErrorMessage, err}
 	}
@@ -118,7 +118,7 @@ func UpdateUser(repository *UsersRepository, user models.User, UserID int) error
 }
 
 func DeleteUser(repository *UsersRepository, UserID int) error {
-	query := `SELECT FROM users WHERE userid = $1`
+	query := `SELECT FROM users WHERE id = $1`
 
 	err := repository.Db.QueryRow(query, UserID).Scan()
 	if err != nil {
@@ -130,7 +130,7 @@ func DeleteUser(repository *UsersRepository, UserID int) error {
 		return err
 	}
 
-	query = `DELETE FROM users WHERE userid = $1`
+	query = `DELETE FROM users WHERE id = $1`
 
 	_, err = repository.Db.Exec(query, UserID)
 	if err != nil {
