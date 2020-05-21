@@ -11,6 +11,9 @@ import(
 type SignUpRepository struct {
 	DB *sql.DB
 }
+type CredRepository struct {
+	DB *sql.DB
+}
 
 func NewSignUpRepository(conf db.RepositoryConfig) (*SignUpRepository, error) {
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", 
@@ -19,6 +22,16 @@ func NewSignUpRepository(conf db.RepositoryConfig) (*SignUpRepository, error) {
 	db, err := sql.Open("pgx", psqlInfo)
 
  	return &SignUpRepository{
+		DB: db,
+	}, err
+}
+func NewCredentialsRepository(conf db.RepositoryConfig) (*CredRepository, error) {
+	pg:= fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		conf.Host, conf.Port, conf.User, conf.Password, conf.Database)
+
+	db, err := sql.Open("pgx", pg)
+
+	return &CredRepository{
 		DB: db,
 	}, err
 }
@@ -70,5 +83,15 @@ func (rep *SignUpRepository)SetUserVerified(u *models.Users) error {
 		return err
 	}
 	
+	return nil
+}
+
+//UpdateCredentials
+func (repository *CredRepository) UpdateCredentials(c *models.Credentials) error {
+	_, err := repository.DB.Exec("UPDATE credentials SET password_hash= $1,salt=$2,updated_at=current_timestamp WHERE id= $3", c.PasswordHash, c.Salt)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

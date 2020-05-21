@@ -310,7 +310,7 @@ components:
     ChangePasswordRequest:
       type: object
       properties:
-        password:
+        existingPassword:
           type: string
           format: password
           description: User's password
@@ -319,7 +319,7 @@ components:
           format: password
           description: User's new password
       required:
-        - password
+        - existingPassword
         - newPassword
     Token:
       type: object
