@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>Are you sure?</h1>
+<div mat-dialog-content>
+  <div style="width: 100%; height: 50px;">
+    <mat-slide-toggle color="warn" [(ngModel)]="data.isDelete">{{data.isDelete? 'Yes': 'No'}}</mat-slide-toggle>
+  </div>
+  <button mat-raised-button (click)="onNoClick()">No</button>
+  <button
+    mat-raised-button
+    color="warn"
+    [disabled]="!data.isDelete"
+    [mat-dialog-close]="data.isDelete"
+    cdkFocusInitial
+    style="float: right;"
+  >
+    Yes, I`m sure
+  </button>
+</div>

@@ -31,8 +31,8 @@ export class InMemoryDataService implements InMemoryDbService {
           id: '131',
           name: 'SD-31',
         },
-        startAt: new Date(2020, 4, 17),
-        lessonNum: '1',
+        startAt: moment([2020, 4, 18, 8, 30]),
+        endAt: moment([2020, 4, 18, 9, 15]),
         room: {
           id: '2011',
           room: '201A',
@@ -55,8 +55,8 @@ export class InMemoryDataService implements InMemoryDbService {
           id: '131',
           name: 'SD-31',
         },
-        startAt: new Date(2020, 4, 18),
-        lessonNum: '2',
+        startAt: moment([2020, 4, 18, 10, 30]),
+        endAt: moment([2020, 4, 18, 12, 15]),
         room: {
           id: '2011',
           room: '201A',
@@ -79,8 +79,8 @@ export class InMemoryDataService implements InMemoryDbService {
           id: '221',
           name: 'EP-21',
         },
-        startAt: new Date(2020, 4, 18),
-        lessonNum: '4',
+        startAt: moment([2020, 4, 19, 11, 35]),
+        endAt: moment([2020, 4, 19, 13, 10]),
         room: {
           id: '2012',
           room: '201B',
@@ -103,8 +103,8 @@ export class InMemoryDataService implements InMemoryDbService {
           id: '222',
           name: 'EP-22',
         },
-        startAt: new Date(2020, 4, 19),
-        lessonNum: '3',
+        startAt: moment([2020, 4, 19, 13, 25]),
+        endAt: moment([2020, 4, 19, 14, 20]),
         room: {
           id: '45',
           room: '45',
@@ -127,8 +127,8 @@ export class InMemoryDataService implements InMemoryDbService {
           id: '221',
           name: 'EP-21',
         },
-        startAt: new Date(2020, 4, 20),
-        lessonNum: '5',
+        startAt: moment([2020, 4, 20, 14]),
+        endAt: moment([2020, 4, 20, 15, 10]),
         room: {
           id: '31',
           room: '3A',
@@ -151,8 +151,8 @@ export class InMemoryDataService implements InMemoryDbService {
           id: '311',
           name: 'OO-11',
         },
-        startAt: new Date(2020, 4, 21),
-        lessonNum: '6',
+        startAt: moment([2020, 4, 21, 8, 30]),
+        endAt: moment([2020, 4, 21, 9, 15]),
         room: {
           id: '202',
           room: '20B',
@@ -175,8 +175,8 @@ export class InMemoryDataService implements InMemoryDbService {
           id: '311',
           name: 'OO-11',
         },
-        startAt: new Date(2020, 4, 22),
-        lessonNum: '8',
+        startAt: moment([2020, 4, 22, 9, 30]),
+        endAt: moment([2020, 4, 22, 10, 15]),
         room: {
           id: '12',
           room: '12',
@@ -318,18 +318,26 @@ export class InMemoryDataService implements InMemoryDbService {
         nameOfSubject: 'Literature',
       },
     ];
-    const timestamp1: string[] = ['1 8.30', '2 9.25', '3 10.30', '4 11.35', '5 12.30', '6 13.25', '7 14.20', '8 15.20'];
-    const timestamp2: string[] = [
-      '9 14.20',
-      '10 15.20',
-      '11 16.15',
-      '12 17.20',
-      '13 18.20',
-      '14 19.15',
-      '15 20.10',
-      '16 21.05',
+    const timestamp1: string[] = [
+      '8',
+      '9',
+      '10',
+      '11',
+      '12',
+      '13',
+      '14',
+      '15',
+      '16',
+      '17',
+      '18',
+      '19',
+      '20',
+      '21',
+      '22',
+      '23',
     ];
-    return {lessons, groups, rooms, subjects, users, timestamp1, timestamp2};
+
+    return {lessons, groups, rooms, subjects, users, timestamp1};
   }
 
   // Overrides the genId method to ensure that a hero always has an id.
