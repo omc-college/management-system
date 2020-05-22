@@ -1,34 +1,57 @@
 $wh: 40px
 $el: calc(100% - #{$wh})
+$width: 4000px
+$height: 900px
 *
     float: left
-
-#right
-    margin: 10px
+.drawer-container
+    width: 100%
+    height: 100%
+mat-drawer
+    width: 400px
+    height: 100%
+mat-drawer-content 
+    width: 100%
+    height: 100%
+#wrapper
+    width:100%
+    height: 100%
+    overflow: auto
+#container
+    flex-direction: row
+    width: $width
+    height: $height
+    overflow: auto
+#timetable
+    width: $el
+    height: 100%
+    border-top: 1px solid black
+    border-left: 1px solid black
+    position: relative
+    flex-direction: row
+#time
+    width: 100%
+    height: $wh
+#week
+    width: $wh
+    height: 100%
 button
     width: 40px
     height: 40px
     mat-icon
         width: 100%
-#down
-    margin-left: 10px
-#time
-    width: 100%
-    height: $wh
 #divider
     width: $wh
     height: $wh
 .timestamp
-    width: calc(calc(100% - #{$wh})/8)
+    width: calc(calc(100% - #{$wh})/16)
     height: 100%
     overflow: hidden
+    border-left: 1px solid black
     p
         font-size: 1.4em
         margin-top: 10px
         margin-left: 5px
-#week
-    width: $wh
-    height: $el
 .weekstamp
     width: 100%
     height: calc(calc(100% - 2px*6)/6)
@@ -39,24 +62,29 @@ button
         font-size: 1.7em
 .unique
     padding-top: 20px 
-#timetable
-    width: $el
-    height: $el
-    border-top: 1px solid black
-    border-left: 1px solid black
 .card
-    width: calc(calc(100% - 2px*8)/8)
-    height: calc(calc(100% - 2px*6)/6)
-    border: 1px solid black
+    width: 100%
+    height: ( 100% / 6 )
+    border-bottom: 1px solid black
+    border-radius: 0px
     padding: 0px
-    margin: 1px
     box-sizing: border-box
     &:hover
         background-color: rgba(0, 0, 0, 0.04)
+.selectedCard
+    background-color: rgba(0, 0, 0, 0.07)
 .lesson
-    width: 100%
-    height: 100%
+    width: 200px
+    height: calc(( 100% - 10px ) / 6)
     padding: 10px
+    color: black
+    position: absolute
+.selectedLesson
+    border: 2px solid black
+    background-color:#3f51b5
+    color: white
+    &:hover
+        background-color:#3f51b5
 .subject, .room
     width: 100%
     overflow: hidden
@@ -67,11 +95,5 @@ button
 .room
     font-size: 1.5em
     padding-top: 5px
-.selected
-    border: 2px solid black
-    background-color:#3f51b5
-    color: white
-    &:hover
-        background-color:#3f51b5
-.hide
-    display: none
+.sideDrawer
+    padding: 15px

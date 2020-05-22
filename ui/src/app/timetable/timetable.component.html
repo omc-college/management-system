@@ -1,53 +1,81 @@
-<div id="time">
-  <div id="divider">
-    <button mat-icon-button color="primary" *ngIf="!showFirstShift" (click)="getTimestamp()">
-      <mat-icon>arrow_forward_ios</mat-icon>
-    </button>
-    <button mat-icon-button color="primary" *ngIf="showFirstShift" (click)="getTimestamp()">
-      <mat-icon>arrow_back_ios</mat-icon>
-    </button>
-  </div>
-  <div class="timestamp" *ngFor="let timestamp of timestamps; trackBy: trackByMethod">
-    <p>{{ timestamp }}</p>
-  </div>
-</div>
+<mat-drawer-container class="drawer-container" hasBackdrop="false">
+  <mat-drawer-content id="wrapper">
+    <div id="container" #container>
+      <div id="time">
+        <div id="divider"></div>
+        <div class="timestamp" *ngFor="let timestamp of timestamp; trackBy: trackByMethod">
+          <p>{{ timestamp }}</p>
+        </div>
+      </div>
 
-<div id="week">
-  <div class="weekstamp"><p>M</p></div>
-  <div class="weekstamp"><p>T</p></div>
-  <div class="weekstamp"><p>W</p></div>
-  <div class="weekstamp"><p>T</p></div>
-  <div class="weekstamp"><p>F</p></div>
-  <div class="weekstamp unique">
-    <p>S</p>
-    <button mat-icon-button color="primary">
-      <mat-icon>arrow_drop_up</mat-icon>
-    </button>
-    <button mat-icon-button color="primary">
-      <mat-icon>arrow_drop_down</mat-icon>
-    </button>
-  </div>
-</div>
+      <div id="week" #week>
+        <div class="weekstamp">
+          <p>M</p>
+        </div>
+        <div class="weekstamp"><p>T</p></div>
+        <div class="weekstamp"><p>W</p></div>
+        <div class="weekstamp"><p>T</p></div>
+        <div class="weekstamp"><p>F</p></div>
+        <div class="weekstamp unique">
+          <p>S</p>
+          <button mat-icon-button color="primary">
+            <mat-icon>arrow_drop_up</mat-icon>
+          </button>
+          <button mat-icon-button color="primary">
+            <mat-icon>arrow_drop_down</mat-icon>
+          </button>
+        </div>
+      </div>
 
-<div id="timetable">
-  <mat-card
-    class="card"
-    [class.selected]="lesson === selectedLesson"
-    (click)="showSliderComponent(lesson)"
-    *ngFor="let lesson of lessons"
-  >
-    <div class="lesson">
-      <div class="subject">{{ lesson.subject.nameOfSubject }}</div>
-      <div class="room">{{ lesson.room.room }}</div>
+      <div id="timetable">
+        <div
+          class="card"
+          [class.selectedCard]="
+            card.year() === selectedDate.year() &&
+            card.month() === selectedDate.month() &&
+            card.date() === selectedDate.date()
+          "
+          (click)="showAddLessonComponent(card); drawer.open()"
+          *ngFor="let card of cards"
+        ></div>
+        <mat-card
+          class="lesson"
+          *ngFor="let lesson of lessons; trackBy: trackByMethod"
+          [style]="
+            'margin-top:' +
+            (container.offsetHeight / DAYSTOSHOW) * (+lesson.startAt.day() - 1) +
+            'px;margin-left:' +
+            ((container.offsetWidth - week.offsetWidth) / (timestamp.length * 60)) *
+              ((+lesson.startAt.hour() - 8) * 60 + +lesson.startAt.minute()) +
+            'px;width:' +
+            (((container.offsetWidth - week.offsetWidth) / (timestamp.length * 60)) *
+              ((+lesson.endAt.hour() - 8) * 60 + +lesson.endAt.minute()) -
+              ((container.offsetWidth - week.offsetWidth) / (timestamp.length * 60)) *
+                ((+lesson.startAt.hour() - 8) * 60 + +lesson.startAt.minute())) +
+            'px'
+          "
+          [class.selectedLesson]="
+            lesson.startAt.year() === selectedLesson.startAt.year() &&
+            lesson.startAt.month() === selectedLesson.startAt.month() &&
+            lesson.startAt.date() === selectedLesson.startAt.date() &&
+            lesson.startAt.hour() === selectedLesson.startAt.hour() &&
+            lesson.startAt.minutes() === selectedLesson.startAt.minutes()
+          "
+          (click)="showLessonInfo(lesson); drawer.open()"
+        >
+          <div class="subject">{{ lesson.subject.nameOfSubject }}</div>
+          <div class="room">{{ lesson.room.room }}</div>
+        </mat-card>
+      </div>
     </div>
-  </mat-card>
-</div>
-<app-slider-menu
-  [class.hide]="hideSlider"
-  [lesson]="selectedLesson"
-  [lessons]="lessons"
-  [sliderAddNewState]="sliderAddNewState"
-  (deletedLesson)="deleteLesson($event)"
-  (addLesson)="addNewLesson($event)"
-  (hideComponent)="hideSliderComponent($event)"
-></app-slider-menu>
+  </mat-drawer-content>
+  <mat-drawer #drawer mode="side" position="end">
+    <app-slider-menu
+      [hide]="drawer"
+      [lesson]="selectedLesson"
+      [sliderAddNewState]="sliderAddNewState"
+      (deletedLesson)="deleteLesson($event)"
+      (addLesson)="addNewLesson($event)"
+    ></app-slider-menu>
+  </mat-drawer>
+</mat-drawer-container>

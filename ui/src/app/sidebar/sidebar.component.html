@@ -1,50 +1,63 @@
 <app-calendar></app-calendar>
 
-<div class="search">
-  <mat-form-field id="datepicker">
-    <mat-label>Choose a date</mat-label>
-    <input matInput [matDatepicker]="picker" />
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker startView="year" [startAt]="'2020-2-12'"></mat-datepicker>
-  </mat-form-field>
-
-  <mat-slide-toggle class="example-margin" color="primary">
-    Timestamp
-  </mat-slide-toggle>
-  <mat-slider thumbLabel min="1" max="8" step="1" color="primary"></mat-slider>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Group</mat-label>
-    <mat-select>
-      <mat-option value="option" *ngFor="let group of groups">{{ group.name }}</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Lecturer</mat-label>
-    <mat-select>
-      <mat-option value="option" *ngFor="let lecturer of lecturers"
-        >{{ lecturer.firstName }} {{ lecturer.lastName }}</mat-option
-      >
-    </mat-select>
-  </mat-form-field>
-
+<form class="showInfo" [formGroup]="findForm" autocomplete="off" novalidate (ngSubmit)="find(findForm.value)">
   <mat-form-field appearance="fill">
     <mat-label>Subject</mat-label>
-    <mat-select>
-      <mat-option value="option" *ngFor="let subject of subjects">{{ subject.nameOfSubject }}</mat-option>
+    <mat-select #subject formControlName="subjectFormControl">
+      <mat-option [value]="subject" *ngFor="let subject of subjects">{{ subject.nameOfSubject }}</mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Room</mat-label>
-    <mat-select>
-      <mat-option value="option" *ngFor="let room of rooms">{{ room.room }}</mat-option>
+    <mat-select #room formControlName="roomFormControl">
+      <mat-option [value]="room" *ngFor="let room of rooms">{{ room.room }}</mat-option>
     </mat-select>
   </mat-form-field>
 
-  <button mat-raised-button color="primary" style="float: right; margin-top: 5px;" (click)="setProgressBar()">
-    Find
-  </button>
-  <button mat-raised-button style="right;margin-top: 5px;" (click)="showError()">ShowError</button>
-</div>
+  <mat-form-field appearance="fill">
+    <mat-label>Group</mat-label>
+    <mat-select #group formControlName="groupFormControl">
+      <mat-option [value]="group" *ngFor="let group of groups">{{ group.name }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Lecturer</mat-label>
+    <mat-select #lecturer formControlName="lecturerFormControl">
+      <mat-option [value]="lecturer" *ngFor="let lecturer of lecturers"
+        >{{ lecturer.firstName }} {{ lecturer.lastName }}</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="datepicker">
+    <mat-label>Start date</mat-label>
+    <input
+      matInput
+      [matDatepickerFilter]="dateFilter"
+      [matDatepicker]="dateFrom"
+      formControlName="startDateFormControl"
+    />
+    <mat-datepicker-toggle matSuffix [for]="dateFrom"></mat-datepicker-toggle>
+    <mat-datepicker #dateFrom startView="year"></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field class="datepicker">
+    <mat-label>End date</mat-label>
+    <input matInput [matDatepickerFilter]="dateFilter" [matDatepicker]="dateTo" formControlName="endDateFormControl" />
+    <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
+    <mat-datepicker #dateTo startView="year"></mat-datepicker>
+  </mat-form-field>
+  <input matInput class="time" type="time" #timeFrom formControlName="startTimeFormControl" />
+  <input matInput class="time" type="time" #timeTo formControlName="endTimeFormControl" />
+  <mat-card-actions>
+    <button mat-raised-button color="primary" class="btn btnFind">
+      Find
+    </button>
+    <button type="button" mat-raised-button color="warn" class="btn" (click)="clear()">
+      Clear
+    </button>
+    <button mat-raised-button class="btn" (click)="showError()">ShowError</button>
+  </mat-card-actions>
+</form>

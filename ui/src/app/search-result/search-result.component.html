@@ -1,0 +1,85 @@
+<div id="menu">
+  <button mat-mini-fab color="primary" aria-label="hide" class="closeBth" (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div *ngIf="data.result">
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let lesson of data.result">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ lesson.subject.nameOfSubject }}
+        </mat-panel-title>
+        <mat-panel-title>
+          {{ lesson.room.room }}
+        </mat-panel-title>
+        <mat-panel-description>
+          {{ lesson.group.name }}
+        </mat-panel-description>
+        <mat-panel-description> {{ lesson.lecturer.firstName }} {{ lesson.lecturer.lastName }} </mat-panel-description>
+        <mat-panel-description> Start at: {{ lesson.startAt }} </mat-panel-description>
+        <mat-panel-description> Ends at: {{ lesson.endAt }} </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <form class="showInfo">
+        <mat-form-field appearance="fill">
+          <mat-label>Subject</mat-label>
+          <mat-select>
+            <mat-option [value]="subject" *ngFor="let subject of subjects">{{ subject.nameOfSubject }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Room</mat-label>
+          <mat-select>
+            <mat-option [value]="room" *ngFor="let room of rooms">{{ room.room }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Group</mat-label>
+          <mat-select>
+            <mat-option [value]="group" *ngFor="let group of groups">{{ group.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Lecturer</mat-label>
+          <mat-select>
+            <mat-option [value]="lecturer" *ngFor="let lecturer of lecturers"
+              >{{ lecturer.firstName }} {{ lecturer.lastName }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="datepicker">
+          <mat-label>Start date</mat-label>
+          <input matInput />
+          <mat-datepicker-toggle matSuffix [for]="dateFrom"></mat-datepicker-toggle>
+          <mat-datepicker #dateFrom startView="year"></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field class="datepicker">
+          <mat-label>End date</mat-label>
+          <input matInput />
+          <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
+          <mat-datepicker #dateTo startView="year"></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="time">
+          <input matInput type="time" />
+        </mat-form-field>
+        <mat-form-field class="time">
+          <input matInput type="time" />
+        </mat-form-field>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" class="updateBtn">
+            Update
+          </button>
+          <button type="button" mat-raised-button color="warn" class="deleteBtn">
+            Delete
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

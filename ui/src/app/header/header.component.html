@@ -1,6 +1,6 @@
 <header>
   <mat-progress-bar *ngIf="showProgressBar" mode="indeterminate" id="progressBar"></mat-progress-bar>
-  <button mat-mini-fab id="menuBtn" color="primary" aria-label="Menu">
+  <button mat-mini-fab id="menuBtn" color="primary" aria-label="Menu" (click)="inputSideNav.toggle()">
     <mat-icon>menu</mat-icon>
   </button>
   <div id="logo">
