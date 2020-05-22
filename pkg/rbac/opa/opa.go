@@ -7,12 +7,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type RegoInput struct {
-	Path   string `json:"path"`
-	Method string `json:"method"`
-	Token  string `json:"token"`
-}
-
 func GetDecision(ctx context.Context, requestRegoInput RegoInput) bool {
 	var err error
 
