@@ -2,19 +2,19 @@ package opa
 
 import (
 	"context"
+
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/sirupsen/logrus"
 )
 
 type RegoInput struct {
-	Path   string   `json:"path"`
-	Method string   `json:"method"`
-	Token  string   `json:"token"`
+	Path   string `json:"path"`
+	Method string `json:"method"`
+	Token  string `json:"token"`
 }
 
-func GetDecision (requestRegoInput RegoInput) bool {
+func GetDecision(ctx context.Context, requestRegoInput RegoInput) bool {
 	var err error
-	ctx := context.Background()
 
 	authorizationRego := rego.New(
 		rego.Query("data.authorization.isAccessGranted"),
