@@ -1,3 +1,13 @@
-<app-header></app-header>
-<app-sidebar></app-sidebar>
-<app-timetable></app-timetable>
+<mat-drawer-container class="drawer-container" hasBackdrop="false">
+  <mat-drawer #drawer mode="side" class="sideDrawer">
+    <button mat-mini-fab color="primary" aria-label="hide" (click)="drawer.toggle()" class="btn">
+      <mat-icon>close</mat-icon>
+    </button>
+    menu
+  </mat-drawer>
+  <mat-drawer-content>
+    <app-header [inputSideNav]="drawer"></app-header>
+    <app-sidebar></app-sidebar>
+    <app-timetable></app-timetable>
+  </mat-drawer-content>
+</mat-drawer-container>

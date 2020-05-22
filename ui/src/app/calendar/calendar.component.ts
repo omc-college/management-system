@@ -18,10 +18,12 @@ export class CalendarComponent implements OnInit {
   ngOnInit(): void {
     this.getSelectedDate();
   }
+
   changeDate(date: Date): void {
     this.selectedDate = date;
     this.timetableService.selectDate(this.selectedDate);
   }
+
   getSelectedDate(): void {
     this.timetableService.getSelectedDate().subscribe(date => {
       this.selectedDate = date;

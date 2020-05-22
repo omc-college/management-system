@@ -1,126 +1,181 @@
-<div *ngIf="!sliderAddNewState" class="showSlider">
-  <button mat-mini-fab color="primary" aria-label="hide" (click)="hide()" style="margin-bottom: 10px;">
+<div class="showSlider" *ngIf="!sliderAddNewState">
+  <button mat-mini-fab color="primary" aria-label="hide" (click)="hideComponent()" class="closeBtn">
     <mat-icon>close</mat-icon>
   </button>
-  <div *ngIf="lesson" class="showInfo">
+  <div class="showInfo" *ngIf="lesson">
     <mat-form-field appearance="fill">
-      <mat-label>Subject</mat-label>
-      <mat-select [value]="lesson.subject" #subject>
-        <mat-option [value]="lesson.subject" selected>{{ lesson.subject.nameOfSubject }}</mat-option>
+      <mat-label>{{ lesson.subject.nameOfSubject }}</mat-label>
+      <mat-select required #subject>
         <mat-option [value]="subject" *ngFor="let subject of subjects">{{ subject.nameOfSubject }}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Room</mat-label>
-      <mat-select [value]="lesson.room" #room>
-        <mat-option [value]="lesson.room" disabled>{{ lesson.room.room }}</mat-option>
+      <mat-label>{{ lesson.room.room }}</mat-label>
+      <mat-select required #room>
         <mat-option [value]="room" *ngFor="let room of rooms">{{ room.room }}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Group</mat-label>
-      <mat-select [value]="lesson.group" #group>
-        <mat-option [value]="lesson.group" disabled>{{ lesson.group.name }}</mat-option>
+      <mat-label>{{ lesson.group.name }}</mat-label>
+      <mat-select required #group>
         <mat-option [value]="group" *ngFor="let group of groups">{{ group.name }}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
-      <mat-label>Lecturer</mat-label>
-      <mat-select [value]="lesson.lecturer" #lecturer>
-        <mat-option [value]="lesson.lecturer" disabled
-          >{{ lesson.lecturer.firstName }} {{ lesson.lecturer.lastName }}</mat-option
-        >
+      <mat-label>{{ lesson.lecturer.firstName }} {{ lesson.lecturer.lastName }}</mat-label>
+      <mat-select required #lecturer>
         <mat-option [value]="lecturer" *ngFor="let lecturer of lecturers"
           >{{ lecturer.firstName }} {{ lecturer.lastName }}</mat-option
         >
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field id="datepicker">
-      <input matInput [matDatepicker]="picker" [value]="lesson.startAt" #startAt />
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker startView="year"></mat-datepicker>
+    <mat-form-field class="datepicker">
+      <mat-label>{{ lesson.startAt.format('YYYY-MM-DD') }}</mat-label>
+      <input matInput [matDatepickerFilter]="dateFilter" [matDatepicker]="dateFrom" required />
+      <mat-datepicker-toggle matSuffix [for]="dateFrom"></mat-datepicker-toggle>
+      <mat-datepicker #dateFrom startView="year"></mat-datepicker>
     </mat-form-field>
 
-    <mat-slide-toggle class="example-margin" color="primary">
-      Timestamp
-    </mat-slide-toggle>
-    <mat-slider thumbLabel min="1" max="8" step="1" color="primary" [value]="lesson.lessonNum" #lessonNum></mat-slider>
+    <mat-form-field class="datepicker">
+      <mat-label>{{ lesson.endAt.format('YYYY-MM-DD') }}</mat-label>
+      <input matInput [matDatepickerFilter]="dateFilter" [matDatepicker]="dateTo" required />
+      <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
+      <mat-datepicker #dateTo startView="year"></mat-datepicker>
+    </mat-form-field>
+
+    <input matInput type="time" class="time" #timeFrom [value]="lesson.startAt.format('HH:mm')" />
+    <input matInput type="time" class="time" #timeTo [value]="lesson.endAt.format('HH:mm')" />
 
     <button
       mat-raised-button
       color="primary"
-      style="float: right; margin-top: 5px;"
+      class="btn btn-r"
       (click)="
-        updateLesson(subject.value, room.value, lecturer.value, group.value, startAt.value, lessonNum.value.toString())
+        updateLesson(
+          subject.value,
+          room.value,
+          lecturer.value,
+          group.value,
+          dateFrom.startAt,
+          dateTo.startAt,
+          timeFrom.value,
+          timeTo.value
+        )
       "
     >
       Change
     </button>
-    <button mat-raised-button color="primary" style="margin-top: 5px;" (click)="deleteLesson()">
+    <button mat-raised-button color="warn" class="btn" (click)="deleteLesson()">
       Delete
     </button>
   </div>
 </div>
-<!--------------------------------------------------add---------------------------------->
-<div *ngIf="sliderAddNewState" class="showSlider">
-  <button mat-mini-fab color="primary" aria-label="hide" (click)="hide()" style="margin-bottom: 10px;">
+
+<!--------------------------------------------------Add New Lesson---------------------------------->
+
+<div class="showSlider" *ngIf="sliderAddNewState">
+  <button mat-mini-fab color="primary" aria-label="hide" (click)="hideComponent()" class="closeBtn">
     <mat-icon>close</mat-icon>
   </button>
-  <div class="showInfo">
+  <form
+    class="showInfo"
+    [formGroup]="addNewForm"
+    autocomplete="off"
+    novalidate
+    (ngSubmit)="addNewLesson(addNewForm.value)"
+  >
     <mat-form-field appearance="fill">
       <mat-label>Subject</mat-label>
-      <mat-select #subject>
+      <mat-select required #subject formControlName="subjectFormControl">
         <mat-option [value]="subject" *ngFor="let subject of subjects">{{ subject.nameOfSubject }}</mat-option>
       </mat-select>
+      <mat-error *ngIf="hasError('subjectFormControl', 'required')">
+        {{ showRequiredErrorMessage('Subject') }}</mat-error
+      >
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Room</mat-label>
-      <mat-select #room>
+      <mat-select required #room formControlName="roomFormControl">
         <mat-option [value]="room" *ngFor="let room of rooms">{{ room.room }}</mat-option>
       </mat-select>
+      <mat-error *ngIf="hasError('roomFormControl', 'required')">{{ showRequiredErrorMessage('Room') }}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Group</mat-label>
-      <mat-select #group>
+      <mat-select required #group formControlName="groupFormControl">
         <mat-option [value]="group" *ngFor="let group of groups">{{ group.name }}</mat-option>
       </mat-select>
+      <mat-error *ngIf="hasError('groupFormControl', 'required')">{{ showRequiredErrorMessage('Group') }}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Lecturer</mat-label>
-      <mat-select #lecturer>
+      <mat-select required #lecturer formControlName="lecturerFormControl">
         <mat-option [value]="lecturer" *ngFor="let lecturer of lecturers"
           >{{ lecturer.firstName }} {{ lecturer.lastName }}</mat-option
         >
       </mat-select>
+      <mat-error *ngIf="hasError('lecturerFormControl', 'required')">{{
+        showRequiredErrorMessage('Lecturer')
+      }}</mat-error>
     </mat-form-field>
 
-    <mat-form-field id="datepicker">
-      <input matInput [matDatepicker]="picker" #startAt />
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker startView="year"></mat-datepicker>
+    <mat-form-field class="datepicker">
+      <mat-label>Start date</mat-label>
+      <input
+        matInput
+        [matDatepickerFilter]="dateFilter"
+        [matDatepicker]="dateFrom"
+        required
+        formControlName="startDateFormControl"
+      />
+      <mat-datepicker-toggle matSuffix [for]="dateFrom"></mat-datepicker-toggle>
+      <mat-datepicker #dateFrom startView="year"></mat-datepicker>
+      <mat-error *ngIf="hasError('startDateFormControl', 'required')">{{
+        showRequiredErrorMessage('Start Date')
+      }}</mat-error>
     </mat-form-field>
 
-    <mat-slide-toggle class="example-margin" color="primary">
-      Timestamp
-    </mat-slide-toggle>
-    <mat-slider thumbLabel min="1" max="8" step="1" color="primary" #lessonNum></mat-slider>
-
-    <button
-      mat-raised-button
-      color="primary"
-      style="float: right; margin-top: 5px;"
-      (click)="
-        addNewLesson(subject.value, room.value, lecturer.value, group.value, startAt.value, lessonNum.value.toString())
-      "
-    >
-      Add
-    </button>
-  </div>
+    <mat-form-field class="datepicker">
+      <mat-label>End date</mat-label>
+      <input
+        matInput
+        [matDatepickerFilter]="dateFilter"
+        [matDatepicker]="dateTo"
+        required
+        formControlName="endDateFormControl"
+      />
+      <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
+      <mat-datepicker #dateTo startView="year"></mat-datepicker>
+      <mat-error *ngIf="hasError('endDateFormControl', 'required')">{{
+        showRequiredErrorMessage('End Date')
+      }}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="time">
+      <input matInput type="time" #timeFrom formControlName="startTimeFormControl" />
+      <mat-error *ngIf="hasError('startTimeFormControl', 'required')">{{
+        showRequiredErrorMessage('Start time')
+      }}</mat-error>
+    </mat-form-field>
+    <mat-form-field class="time">
+      <input matInput type="time" #timeTo formControlName="endTimeFormControl" />
+      <mat-error *ngIf="hasError('endTimeFormControl', 'required')">{{
+        showRequiredErrorMessage('End time')
+      }}</mat-error>
+    </mat-form-field>
+    <mat-card-actions class="btnCard">
+      <button mat-raised-button color="primary" [disabled]="!addNewForm.valid" class="btn btn-r">
+        Create
+      </button>
+      <button type="button" mat-raised-button color="warn" (click)="onCancel()" class="btn">
+        Cancel
+      </button>
+    </mat-card-actions>
+  </form>
 </div>

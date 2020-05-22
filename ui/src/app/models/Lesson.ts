@@ -8,7 +8,7 @@ export interface Lesson {
   subject: iSubject;
   lecturer: User;
   group: Group;
-  startAt: Date;
-  lessonNum: string;
+  startAt: moment.Moment;
+  endAt: moment.Moment;
   room: Room;
 }

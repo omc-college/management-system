@@ -1,86 +1,121 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {TimetableService} from '../timetable.service';
-import {Lesson} from '../models/Lesson';
+import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+import * as moment from 'moment';
+import {MatSidenav, MatDrawer} from '@angular/material/sidenav';
+
 import {TimetableHttpService} from '../shared/timetable-http.service';
-const NUMBEROFCARDS = 48;
+import {TimetableService} from '../timetable.service';
+
+import {Lesson} from '../models/Lesson';
+
 @Component({
   selector: 'app-timetable',
   templateUrl: './timetable.component.html',
   styleUrls: ['./timetable.component.sass'],
 })
 export class TimetableComponent implements OnInit {
+  @ViewChild('drawer') public drawer: MatSidenav;
+
   private lessonsUrl = 'api/lessons';
-  private timestamp1Url = 'api/timestamp1';
-  private timestamp2Url = 'api/timestamp2';
-  timestamps: string[] = [];
-  showFirstShift: boolean = true;
-  hideSlider: boolean = true;
+  private timestampUrl = 'api/timestamp1';
+
+  readonly DAYSTOSHOW: number = 6;
   sliderAddNewState: boolean = false;
+
+  timestamp: string[] = [];
+  cards: moment.Moment[];
   lessons: Lesson[] = [];
+
   selectedLesson: Lesson;
-  selectedDate: Date = new Date();
-  nextWeek: Date = new Date();
+  selectedDate: moment.Moment = moment();
   constructor(private timetableService: TimetableService, private timetableHttpService: TimetableHttpService) {}
+
   ngOnInit(): void {
     this.getSelectedDate();
+    this.selectLesson();
     this.getLessons();
+    this.setDatesInCard();
     this.getTimestamp();
     this.getAddLessonComponentState();
   }
+  addNewLesson(newLesson: Lesson): void {
+    newLesson.startAt = moment(newLesson.startAt);
+    newLesson.endAt = moment(newLesson.endAt);
+    if (
+      this.cards.find(
+        d =>
+          d.year() === newLesson.startAt.year() &&
+          d.month() === newLesson.startAt.month() &&
+          d.date() === newLesson.startAt.date(),
+      )
+    ) {
+      this.lessons.push(newLesson);
+    }
+  }
+
+  deleteLesson(lesson: Lesson): void {
+    this.lessons = this.lessons.filter(l => l !== lesson);
+  }
+
+  setDatesInCard(): void {
+    this.cards = [];
+    for (let i = 1; i <= this.DAYSTOSHOW; i++) {
+      this.cards.push(moment().week(this.selectedDate.week()).day(i));
+    }
+  }
   getLessons(): void {
     this.timetableHttpService.getData(this.lessonsUrl).subscribe(lessons => {
-      lessons.forEach(el => (el.startAt = new Date(el.startAt)));
+      lessons.forEach(el => {
+        el.startAt = moment(el.startAt);
+        el.endAt = moment(el.endAt);
+      });
       this.lessons = lessons;
+      this.selectLesson();
     });
   }
+
   getSelectedDate(): void {
     this.timetableService.getSelectedDate().subscribe(date => {
-      this.selectedDate = date;
+      this.selectedDate = moment(date);
+      this.setDatesInCard();
+      this.selectLesson();
     });
+  }
+
+  setSelectedDate(date: moment.Moment): void {
+    this.timetableService.selectDate(new Date(date.format('YYYY-MM-DD')));
+  }
+
+  selectLesson(): void {
+    this.selectedLesson = this.lessons.find(
+      el =>
+        el.startAt.year() === this.selectedDate.year() &&
+        el.startAt.month() === this.selectedDate.month() &&
+        el.startAt.date() === this.selectedDate.date(),
+    );
   }
   getTimestamp(): void {
-    if (this.showFirstShift) {
-      this.timetableHttpService.getData(this.timestamp1Url).subscribe(timesetamp => (this.timestamps = timesetamp));
-    } else {
-      this.timetableHttpService.getData(this.timestamp2Url).subscribe(timesetamp => (this.timestamps = timesetamp));
-    }
-    this.showFirstShift = !this.showFirstShift;
+    this.timetableHttpService.getData(this.timestampUrl).subscribe(timesetamp => (this.timestamp = timesetamp));
   }
-  deleteLesson(lesson: Lesson): void {
-    this.lessons.forEach(el => {
-      if (el === lesson) {
-        el = null;
-      }
-    });
-  }
-  addNewLesson(newLesson: Lesson): void {
-    newLesson.startAt = new Date(newLesson.startAt);
-    this.lessons[newLesson.startAt.getDay() * 8 - (8 - +newLesson.lessonNum) - 1] = newLesson;
-  }
+
   getAddLessonComponentState(): void {
     this.timetableService.getAddLessonComponentState().subscribe(bool => {
       this.sliderAddNewState = bool;
-      this.hideSlider = !this.sliderAddNewState;
+      this.drawer.toggle(this.sliderAddNewState);
     });
   }
-  showAddLessonComponent(): void {
+  showAddLessonComponent(date: moment.Moment): void {
     this.sliderAddNewState = true;
     this.timetableService.changeAddLessonComponentState(this.sliderAddNewState);
-    this.hideSlider = false;
+    this.selectedDate = date;
+    this.setSelectedDate(date);
   }
-  hideSliderComponent(hide: boolean) {
+  showLessonInfo(lesson: Lesson): void {
+    this.setSelectedDate(lesson.startAt);
     this.sliderAddNewState = false;
-    this.timetableService.changeAddLessonComponentState(this.sliderAddNewState);
-    this.hideSlider = hide;
-  }
-  showSliderComponent(lesson: Lesson): void {
-    this.selectedDate = lesson.startAt;
-    this.timetableService.selectDate(this.selectedDate);
-    this.sliderAddNewState = false;
-    this.timetableService.changeAddLessonComponentState(this.sliderAddNewState);
     this.selectedLesson = lesson;
-    this.hideSlider = false;
+    this.timetableService.changeAddLessonComponentState(this.sliderAddNewState);
   }
+
   trackByMethod(index: number, el: any): number {
     return el.id;
   }
