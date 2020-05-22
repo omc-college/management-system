@@ -1,77 +1,62 @@
 {
-  "roles": {
-    "1": {
-      "name": "Admin",
-      "entries": {
-        "1": {
-          "name": "rolesManagement",
-          "description": "deadbeef",
-          "endpoints": {
-            "1": {
-              "name": "giveOneStudent",
-              "path": "/roles/{id}",
-              "method": "GET"
-            },
-            "2": {
-              "name": "giveStudents",
-              "path": "/roles",
-              "method": "GET"
-            },
-            "3": {
-              "name": "deleteStudent",
-              "path": "/roles/{id}",
-              "method": "DELETE"
-            }
-          }
-        },
-        "2": {
-          "name": "groupsManagement",
-          "description": "deadbeef",
-          "endpoints": {
-            "1": {
-              "name": "giveOneGroup",
-              "path": "/group/{id}",
-              "method": "GET"
-            },
-            "2": {
-              "name": "giveGroups",
-              "path": "/group",
-              "method": "GET"
-            },
-            "3": {
-              "name": "deleteGroup",
-              "path": "/group/{id}",
-              "method": "DELETE"
-            }
-          }
-        }
-      }
+  "cache": [{
+      "regExp": "^/group/\\w+$",
+      "roles": [
+        "1",
+        "2"
+      ],
+      "methods": [
+        "GET",
+        "DELETE"
+      ]
     },
-    "2": {
-      "name": "User",
-      "entries": {
-        "1": {
-          "name": "studentsManagement",
-          "description": "deadbeef",
-          "endpoints": {
-            "1": {
-              "name": "giveOneStudent",
-              "path": "/student/{id}",
-              "method": "GET"
-            },
-            "2": {
-              "name": "giveStudents",
-              "path": "/student",
-              "method": "GET"
-            },
-            "3": {
-              "name": "deleteStudent",
-              "path": "/student/{id}",
-              "method": "DELETE"
-            }
-          }
-        }
-      }
+    {
+      "regExp": "^/student/\\w+$",
+      "roles": [
+        "2"
+      ],
+      "methods": [
+        "GET",
+        "DELETE"
+      ]
+    },
+    {
+      "regExp": "^/roles/\\w+$",
+      "roles": [
+        "1"
+      ],
+      "methods": [
+        "GET",
+        "DELETE"
+      ]
+    },
+    {
+      "regExp": "^/group$",
+      "roles": [
+        "1"
+      ],
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "regExp": "^/student$",
+      "roles": [
+        "2"
+      ],
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "regExp": "^/roles$",
+      "roles": [
+        "2"
+      ],
+      "methods": [
+        "GET"
+      ]
     }
-  }
+  ]
+
 }
