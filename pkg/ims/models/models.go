@@ -1,33 +1,39 @@
 package models
 
-import "github.com/dgrijalva/jwt-go"
+import (
+	"github.com/dgrijalva/jwt-go"
+)
 
 type Users struct {
-	ID          int    `json:"ID"`
-	FirstName   string `json:"first_name"`
-	LastName    string `json:"last_name"`
-	Email       string `json:"email"`
-	MobilePhone string `json:"mobile_phone"`
-	CreatedAt   string `json:"created_at"`
-	ModifiedAt  string `json:"modified_at"`
-	Role        string `json:"role"`
-	Verified    bool   `json:"verified"`
+	ID          int      `json:"id"`
+	FirstName   string   `json:"first_name"`
+	LastName    string   `json:"last_name"`
+	Email       string   `json:"email"`
+	MobilePhone string   `json:"mobile_phone"`
+	CreatedAt   string   `json:"created_at"`
+	ModifiedAt  string   `json:"modified_at"`
+	Roles       []string `json:"roles"`
+	Verified    bool     `json:"verified"`
 }
 
 type Claims struct {
 	Email string `json:"email"`
-	Sub   string `json:"sub"`
+	ID    string `json:"id"`
 	Role  string `json:"role"`
 	jwt.StandardClaims
 }
 
 type Credentials struct {
-	PasswordHash string
-	Salt         string
+	ID           string `json:"id"`
+	PasswordHash string `json:"password_hash"`
+	Salt         string `json:"salt"`
+	UpdatedAt    string `json:"updated_at"`
 }
 
 type EmailVerificationTokens struct {
-	VerificationToken string
+	ID                string `json:"id"`
+	VerificationToken string `json:"verification_token"`
+	GeneretedAt       string `json:"generated_at"`
 }
 
 type Error struct {

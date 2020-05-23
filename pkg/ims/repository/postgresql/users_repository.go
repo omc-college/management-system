@@ -1,51 +1,36 @@
 package postgresql
 
 import (
-	"database/sql"
-	"errors"
 	_ "github.com/jackc/pgx"
+	_ "github.com/jackc/pgx/pgtype"
 	_ "github.com/jackc/pgx/stdlib"
+	"github.com/jmoiron/sqlx"
 	"github.com/omc-college/management-system/pkg/ims/models"
 )
 
-//
 type UsersRepository struct {
-	Db *sql.DB
+	db *sqlx.DB
 }
 
-// Create new user repository
-func NewUsersRepository(dbPath string) (*UsersRepository, error) {
-	Db, err := sql.Open("pgx", dbPath)
+func NewUsersRepository(dbConnURL string) (*UsersRepository, error) {
+	db, err := sqlx.Connect("pgx", dbConnURL)
 	if err != nil {
 		return nil, err
 	}
-	err = Db.Ping()
+	err = db.Ping()
 	if err != nil {
 		return nil, err
 	}
-	return &UsersRepository{Db: Db}, nil
+	return &UsersRepository{
+		db: db,
+	}, nil
 }
 
-func GetAllUsers(repository *UsersRepository) ([]models.Users, error) {
-	query := `SELECT *  FROM users;`
+func (ur *UsersRepository) GetAllUsers() ([]models.Users, error) {
 
 	var users []models.Users
 
-	rows, err := repository.Db.Query(query)
-	if err != nil {
-		return nil, err
-	}
-
-	for rows.Next() {
-		var u = models.Users{}
-		err := rows.Scan(&u.ID, &u.FirstName, &u.LastName, &u.Email, &u.MobilePhone, &u.Role, &u.CreatedAt, &u.ModifiedAt)
-		if err != nil {
-			return nil, err
-		}
-		users = append(users, u)
-	}
-
-	err = rows.Err()
+	err := ur.db.Select(&users, "SELECT * FROM users ORDER BY id ASC")
 	if err != nil {
 		return nil, err
 	}
@@ -53,63 +38,30 @@ func GetAllUsers(repository *UsersRepository) ([]models.Users, error) {
 	return users, nil
 }
 
-func GetUser(repository *UsersRepository, ID int) (models.Users, error) {
-	query := `SELECT * FROM users WHERE id = $1;`
+func (ur *UsersRepository) GetUser(ID int) (*models.Users, error) {
 
-	var user = models.Users{}
+	u := user{}
 
-	rows, err := repository.Db.Query(query, ID)
+	err := ur.db.Get(&u, "SELECT * FROM users WHERE id= $1", ID)
 	if err != nil {
-		return models.Users{}, err
+		return nil, err
 	}
 
-	for rows.Next() {
-		err = rows.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.MobilePhone, &user.Role, &user.CreatedAt, &user.ModifiedAt)
-		if err != nil {
-			return models.Users{}, err
-		}
+	if u.ID == 0 {
+		return nil, ErrNoRows
 	}
 
-	if user.ID == 0 {
-		return models.Users{}, ErrNoRows
-	}
-
-	err = rows.Err()
-	if err != nil {
-		return models.Users{}, err
-	}
-	return user, nil
+	return ToUser(u)
 }
 
-func AddUser(repository *UsersRepository, user models.Users) error {
-	query := `INSERT INTO users (first_name, last_name, email, mobile_phone, role, created_at, modified_at) 
-    VALUES ($1, $2, $3, $4, $5, current_timestamp, null ) RETURNING (id)`
-
-	var uID int
-
-	err := repository.Db.QueryRow(query, user.FirstName, user.LastName, user.Email, user.MobilePhone, user.Role).Scan(&uID)
+func (ur *UsersRepository) UpdateUser(u models.Users) error {
+	user := user{}
+	err := ur.db.Get(&user, "SELECT * FROM users WHERE id= $1", u.ID)
 	if err != nil {
 		return err
 	}
-	return nil
-}
 
-func UpdateUser(repository *UsersRepository, user models.Users) error {
-	query := `SELECT FROM users WHERE id = $1`
-
-	err := repository.Db.QueryRow(query, user.ID).Scan()
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			err = ErrNoRows
-		} else {
-			err = QueryError{queryErrorMessage, err}
-		}
-		return err
-	}
-
-	query = `UPDATE users SET first_name = $1, last_name= $2, email= $3, mobile_phone= $4, modified_at= current_timestamp WHERE id = $5`
-
-	_, err = repository.Db.Exec(query, user.FirstName, user.LastName, user.Email, user.MobilePhone, user.Role, user.ID)
+	_, err = ur.db.Exec("UPDATE users SET first_name = $1, last_name= $2, email= $3, mobile_phone= $4, modified_at= CURRENT_TIMESTAMP, roles= $5 WHERE id = $6", u.FirstName, u.LastName, u.Email, u.MobilePhone, u.Roles, u.ID)
 	if err != nil {
 		return QueryError{queryErrorMessage, err}
 	}
@@ -117,25 +69,46 @@ func UpdateUser(repository *UsersRepository, user models.Users) error {
 	return nil
 }
 
-func DeleteUser(repository *UsersRepository, UserID int) error {
-	query := `SELECT FROM users WHERE id = $1`
+func (ur *UsersRepository) DeleteUser(UserID int) error {
 
-	err := repository.Db.QueryRow(query, UserID).Scan()
+	_, err := ur.db.Exec("DELETE FROM users WHERE id= $1", UserID)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			err = ErrNoRows
-		} else {
-			err = QueryError{queryErrorMessage, err}
-		}
 		return err
 	}
 
-	query = `DELETE FROM users WHERE id = $1`
+	return nil
+}
 
-	_, err = repository.Db.Exec(query, UserID)
+func (ur *UsersRepository) GetUserByEmail(email string) (*models.Users, error) {
+
+	u := user{}
+
+	err := ur.db.Get(&u, "SELECT * FROM users WHERE email= $1", email)
 	if err != nil {
-		return QueryError{queryErrorMessage, err}
+		return nil, err
 	}
 
-	return nil
+	return ToUser(u)
+}
+
+func ToUser(privatUser user) (*models.Users, error) {
+
+	roles := []string{}
+	err := privatUser.Roles.AssignTo(&roles)
+	if err != nil {
+		return nil, err
+	}
+	var genericUser *models.Users
+	genericUser = &models.Users{
+		ID:          privatUser.ID,
+		FirstName:   privatUser.FirstName,
+		LastName:    privatUser.LastName,
+		Email:       privatUser.Email,
+		MobilePhone: privatUser.MobilePhone,
+		CreatedAt:   privatUser.CreatedAt,
+		ModifiedAt:  privatUser.ModifiedAt,
+		Roles:       roles,
+		Verified:    privatUser.Verified,
+	}
+	return genericUser, nil
 }

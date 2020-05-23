@@ -1,0 +1,10 @@
+BEGIN;
+
+ALTER TABLE users
+DROP COLUMN  role;
+
+ALTER TABLE users 
+ADD COLUMN roles []text;
+
+
+COMMIT;
