@@ -13,7 +13,7 @@ paths:
   /signup:
     post:
       description: This endpoint handles user registartion requests, sent from sign-up form
-      operationId: signUp
+      operationId: SignUp
       requestBody:
         content:
           application/json:
@@ -70,7 +70,7 @@ paths:
   /email/available:
     get:
       description: This endpoint compares user's entered email with existing emails and displays an error if there is the same in DB
-      operationId: emailAvailable
+      operationId: EmailAvailable
       parameters:
         - in: query
           name: email
@@ -90,7 +90,7 @@ paths:
   /users/emailVerificationToken/verify:
     get:
       description: To complete the registration you need to confirm your email with token
-      operationId: emailVerificationToken
+      operationId: EmailVerificationToken
       parameters:
         - in: query
           name: token

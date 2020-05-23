@@ -27,7 +27,7 @@ type Credentials struct {
 }
 
 type EmailVerificationTokens struct {
-	VerificationToken string
+	VerificationToken string `json:"verification_token"`
 }
 
 type Error struct {
