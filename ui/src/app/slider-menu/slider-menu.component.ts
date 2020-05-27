@@ -10,7 +10,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import {Lesson} from '../models/Lesson';
 import {Group} from '../models/Group';
 import {User} from '../models/User';
-import {iSubject} from '../models/Subject';
+import {ISubject} from '../models/Subject';
 import {Room} from '../models/Room';
 
 @Component({
@@ -36,7 +36,7 @@ export class SliderMenuComponent implements OnInit {
 
   groups: Group[] = [];
   lecturers: User[] = [];
-  subjects: iSubject[] = [];
+  subjects: ISubject[] = [];
   rooms: Room[] = [];
   constructor(
     private timetableHttpService: TimetableHttpService,
@@ -124,7 +124,7 @@ export class SliderMenuComponent implements OnInit {
     this.addNewForm.reset();
   }
   updateLesson(
-    subject: iSubject,
+    subject: ISubject,
     room: Room,
     lecturer: User,
     group: Group,

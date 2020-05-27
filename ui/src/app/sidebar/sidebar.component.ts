@@ -8,7 +8,7 @@ import {SearchResultComponent} from '../search-result/search-result.component';
 
 import {Group} from '../models/Group';
 import {User} from '../models/User';
-import {iSubject} from '../models/Subject';
+import {ISubject} from '../models/Subject';
 import {Room} from '../models/Room';
 import {Error} from '../models/Error';
 
@@ -29,7 +29,7 @@ export class SidebarComponent implements OnInit {
 
   groups: Group[] = [];
   lecturers: User[] = [];
-  subjects: iSubject[] = [];
+  subjects: ISubject[] = [];
   rooms: Room[] = [];
   constructor(
     private timetableHttpService: TimetableHttpService,

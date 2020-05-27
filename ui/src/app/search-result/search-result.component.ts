@@ -4,7 +4,7 @@ import {TimetableHttpService} from '../shared/timetable-http.service';
 
 import {Group} from '../models/Group';
 import {User} from '../models/User';
-import {iSubject} from '../models/Subject';
+import {ISubject} from '../models/Subject';
 import {Room} from '../models/Room';
 @Component({
   selector: 'app-search-result',
@@ -18,7 +18,7 @@ export class SearchResultComponent implements OnInit {
   private usersUrl = 'api/users';
   groups: Group[] = [];
   lecturers: User[] = [];
-  subjects: iSubject[] = [];
+  subjects: ISubject[] = [];
   rooms: Room[] = [];
   constructor(
     private timetableHttpService: TimetableHttpService,

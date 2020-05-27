@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { SliderMenuComponent } from './slider-menu.component';
+import {SliderMenuComponent} from './slider-menu.component';
 
 describe('SliderMenuComponent', () => {
   let component: SliderMenuComponent;
@@ -8,9 +8,8 @@ describe('SliderMenuComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SliderMenuComponent ]
-    })
-    .compileComponents();
+      declarations: [SliderMenuComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

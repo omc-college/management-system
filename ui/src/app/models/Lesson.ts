@@ -2,10 +2,10 @@ import * as moment from 'moment';
 import {Group} from './Group';
 import {User} from './User';
 import {Room} from './Room';
-import {iSubject} from './Subject';
+import {ISubject} from './Subject';
 export interface Lesson {
   readonly id: string;
-  subject: iSubject;
+  subject: ISubject;
   lecturer: User;
   group: Group;
   startAt: moment.Moment;
