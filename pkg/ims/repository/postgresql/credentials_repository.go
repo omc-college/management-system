@@ -7,21 +7,13 @@ import (
 )
 
 type CredRepository struct {
-	db *sqlx.DB
+	db sqlx.Ext
 }
 
-func NewCredentialsRepository(dbConnURL string) (*CredRepository, error) {
-	db, err := sqlx.Connect("pgx", dbConnURL)
-	if err != nil {
-		return nil, err
-	}
-	err = db.Ping()
-	if err != nil {
-		return nil, err
-	}
+func NewCredentialsRepository(db sqlx.Ext) *CredRepository {
 	return &CredRepository{
 		db: db,
-	}, nil
+	}
 }
 
 //UpdateCredentials
@@ -35,11 +27,18 @@ func (cr *CredRepository) UpdateCredentials(c *models.Credentials) error {
 }
 
 func (cr *CredRepository) GetCredentialByUserID(usersId string) (*models.Credentials, error) {
-
 	c := &models.Credentials{}
-	err := cr.db.Get(&c, "SELECT * FROM credentials WHERE id=$1", usersId)
+
+	result, err := cr.db.Query("SELECT * FROM credentials WHERE id=$1", usersId)
 	if err != nil {
 		return nil, err
+	}
+
+	for result.Next() {
+		err = result.Scan(&c.ID, &c.PasswordHash, &c.Salt, &c.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return c, nil
@@ -49,8 +48,9 @@ func (cr *CredRepository) GetCredentialByUserID(usersId string) (*models.Credent
 func (cr *CredRepository) InsertCredentials(c *models.Credentials) error {
 	_, err := cr.db.Exec("INSERT INTO credentials(id, password_hash, salt, updated_at) VALUES($1, $2, $3, CURRENT_TIMESTAMP)", c.ID, c.PasswordHash, c.Salt)
 	if err != nil {
-		return err
+		return QueryError{queryErrorMessage, err}
 	}
+
 	return nil
 }
 

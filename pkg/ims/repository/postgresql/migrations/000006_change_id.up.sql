@@ -1,0 +1,12 @@
+BEGIN;
+
+ALTER TABLE credentials
+ALTER COLUMN id TYPE INT;
+
+ALTER TABLE email_verification_tokens
+ALTER COLUMN id TYPE INT;
+
+ALTER TABLE users 
+DROP CONSTRAINT mobile_phone;
+
+COMMIT;
