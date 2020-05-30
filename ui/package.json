@@ -10,7 +10,8 @@
     "fix:other": "npm run prettier --write",
     "fix:code": "npm run test:code --fix",
     "fix": "npm run fix:code && npm run fix:other",
-    "prettier": "prettier --write \"**/*.ts\"",
+    "prettier-fix": "prettier --write \"**/*.ts\"",
+    "prettier": "prettier --check \"**/*.ts\"",
     "test:other": "npm run prettier --list-different",
     "test:code": "eslint --ignore-path .gitignore --ignore-path .prettierignore --ext .js,.jsx .",
     "test": "npm run test:other && npm run test:code"

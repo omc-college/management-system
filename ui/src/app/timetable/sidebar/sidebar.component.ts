@@ -24,7 +24,7 @@ export class SidebarComponent implements OnInit {
   private subjectsUrl = 'api/subjects';
   private usersUrl = 'api/users';
 
-  showProgressBar: boolean = false;
+  showProgressBar = false;
   findForm: FormGroup;
 
   groups: Group[] = [];
@@ -34,7 +34,7 @@ export class SidebarComponent implements OnInit {
   constructor(
     private timetableHttpService: TimetableHttpService,
     private timetableService: TimetableService,
-    private _bottomSheet: MatBottomSheet,
+    private bottomSheet: MatBottomSheet,
     public dialog: MatDialog,
   ) {}
 
@@ -81,75 +81,27 @@ export class SidebarComponent implements OnInit {
       filters.endDateFormControl ||
       filters.startTimeFormControl ||
       filters.endTimeFormControl
-    ) {
-      this.executeFind(filters);
-    }
-  }
-
-  private executeFind(filters) {
-    let query: string = `?`;
-    if (filters.subjectFormControl && query.length === 1) {
-      query += `subjectid=${filters.subjectFormControl.id}`;
-    } else if (filters.subjectFormControl) {
-      query += `&subjectid=${filters.subjectFormControl.id}`;
-    }
-    if (filters.roomFormControl && query.length === 1) {
-      query += `roomid=${filters.roomFormControl.id}`;
-    } else if (filters.roomFormControl) {
-      query += `&roomid=${filters.roomFormControl.id}`;
-    }
-    if (filters.groupFormControl && query.length === 1) {
-      query += `groupid=${filters.groupFormControl.id}`;
-    } else if (filters.groupFormControl) {
-      query += `&groupid=${filters.groupFormControl.id}`;
-    }
-    if (filters.lecturerFormControl && query.length === 1) {
-      query += `lecturerid=${filters.lecturerFormControl.id}`;
-    } else if (filters.lecturerFormControl) {
-      query += `&lecturerid=${filters.lecturerFormControl.id}`;
-    }
-    if (filters.startDateFormControl && query.length === 1) {
-      query += `datefrom=${filters.startDateFormControl.getFullYear()}-${filters.startDateFormControl.getMonth()}-${filters.startDateFormControl.getDate()}`;
-    } else if (filters.startDateFormControl) {
-      query += `&datefrom=${filters.startDateFormControl.getFullYear()}-${filters.startDateFormControl.getMonth()}-${filters.startDateFormControl.getDate()}`;
-    }
-    if (filters.endDateFormControl && query.length === 1) {
-      query += `dateto=${filters.endDateFormControl.getFullYear()}-${filters.endDateFormControl.getMonth()}-${filters.endDateFormControl.getDate()}`;
-    } else if (filters.endDateFormControl) {
-      query += `&dateto=${filters.endDateFormControl.getFullYear()}-${filters.endDateFormControl.getMonth()}-${filters.endDateFormControl.getDate()}`;
-    }
-    if (filters.startTimeFormControl && query.length === 1) {
-      query += `timefrom=${filters.startTimeFormControl}`;
-    } else if (filters.startTimeFormControl) {
-      query += `&timefrom=${filters.startTimeFormControl}`;
-    }
-    if (filters.endTimeFormControl && query.length === 1) {
-      query += `timeto=${filters.endTimeFormControl}`;
-    } else if (filters.endTimeFormControl) {
-      query += `&timeto=${filters.endTimeFormControl}`;
-    }
-    console.log(query);
-    this.timetableHttpService.getData(this.lessonsUrl, '?id=1').subscribe(lessons => {
-      console.log(lessons);
-      this.timetableService.setSearchResult(lessons);
-      let dialogRef = this.dialog.open(SearchResultComponent, {
-        height: '660px',
-        width: '1240px',
-        disableClose: true,
-        data: {
-          result: lessons,
-        },
+    )
+      this.timetableHttpService.search(this.lessonsUrl, filters).subscribe(lessons => {
+        this.timetableService.setSearchResult(lessons);
+        const dialogRef = this.dialog.open(SearchResultComponent, {
+          height: '660px',
+          width: '1240px',
+          disableClose: true,
+          data: {
+            result: lessons,
+          },
+        });
+        dialogRef.afterClosed().subscribe();
       });
-      dialogRef.afterClosed().subscribe();
-    });
   }
 
-  dateFilter = (d: Date | null): boolean => {
+  dateFilter(d: Date | null): boolean {
     const day = (d || new Date()).getDay();
     return day !== 0;
-  };
+  }
   showError() {
-    this._bottomSheet.open(ErrorComponent);
+    this.bottomSheet.open(ErrorComponent);
   }
 
   setProgressBar() {
@@ -169,10 +121,10 @@ export class ErrorComponent {
     message: 'Here will be errors or other messages',
   };
 
-  constructor(private _bottomSheetRef: MatBottomSheetRef<ErrorComponent>) {}
+  constructor(private bottomSheetRef: MatBottomSheetRef<ErrorComponent>) {}
 
   openLink(event: MouseEvent): void {
-    this._bottomSheetRef.dismiss();
+    this.bottomSheetRef.dismiss();
     event.preventDefault();
   }
 }

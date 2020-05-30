@@ -22,8 +22,6 @@ export class TimetableService {
   private groups$: Subject<Group[]> = new Subject<Group[]>();
   private rooms$: Subject<Room[]> = new Subject<Room[]>();
 
-  constructor(private TimetableHttpService: TimetableHttpService) {}
-
   getSelectedDate(): Observable<Date> {
     return this.selectedDate$;
   }
