@@ -13,11 +13,6 @@ export class AuthorizationService {
   constructor(private http: HttpClient) {}
 
   signIn(value: SignIn): Observable<SignIn> {
-    console.log('sign in');
     return this.http.post<SignIn>('api/signIn', value, this.httpOptions);
-  }
-  signUp(value): Observable<any> {
-    console.log('sign up');
-    return this.http.post<any>('api/signUp', value, this.httpOptions);
   }
 }
