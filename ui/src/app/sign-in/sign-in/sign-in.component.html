@@ -8,7 +8,6 @@
           <mat-error *ngIf="hasSignInError('login', 'required')">Login is required</mat-error>
           <mat-error *ngIf="hasSignInError('login', 'maxlength')">You have more than 60 characters</mat-error>
         </mat-form-field>
-
         <mat-form-field>
           <input
             matInput
@@ -27,13 +26,11 @@
           >
             <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
-
           <mat-hint>Not more then 255 characters long.</mat-hint>
           <mat-error *ngIf="hasSignInError('password', 'required')">Password is required</mat-error>
           <mat-error *ngIf="hasSignInError('password', 'maxlength')">You have more than 255 characters</mat-error>
         </mat-form-field>
       </mat-card-content>
-
       <mat-card-actions>
         <button
           mat-raised-button
@@ -46,7 +43,6 @@
           Sign in
         </button>
       </mat-card-actions>
-
       <div class="hint">
         <p>Not registered yet? Please, <a>Sign up</a></p>
       </div>
