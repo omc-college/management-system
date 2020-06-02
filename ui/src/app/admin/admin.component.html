@@ -1,21 +1,22 @@
 <mat-tab-group mat-align-tabs="center" color="accent" backgroundColor="primary">
+  <mat-tab label="Resources">
+    <ng-template matTabContent>
+      <app-resources-management></app-resources-management>
+    </ng-template>
+  </mat-tab>
   <mat-tab label="Roles">
     <ng-template matTabContent> <app-roles class="roles"></app-roles> </ng-template
   ></mat-tab>
 
   <mat-tab label="Users">
     <ng-template matTabContent>
-      <div>
-        Small content
-      </div>
+      <app-users-management></app-users-management>
     </ng-template>
   </mat-tab>
 
   <mat-tab label="Groups">
     <ng-template matTabContent>
-      <div>
-        Big content
-      </div>
+      <app-groups-management></app-groups-management>
     </ng-template>
   </mat-tab>
 </mat-tab-group>

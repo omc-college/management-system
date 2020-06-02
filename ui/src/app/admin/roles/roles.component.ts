@@ -1,6 +1,6 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {RolesService} from '../roles.service';
+import {RolesService} from './roles.service';
 
 import {Role, FeatureEntry} from '../../models/role';
 import {DeleteDialogComponent} from '../../timetable/slider-menu/slider-menu.component';
@@ -92,7 +92,7 @@ export class RolesComponent implements OnInit {
     } as Role;
     const roleRef = this.dialog.open(AddRoleDialogComponent, {
       width: '300px',
-      data: {},
+      data: {message: 'Name:'},
     });
     roleRef.afterClosed().subscribe(result => {
       if (result) {
@@ -105,8 +105,8 @@ export class RolesComponent implements OnInit {
         featuresRef.afterClosed().subscribe(res => {
           if (res) {
             role.entries = role.entries.concat(res);
-            this.executeAddRole(role);
           }
+          this.executeAddRole(role);
         });
       }
     });
@@ -119,7 +119,7 @@ export class RolesComponent implements OnInit {
   changeName(role: Role): void {
     const roleRef = this.dialog.open(AddRoleDialogComponent, {
       width: '300px',
-      data: {},
+      data: {message: 'New name is:'},
     });
     roleRef.afterClosed().subscribe(result => {
       if (result) {

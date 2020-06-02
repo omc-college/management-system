@@ -3,11 +3,12 @@ import {InMemoryDbService} from 'angular-in-memory-web-api';
 import * as moment from 'moment';
 
 import {Lesson} from '../models/Lesson';
-import {Group} from '../models/Group';
+import {GroupAsResource} from '../models/GroupAsResource';
 import {Room} from '../models/Room';
 import {iSubject} from '../models/Subject';
-import {User} from '../models/User';
+import {UserAsResource} from '../models/UserAsResource';
 import {Role, FeatureEntry, Endpoint} from '../models/role';
+import {Resource} from '../models/Resource';
 
 @Injectable({
   providedIn: 'root',
@@ -184,7 +185,7 @@ export class InMemoryDataService implements InMemoryDbService {
         },
       },
     ];
-    const users: User[] = [
+    const users: UserAsResource[] = [
       {
         id: '1',
         firstName: 'Andriy',
@@ -221,7 +222,7 @@ export class InMemoryDataService implements InMemoryDbService {
         role: 'parent',
       },
     ];
-    const groups: Group[] = [
+    const groups: GroupAsResource[] = [
       {
         id: '131',
         name: 'SD-31',
@@ -696,7 +697,44 @@ export class InMemoryDataService implements InMemoryDbService {
         ],
       },
     ];
-    return {lessons, groups, rooms, subjects, users, timestamp1, roles, endpoints, featureEntry};
+    const resources = [
+      {
+        resourceId: 0,
+        resourceName: 'Projector',
+        resourceDescription: 'Required when you are needed to show presentation',
+      },
+      {
+        resourceId: 1,
+        resourceName: 'Projector 2',
+        resourceDescription: 'Required when you are needed to show presentation',
+      },
+      {
+        resourceId: 2,
+        resourceName: 'Projector 3',
+        resourceDescription: 'Required when you are needed to show presentation',
+      },
+      {
+        resourceId: 3,
+        resourceName: 'Projector 4',
+        resourceDescription: 'Required when you are needed to show presentation',
+      },
+      {
+        resourceId: 4,
+        resourceName: 'Projector 5',
+        resourceDescription: 'Required when you are needed to show presentation',
+      },
+      {
+        resourceId: 5,
+        resourceName: 'Projector 6',
+        resourceDescription: 'Required when you are needed to show presentation',
+      },
+      {
+        resourceId: 6,
+        resourceName: 'Projector 7',
+        resourceDescription: 'Required when you are needed to show presentation',
+      },
+    ];
+    return {lessons, groups, rooms, subjects, users, timestamp1, roles, endpoints, featureEntry, resources};
   }
 
   // Overrides the genId method to ensure that a hero always has an id.
