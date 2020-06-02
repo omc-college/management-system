@@ -24,7 +24,7 @@ export class SidebarComponent implements OnInit {
   private subjectsUrl = 'api/subjects';
   private usersUrl = 'api/users';
 
-  showProgressBar: boolean = false;
+  showProgressBar = false;
   findForm: FormGroup;
 
   groups: Group[] = [];
@@ -34,7 +34,7 @@ export class SidebarComponent implements OnInit {
   constructor(
     private timetableHttpService: TimetableHttpService,
     private timetableService: TimetableService,
-    private _bottomSheet: MatBottomSheet,
+    private bottomSheet: MatBottomSheet,
     public dialog: MatDialog,
   ) {}
 
@@ -87,7 +87,7 @@ export class SidebarComponent implements OnInit {
   }
 
   private executeFind(filters) {
-    let query: string = `?`;
+    let query = `?`;
     if (filters.subjectFormControl && query.length === 1) {
       query += `subjectid=${filters.subjectFormControl.id}`;
     } else if (filters.subjectFormControl) {
@@ -132,7 +132,7 @@ export class SidebarComponent implements OnInit {
     this.timetableHttpService.getData(this.lessonsUrl, '?id=1').subscribe(lessons => {
       console.log(lessons);
       this.timetableService.setSearchResult(lessons);
-      let dialogRef = this.dialog.open(SearchResultComponent, {
+      const dialogRef = this.dialog.open(SearchResultComponent, {
         height: '660px',
         width: '1240px',
         disableClose: true,
@@ -144,12 +144,12 @@ export class SidebarComponent implements OnInit {
     });
   }
 
-  dateFilter = (d: Date | null): boolean => {
+  dateFilter(d: Date | null): boolean {
     const day = (d || new Date()).getDay();
     return day !== 0;
-  };
+  }
   showError() {
-    this._bottomSheet.open(ErrorComponent);
+    this.bottomSheet.open(ErrorComponent);
   }
 
   setProgressBar() {
@@ -169,10 +169,10 @@ export class ErrorComponent {
     message: 'Here will be errors or other messages',
   };
 
-  constructor(private _bottomSheetRef: MatBottomSheetRef<ErrorComponent>) {}
+  constructor(private bottomSheetRef: MatBottomSheetRef<ErrorComponent>) {}
 
   openLink(event: MouseEvent): void {
-    this._bottomSheetRef.dismiss();
+    this.bottomSheetRef.dismiss();
     event.preventDefault();
   }
 }
