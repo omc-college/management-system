@@ -8,8 +8,8 @@ import {MatSidenav} from '@angular/material/sidenav';
 })
 export class HeaderComponent implements OnInit {
   @Input() inputSideNav: MatSidenav;
-  AddLessonBtnState: boolean = false;
-  showProgressBar: boolean = false;
+  AddLessonBtnState = false;
+  showProgressBar = false;
 
   constructor(private timetableService: TimetableService) {}
 

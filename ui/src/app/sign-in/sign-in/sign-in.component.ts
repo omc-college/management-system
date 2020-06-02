@@ -11,6 +11,7 @@ import {SignIn} from '../../models/signIn';
 export class SignInComponent implements OnInit {
   signInForm: FormGroup;
   signUpForm: FormGroup;
+
   showSignUp = false;
   hide = true;
   constructor(private authorisationService: AuthorizationService) {}
@@ -31,7 +32,7 @@ export class SignInComponent implements OnInit {
 
   signIn(value) {
     if (this.signInForm.valid) {
-      let signInValue: SignIn = {
+      const signInValue: SignIn = {
         login: value.login,
         password: value.password,
       };
