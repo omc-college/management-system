@@ -31,6 +31,18 @@ import {MatStepperModule} from '@angular/material/stepper';
     MatToolbarModule,
     MatStepperModule,
   ],
-  exports: [SignInComponent],
+  exports: [
+    SignInComponent,
+
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatSelectModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatStepperModule,
+  ],
 })
 export class SignInModule {}
