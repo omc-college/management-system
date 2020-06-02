@@ -1,4 +1,9 @@
+import {User} from './User';
 export interface Group {
-  id: string;
-  name: string;
+  id: number;
+  specialisation: string;
+  yearOfEducation: number;
+  groupNumber: number;
+  curator: User;
+  students: User[];
 }
