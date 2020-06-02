@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
-import {TimetableHttpService} from './shared/timetable-http.service';
 
 import {Lesson} from '../models/Lesson';
-import {Group} from '../models/Group';
-import {User} from '../models/User';
+import {GroupAsResource} from '../models/GroupAsResource';
+import {UserAsResource} from '../models/UserAsResource';
 import {iSubject} from '../models/Subject';
 import {Room} from '../models/Room';
 
@@ -17,9 +16,9 @@ export class TimetableService {
   private searchResult$: Subject<Lesson[]> = new Subject<Lesson[]>();
   private selectedDate$: Subject<Date> = new Subject<Date>();
 
-  private lecturers$: Subject<User[]> = new Subject<User[]>();
+  private lecturers$: Subject<UserAsResource[]> = new Subject<UserAsResource[]>();
   private subjects$: Subject<iSubject[]> = new Subject<iSubject[]>();
-  private groups$: Subject<Group[]> = new Subject<Group[]>();
+  private groups$: Subject<GroupAsResource[]> = new Subject<GroupAsResource[]>();
   private rooms$: Subject<Room[]> = new Subject<Room[]>();
 
   getSelectedDate(): Observable<Date> {
@@ -54,19 +53,19 @@ export class TimetableService {
     return this.rooms$;
   }
 
-  setLecturers(lecturer: User[]): void {
+  setLecturers(lecturer: UserAsResource[]): void {
     this.lecturers$.next(lecturer);
   }
 
-  getLecturers(): Observable<User[]> {
+  getLecturers(): Observable<UserAsResource[]> {
     return this.lecturers$;
   }
 
-  setGroups(groups: Group[]): void {
+  setGroups(groups: GroupAsResource[]): void {
     this.groups$.next(groups);
   }
 
-  getGroups(): Observable<Group[]> {
+  getGroups(): Observable<GroupAsResource[]> {
     return this.groups$;
   }
 

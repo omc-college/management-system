@@ -8,8 +8,8 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 import {Lesson} from '../../models/Lesson';
-import {Group} from '../../models/Group';
-import {User} from '../../models/User';
+import {GroupAsResource} from '../../models/GroupAsResource';
+import {UserAsResource} from '../../models/UserAsResource';
 import {iSubject} from '../../models/Subject';
 import {Room} from '../../models/Room';
 
@@ -34,8 +34,8 @@ export class SliderMenuComponent implements OnInit {
   isChange = false;
   addNewForm: FormGroup;
 
-  groups: Group[] = [];
-  lecturers: User[] = [];
+  groups: GroupAsResource[] = [];
+  lecturers: UserAsResource[] = [];
   subjects: iSubject[] = [];
   rooms: Room[] = [];
   constructor(
@@ -126,8 +126,8 @@ export class SliderMenuComponent implements OnInit {
   updateLesson(
     subject: iSubject,
     room: Room,
-    lecturer: User,
-    group: Group,
+    lecturer: UserAsResource,
+    group: GroupAsResource,
     dateFrom: Date,
     dateTo: Date,
     timeFrom: string,
