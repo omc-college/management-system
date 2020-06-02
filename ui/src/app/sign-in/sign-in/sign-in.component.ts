@@ -11,8 +11,10 @@ import {SignIn} from '../../models/signIn';
 export class SignInComponent implements OnInit {
   signInForm: FormGroup;
   signUpForm: FormGroup;
+
   showSignUp = false;
   hide = true;
+
   constructor(private autorisationService: AutorisationService) {}
 
   ngOnInit(): void {
@@ -31,7 +33,7 @@ export class SignInComponent implements OnInit {
 
   signIn(value) {
     if (this.signInForm.valid) {
-      let signInValue: SignIn = {
+      const signInValue: SignIn = {
         login: value.login,
         password: value.password,
       };
@@ -45,7 +47,7 @@ export class SignInComponent implements OnInit {
 
   signUp(value) {
     if (this.signUpForm.valid) {
-      let signUpValue = {
+      const signUpValue = {
         firstName: value.firstName,
         lastname: value.lastname,
         surname: value.surname,
@@ -59,9 +61,11 @@ export class SignInComponent implements OnInit {
   private executeSignUp(value) {
     this.autorisationService.signUp(value).subscribe(request => console.log(request));
   }
+
   hasSignInError(controlName: string, errorName: string) {
     return this.signInForm.controls[controlName].hasError(errorName);
   }
+
   hasSignUpError(controlName: string, errorName: string) {
     return this.signUpForm.controls[controlName].hasError(errorName);
   }

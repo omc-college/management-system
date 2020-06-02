@@ -5,7 +5,7 @@ import {TimetableComponent} from './timetable/timetable.component';
 import {SignInComponent} from './sign-in/sign-in/sign-in.component';
 import {LandingPageComponent} from './landing-page/landing-page.component';
 import {ErrorPageComponent} from './error-page/error-page.component';
-
+import {AdminComponent} from './admin/admin.component';
 class FutureGuard implements CanActivate {
   canActivate() {
     return true;
@@ -16,6 +16,7 @@ const routes: Routes = [
   {path: 'landing', component: LandingPageComponent, pathMatch: 'full'},
   {path: 'sign-in', component: SignInComponent, pathMatch: 'full'},
   {path: 'timetable', canActivate: [FutureGuard], component: TimetableComponent, pathMatch: 'full'},
+  {path: 'admin', canActivate: [FutureGuard], component: AdminComponent, pathMatch: 'full'},
   {path: '**', component: ErrorPageComponent},
 ];
 

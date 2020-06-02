@@ -43,10 +43,10 @@ export class SearchResultComponent implements OnInit {
       this.lecturers = lecturers;
     });
   }
-  dateFilter = (d: Date | null): boolean => {
+  dateFilter(d: Date | null): boolean {
     const day = (d || new Date()).getDay();
     return day !== 0;
-  };
+  }
   close(): void {
     this.dialogRef.close();
   }
