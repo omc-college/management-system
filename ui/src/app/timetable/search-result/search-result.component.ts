@@ -2,8 +2,8 @@ import {Component, OnInit, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {TimetableHttpService} from '../shared/timetable-http.service';
 
-import {Group} from '../../models/Group';
-import {User} from '../../models/User';
+import {GroupAsResource} from '../../models/GroupAsResource';
+import {UserAsResource} from '../../models/UserAsResource';
 import {iSubject} from '../../models/Subject';
 import {Room} from '../../models/Room';
 @Component({
@@ -16,8 +16,8 @@ export class SearchResultComponent implements OnInit {
   private roomsUrl = 'api/rooms';
   private subjectsUrl = 'api/subjects';
   private usersUrl = 'api/users';
-  groups: Group[] = [];
-  lecturers: User[] = [];
+  groups: GroupAsResource[] = [];
+  lecturers: UserAsResource[] = [];
   subjects: iSubject[] = [];
   rooms: Room[] = [];
   constructor(
