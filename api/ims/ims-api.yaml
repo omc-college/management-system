@@ -266,7 +266,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
+  /resetpassword:
+    put:
+     description: This endpoint handles resetting the password
+     operationId: ResetPassword
+     requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+     responses:
+        '200':
+          description:  Successful new password
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     SignupRequest:
@@ -326,6 +343,15 @@ components:
       required:
         - existingPassword
         - newPassword
+    ResetPasswordRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          description: User's email
     Token:
       type: object
       properties:
