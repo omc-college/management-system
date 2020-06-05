@@ -20,6 +20,7 @@ export class InMemoryDataService implements InMemoryDbService {
           id: '11',
           nameOfSubject: 'Programming',
         },
+<<<<<<< HEAD
         lecturer: {
           id: '21',
           firstName: 'Borys',
@@ -33,6 +34,32 @@ export class InMemoryDataService implements InMemoryDbService {
         },
         startAt: moment([2020, 4, 18, 8, 30]),
         endAt: moment([2020, 4, 18, 9, 15]),
+=======
+        lecturers: [
+          {
+            id: '11',
+            firstName: 'Dmytro',
+            lastName: 'Tsapko',
+            surname: 'AAAAAAAA',
+            role: 'lecturer',
+          },
+          {
+            id: '12',
+            firstName: 'Tetyana',
+            lastName: 'Lumpova',
+            surname: 'Nonamivna',
+            role: 'lecturer',
+          },
+        ],
+        groups: [
+          {
+            id: '131',
+            name: 'SD-31',
+          },
+        ],
+        startAt: moment().year(2020).month(5).date(13).hour(8).minute(30),
+        endAt: moment().year(2020).month(5).date(13).hour(9).minute(15),
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
         room: {
           id: '2011',
           room: '201A',
@@ -44,6 +71,7 @@ export class InMemoryDataService implements InMemoryDbService {
           id: '12',
           nameOfSubject: 'Math',
         },
+<<<<<<< HEAD
         lecturer: {
           id: '12',
           firstName: 'Tetyana',
@@ -57,6 +85,29 @@ export class InMemoryDataService implements InMemoryDbService {
         },
         startAt: moment([2020, 4, 18, 10, 30]),
         endAt: moment([2020, 4, 18, 12, 15]),
+=======
+        lecturers: [
+          {
+            id: '12',
+            firstName: 'Tetyana',
+            lastName: 'Lumpova',
+            surname: 'Nonamivna',
+            role: 'lecturer',
+          },
+        ],
+        groups: [
+          {
+            id: '131',
+            name: 'SD-31',
+          },
+          {
+            id: '11',
+            name: '1A',
+          },
+        ],
+        startAt: moment().year(2020).month(5).date(10).hour(10).minute(30),
+        endAt: moment().year(2020).month(5).date(10).hour(11).minute(15),
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
         room: {
           id: '2011',
           room: '201A',
@@ -68,6 +119,7 @@ export class InMemoryDataService implements InMemoryDbService {
           id: '13',
           nameOfSubject: 'Physics',
         },
+<<<<<<< HEAD
         lecturer: {
           id: '21',
           firstName: 'Borys',
@@ -81,6 +133,25 @@ export class InMemoryDataService implements InMemoryDbService {
         },
         startAt: moment([2020, 4, 19, 11, 35]),
         endAt: moment([2020, 4, 19, 13, 10]),
+=======
+        lecturers: [
+          {
+            id: '21',
+            firstName: 'Borys',
+            lastName: 'Gaprindashvili',
+            surname: 'Vyachespavovich',
+            role: 'lecturer',
+          },
+        ],
+        groups: [
+          {
+            id: '221',
+            name: 'EP-21',
+          },
+        ],
+        startAt: moment().year(2020).month(6).date(11).hour(11).minute(35),
+        endAt: moment().year(2020).month(6).date(11).hour(12).minute(20),
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
         room: {
           id: '2012',
           room: '201B',
@@ -92,6 +163,7 @@ export class InMemoryDataService implements InMemoryDbService {
           id: '14',
           nameOfSubject: 'English',
         },
+<<<<<<< HEAD
         lecturer: {
           id: '21',
           firstName: 'Borys',
@@ -105,6 +177,25 @@ export class InMemoryDataService implements InMemoryDbService {
         },
         startAt: moment([2020, 4, 19, 13, 25]),
         endAt: moment([2020, 4, 19, 14, 20]),
+=======
+        lecturers: [
+          {
+            id: '21',
+            firstName: 'Borys',
+            lastName: 'Gaprindashvili',
+            surname: 'Vyachespavovich',
+            role: 'lecturer',
+          },
+        ],
+        groups: [
+          {
+            id: '222',
+            name: 'EP-22',
+          },
+        ],
+        startAt: moment().year(2020).month(5).date(15).hour(14).minute(20),
+        endAt: moment().year(2020).month(5).date(15).hour(15).minute(5),
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
         room: {
           id: '45',
           room: '45',
@@ -116,6 +207,7 @@ export class InMemoryDataService implements InMemoryDbService {
           id: '14',
           nameOfSubject: 'English',
         },
+<<<<<<< HEAD
         lecturer: {
           id: '21',
           firstName: 'Borys',
@@ -129,6 +221,32 @@ export class InMemoryDataService implements InMemoryDbService {
         },
         startAt: moment([2020, 4, 20, 14]),
         endAt: moment([2020, 4, 20, 15, 10]),
+=======
+        lecturers: [
+          {
+            id: '21',
+            firstName: 'Borys',
+            lastName: 'Gaprindashvili',
+            surname: 'Vyachespavovich',
+            role: 'lecturer',
+          },
+          {
+            id: '32',
+            firstName: 'Tetyana',
+            lastName: 'Garivna',
+            surname: 'Noname',
+            role: 'director',
+          },
+        ],
+        groups: [
+          {
+            id: '221',
+            name: 'EP-21',
+          },
+        ],
+        startAt: moment().year(2020).month(4).date(1).hour(13).minute(25),
+        endAt: moment().year(2020).month(4).date(1).hour(14).minute(10),
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
         room: {
           id: '31',
           room: '3A',
@@ -140,6 +258,7 @@ export class InMemoryDataService implements InMemoryDbService {
           id: '15',
           nameOfSubject: 'Ukrainian language',
         },
+<<<<<<< HEAD
         lecturer: {
           id: '21',
           firstName: 'Borys',
@@ -153,6 +272,32 @@ export class InMemoryDataService implements InMemoryDbService {
         },
         startAt: moment([2020, 4, 21, 8, 30]),
         endAt: moment([2020, 4, 21, 9, 15]),
+=======
+        lecturers: [
+          {
+            id: '21',
+            firstName: 'Borys',
+            lastName: 'Gaprindashvili',
+            surname: 'Vyachespavovich',
+            role: 'lecturer',
+          },
+          {
+            id: '32',
+            firstName: 'Tetyana',
+            lastName: 'Garivna',
+            surname: 'Noname',
+            role: 'director',
+          },
+        ],
+        groups: [
+          {
+            id: '311',
+            name: 'OO-11',
+          },
+        ],
+        startAt: moment().year(2021).month(2).date(9).hour(10).minute(30),
+        endAt: moment().year(2021).month(2).date(9).hour(11).minute(25),
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
         room: {
           id: '202',
           room: '20B',
@@ -164,6 +309,7 @@ export class InMemoryDataService implements InMemoryDbService {
           id: '11',
           nameOfSubject: 'History',
         },
+<<<<<<< HEAD
         lecturer: {
           id: '32',
           firstName: 'Tetyana',
@@ -177,6 +323,32 @@ export class InMemoryDataService implements InMemoryDbService {
         },
         startAt: moment([2020, 4, 22, 9, 30]),
         endAt: moment([2020, 4, 22, 10, 15]),
+=======
+        lecturers: [
+          {
+            id: '32',
+            firstName: 'Tetyana',
+            lastName: 'Garivna',
+            surname: 'Noname',
+            role: 'director',
+          },
+          {
+            id: '11',
+            firstName: 'Dmytro',
+            lastName: 'Tsapko',
+            surname: 'AAAAAAAA',
+            role: 'lecturer',
+          },
+        ],
+        groups: [
+          {
+            id: '311',
+            name: 'OO-11',
+          },
+        ],
+        startAt: moment().year(2020).month(12).date(12).hour(8).minute(30),
+        endAt: moment().year(2020).month(12).date(12).hour(9).minute(15),
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
         room: {
           id: '12',
           room: '12',
@@ -192,6 +364,16 @@ export class InMemoryDataService implements InMemoryDbService {
         role: 'student',
       },
       {
+<<<<<<< HEAD
+=======
+        id: '11',
+        firstName: 'Dmytro',
+        lastName: 'Tsapko',
+        surname: 'AAAAAAAA',
+        role: 'lecturer',
+      },
+      {
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
         id: '12',
         firstName: 'Tetyana',
         lastName: 'Lumpova',
@@ -319,6 +501,7 @@ export class InMemoryDataService implements InMemoryDbService {
       },
     ];
     const timestamp1: string[] = [
+<<<<<<< HEAD
       '8',
       '9',
       '10',
@@ -338,6 +521,28 @@ export class InMemoryDataService implements InMemoryDbService {
     ];
 
     return {lessons, groups, rooms, subjects, users, timestamp1};
+=======
+      '8.30-9.15',
+      '9.25-10.10',
+      '10.30-11.15',
+      '11.35-12.20',
+      '12.30-13.15',
+      '13.25-14.10',
+      '14.20-15.05',
+      '15.20-16.05',
+    ];
+    const timestamp2: string[] = [
+      '14.20-15.05',
+      '15.20-16.05',
+      '16.15-17.00',
+      '17.20-18.05',
+      '18.20-19.05',
+      '19.15-20.00',
+      '20.10-20.55',
+      '21.05-21.50',
+    ];
+    return {lessons, groups, rooms, subjects, users, timestamp1, timestamp2};
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
   }
 
   // Overrides the genId method to ensure that a hero always has an id.

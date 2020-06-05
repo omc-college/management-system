@@ -1,5 +1,6 @@
 package models
 
+<<<<<<< HEAD
 import (
 	"github.com/dgrijalva/jwt-go"
 	"time"
@@ -15,10 +16,22 @@ type User struct {
 	ModifiedAt  time.Time   `json:"modified_at" db:"modified_at"`
 	Roles       []string 	`json:"roles" db:"roles"`
 	Verified    bool     	`json:"verified" db:"verified"`
+=======
+import "github.com/dgrijalva/jwt-go"
+
+type Users struct {
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Email     string `json:"email"`
+	Sub       string `json:"sub"`
+	Role      string `json:"role"`
+	Verified  bool   `json:"verified"`
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
 }
 
 type Claims struct {
 	Email string `json:"email"`
+<<<<<<< HEAD
 	ID    string `json:"id"`
 	Role  string `json:"role"`
 	jwt.StandardClaims
@@ -49,3 +62,13 @@ type SignupRequest struct {
 	Password 	string `json:"password" db:"password"`
 }
 
+=======
+	Sub   string `json:"sub"`
+	Role  string `json:"role"`
+	jwt.StandardClaims
+}
+type Credentials struct {
+	PasswordHash string
+	Salt         string
+}
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674

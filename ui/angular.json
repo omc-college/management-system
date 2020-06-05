@@ -1,6 +1,10 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+<<<<<<< HEAD
   "version": 1,
+=======
+  "version": 1, 
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
   "newProjectRoot": "projects",
   "projects": {
     "timetable": {
@@ -28,7 +32,10 @@
               "src/assets"
             ],
             "styles": [
+<<<<<<< HEAD
               "src/custom-theme.scss",
+=======
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
               "src/styles.sass"
             ],
             "scripts": []
@@ -124,7 +131,13 @@
           }
         }
       }
+<<<<<<< HEAD
     }
   },
   "defaultProject": "timetable"
 }
+=======
+    }},
+  "defaultProject": "timetable"
+}
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674

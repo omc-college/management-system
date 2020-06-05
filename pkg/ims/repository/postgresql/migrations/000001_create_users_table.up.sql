@@ -1,10 +1,17 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS users (
+<<<<<<< HEAD
     id  SERIAL PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
+=======
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+	email VARCHAR(255) NOT NULL,
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
 	verified BOOLEAN DEFAULT false NOT NULL
 );
 

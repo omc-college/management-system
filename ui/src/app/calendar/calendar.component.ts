@@ -1,7 +1,15 @@
+<<<<<<< HEAD
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {TimetableService} from '../timetable.service';
 
 import {MatCalendar} from '@angular/material/datepicker';
+=======
+import {Component, OnInit} from '@angular/core';
+import * as moment from 'moment';
+import {TimetableService} from '../timetable.service';
+
+const CALENDAR_SIZE = 42;
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
 
 @Component({
   selector: 'app-calendar',
@@ -9,13 +17,21 @@ import {MatCalendar} from '@angular/material/datepicker';
   styleUrls: ['./calendar.component.sass'],
 })
 export class CalendarComponent implements OnInit {
+<<<<<<< HEAD
   selectedDate: Date = new Date(); // date which is chosen at this moment
 
   @ViewChild(MatCalendar) calendar: MatCalendar<Date>;
+=======
+  months: string[] = moment.months();
+  showMonths: boolean = false; // switch between showing days or months
+  selectedDate: moment.Moment = moment(); // date which is chosen at this moment
+  daysForRender: moment.Moment[] = []; // needed for rendering days in month
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
 
   constructor(private timetableService: TimetableService) {}
 
   ngOnInit(): void {
+<<<<<<< HEAD
     this.getSelectedDate();
   }
 
@@ -28,6 +44,37 @@ export class CalendarComponent implements OnInit {
     this.timetableService.getSelectedDate().subscribe(date => {
       this.selectedDate = date;
       this.calendar._goToDateInView(this.selectedDate, 'month');
+=======
+    this.calculateDaysForRender();
+    this.getSelectedDate();
+  }
+
+  calculateDaysForRender() {
+    const firstDayOfSelectedMonth: number = moment()
+      .year(this.selectedDate.year())
+      .month(this.selectedDate.month())
+      .date(0)
+      .day();
+
+    // in moment.js if you enter negative number in .date() it shows you previous month's date,
+    // if your number will be > than number of days in selected month it shows you date from next month,
+    // with help of i = -firstDayOfSelectedMonth it calculates days from previous month in first week of chosen month,
+    // when i > days in chosen week it'll calculate next month's date
+    for (let i = -firstDayOfSelectedMonth, k = 0; i < CALENDAR_SIZE - firstDayOfSelectedMonth; i++, k++) {
+      this.daysForRender[k] = moment().year(this.selectedDate.year()).month(this.selectedDate.month()).date(i);
+    }
+  }
+  changeDate(y: number, m: number, d: number): void {
+    this.selectedDate.year(y);
+    this.selectedDate.month(m);
+    this.selectedDate.date(d);
+    this.calculateDaysForRender();
+  }
+  getSelectedDate(): void {
+    this.timetableService.getSelectedDate().subscribe(date => {
+      this.selectedDate = date;
+      this.calculateDaysForRender();
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
     });
   }
 }

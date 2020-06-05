@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 $wh: 40px
 $el: calc(100% - #{$wh})
 $width: 4000px
@@ -40,10 +41,38 @@ button
     height: 40px
     mat-icon
         width: 100%
+=======
+$wh: 70px
+$el: calc(100% - #{$wh})
+button
+    width: 50px
+    height: 50px
+    border: 0px
+    img
+        width: 100%
+        height: 100%
+    &:active
+        img
+            width: 90%
+            height: 90%
+            margin: 5%
+
+#right
+    margin: 10px
+.left
+    margin: 10px
+    transform: rotate(180deg)
+#down
+    margin-left: 10px
+#time
+    width: 100%
+    height: $wh
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
 #divider
     width: $wh
     height: $wh
 .timestamp
+<<<<<<< HEAD
     width: calc(calc(100% - #{$wh})/16)
     height: 100%
     overflow: hidden
@@ -87,6 +116,41 @@ button
         background-color:#3f51b5
 .subject, .room
     width: 100%
+=======
+    width: calc(#{$el} / 8)
+    height: 100%
+    p
+        font-size: 1.4em
+        margin-top: 40px
+        margin-left: 10px
+#week
+    width: $wh
+    height: $el
+.weekstamp
+    width: 100%
+    height: calc(100% / 6 )
+    padding-top: 40px
+    p
+        width: 100%
+        text-align: center
+        font-size: 2em
+.unique
+    padding-top: 20px 
+#timetable
+    width: $el
+    height: $el
+    border-top: 1px solid black
+    border-left: 1px solid black
+.lesson
+    width: (100%/8)
+    height: (100% / 6)
+    border: 1px solid black
+    border-top: 0px
+    border-left: 0px
+    padding: 15px
+.subject, .room
+    width: 60%
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
     overflow: hidden
 .subject
     height: 50%
@@ -95,5 +159,12 @@ button
 .room
     font-size: 1.5em
     padding-top: 5px
+<<<<<<< HEAD
 .sideDrawer
     padding: 15px
+=======
+.chosen
+    border: 2px solid black
+.hide
+    display: none
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674

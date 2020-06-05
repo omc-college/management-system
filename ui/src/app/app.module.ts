@@ -1,7 +1,11 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
+<<<<<<< HEAD
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+=======
+import {FormsModule} from '@angular/forms';
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
 // adding in-memory web-api
 // Remove it when a real server is ready to receive requests.
 import {HttpClientInMemoryWebApiModule} from 'angular-in-memory-web-api';
@@ -14,6 +18,7 @@ import {HeaderComponent} from './header/header.component';
 import {SidebarComponent} from './sidebar/sidebar.component';
 import {TimetableComponent} from './timetable/timetable.component';
 import {SliderMenuComponent} from './slider-menu/slider-menu.component';
+<<<<<<< HEAD
 import {DeleteDialog} from './slider-menu/slider-menu.component';
 import {SuccessDialog} from './slider-menu/slider-menu.component';
 
@@ -34,6 +39,8 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatDialogModule} from '@angular/material/dialog';
 import {SearchResultComponent} from './search-result/search-result.component';
 import {MatExpansionModule} from '@angular/material/expansion';
+=======
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
 
 @NgModule({
   declarations: [
@@ -43,20 +50,27 @@ import {MatExpansionModule} from '@angular/material/expansion';
     SidebarComponent,
     TimetableComponent,
     SliderMenuComponent,
+<<<<<<< HEAD
     DeleteDialog,
     SuccessDialog,
     SearchResultComponent,
+=======
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+<<<<<<< HEAD
     ReactiveFormsModule,
+=======
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
     // Remove it when a real server is ready to receive requests.
     HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {dataEncapsulation: false}),
+<<<<<<< HEAD
     BrowserAnimationsModule,
     MatDatepickerModule,
     MatFormFieldModule,
@@ -75,6 +89,9 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatExpansionModule,
   ],
   entryComponents: [DeleteDialog, SuccessDialog],
+=======
+  ],
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
   providers: [],
   bootstrap: [AppComponent],
 })

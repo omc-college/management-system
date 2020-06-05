@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+<<<<<<< HEAD
 import {TimetableHttpService} from '../shared/timetable-http.service';
 import {TimetableService} from '../timetable.service';
 import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet';
@@ -6,11 +7,18 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {SearchResultComponent} from '../search-result/search-result.component';
 
+=======
+import {Error} from '../models/Error';
+import {TimetableHttpService} from '../shared/timetable-http.service';
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
 import {Group} from '../models/Group';
 import {User} from '../models/User';
 import {iSubject} from '../models/Subject';
 import {Room} from '../models/Room';
+<<<<<<< HEAD
 import {Error} from '../models/Error';
+=======
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
 
 @Component({
   selector: 'app-sidebar',
@@ -18,19 +26,35 @@ import {Error} from '../models/Error';
   styleUrls: ['./sidebar.component.sass'],
 })
 export class SidebarComponent implements OnInit {
+<<<<<<< HEAD
   private lessonsUrl = 'api/lessons';
+=======
+  error: Error = {
+    id: '55',
+    code: 505,
+    message: 'Here will be errors or other messages',
+  };
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
   private groupsUrl = 'api/groups';
   private roomsUrl = 'api/rooms';
   private subjectsUrl = 'api/subjects';
   private usersUrl = 'api/users';
+<<<<<<< HEAD
 
   showProgressBar: boolean = false;
   findForm: FormGroup;
 
+=======
+  showGroups: boolean = true;
+  showLecturers: boolean = true;
+  showSubjects: boolean = true;
+  showRooms: boolean = true;
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
   groups: Group[] = [];
   lecturers: User[] = [];
   subjects: iSubject[] = [];
   rooms: Room[] = [];
+<<<<<<< HEAD
   constructor(
     private timetableHttpService: TimetableHttpService,
     private timetableService: TimetableService,
@@ -174,5 +198,27 @@ export class ErrorComponent {
   openLink(event: MouseEvent): void {
     this._bottomSheetRef.dismiss();
     event.preventDefault();
+=======
+  constructor(private timetableHttpService: TimetableHttpService) {}
+  ngOnInit(): void {
+    this.getGroups();
+    this.getLecturers();
+    this.getSubjects();
+    this.getRooms();
+  }
+  getGroups(): void {
+    this.timetableHttpService.getData(this.groupsUrl).subscribe(groups => (this.groups = groups));
+  }
+  getLecturers(): void {
+    this.timetableHttpService
+      .getData(this.usersUrl, '?role=lecturer')
+      .subscribe(lecturers => (this.lecturers = lecturers));
+  }
+  getSubjects(): void {
+    this.timetableHttpService.getData(this.subjectsUrl).subscribe(subjects => (this.subjects = subjects));
+  }
+  getRooms(): void {
+    this.timetableHttpService.getData(this.roomsUrl).subscribe(rooms => (this.rooms = rooms));
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
   }
 }

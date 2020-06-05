@@ -1,7 +1,12 @@
 <header>
+<<<<<<< HEAD
   <mat-progress-bar *ngIf="showProgressBar" mode="indeterminate" id="progressBar"></mat-progress-bar>
   <button mat-mini-fab id="menuBtn" color="primary" aria-label="Menu" (click)="inputSideNav.toggle()">
     <mat-icon>menu</mat-icon>
+=======
+  <button type="button" id="services">
+    <img src="../../assets/img/otherServices.svg" />
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
   </button>
   <div id="logo">
     <div id="imgLogo">
@@ -15,10 +20,15 @@
   <button type="button" id="account">
     <img src="../../assets/img/user.svg" />
   </button>
+<<<<<<< HEAD
   <button mat-raised-button *ngIf="!AddLessonBtnState" (click)="addLesson()" color="primary" class="addBtn">
     New Lesson
   </button>
   <button mat-raised-button *ngIf="AddLessonBtnState" (click)="addLesson()" color="primary" class="addBtn">
     Back
   </button>
+=======
+  <button *ngIf="!AddLessonBtnState" type="button" id="addLesson" (click)="addLesson()">New lesson</button>
+  <button *ngIf="AddLessonBtnState" type="button" id="addLesson" (click)="addLesson()">Back</button>
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
 </header>

@@ -1,4 +1,5 @@
 <app-calendar></app-calendar>
+<<<<<<< HEAD
 
 <form class="showInfo" [formGroup]="findForm" autocomplete="off" novalidate (ngSubmit)="find(findForm.value)">
   <mat-form-field appearance="fill">
@@ -61,3 +62,58 @@
     <button mat-raised-button class="btn" (click)="showError()">ShowError</button>
   </mat-card-actions>
 </form>
+=======
+<form id="findLesons">
+  <div class="part">
+    <input type="date" id="from" />
+    <input type="date" id="to" />
+  </div>
+  <div class="part">
+    <select name="Group" id="group" *ngIf="showGroups">
+      <option *ngFor="let group of groups">{{ group.name }}</option>
+    </select>
+    <button type="button" class="plus" *ngIf="showGroups">+</button>
+    <button type="button" class="new" *ngIf="showGroups" (click)="showGroups = !showGroups">New</button>
+
+    <input type="text" id="Group" *ngIf="!showGroups" placeholder="New group" />
+    <button type="button" class="new" *ngIf="!showGroups" (click)="showGroups = !showGroups">Back</button>
+    <button type="button" class="new back" *ngIf="!showGroups" (click)="showGroups = !showGroups">Add</button>
+  </div>
+
+  <div class="part">
+    <select name="Teacher" id="teacher" *ngIf="showLecturers">
+      <option *ngFor="let lecturer of lecturers">{{ lecturer.firstName }} {{ lecturer.lastName }}</option>
+    </select>
+    <button type="button" class="plus" *ngIf="showLecturers">+</button>
+    <button type="button" class="new" *ngIf="showLecturers" (click)="showLecturers = !showLecturers">New</button>
+
+    <input type="text" id="teacher" *ngIf="!showLecturers" placeholder="New lecturer" />
+    <button type="button" class="new" *ngIf="!showLecturers" (click)="showLecturers = !showLecturers">Back</button>
+    <button type="button" class="new back" *ngIf="!showLecturers" (click)="showLecturers = !showLecturers">Add</button>
+  </div>
+
+  <div class="part">
+    <select name="Subject" id="subject" *ngIf="showSubjects">
+      <option *ngFor="let subject of subjects">{{ subject.nameOfSubject }}</option>
+    </select>
+    <button type="button" class="new" *ngIf="showSubjects" (click)="showSubjects = !showSubjects">New</button>
+
+    <input type="text" id="subject" *ngIf="!showSubjects" placeholder="New subject" />
+    <button type="button" class="new" *ngIf="!showSubjects" (click)="showSubjects = !showSubjects">Back</button>
+    <button type="button" class="new back" *ngIf="!showSubjects" (click)="showSubjects = !showSubjects">Add</button>
+  </div>
+
+  <div class="part">
+    <select name="Room" id="room" *ngIf="showRooms">
+      <option *ngFor="let room of rooms">{{ room.room }}</option>
+    </select>
+    <button type="button" class="new" *ngIf="showRooms" (click)="showRooms = !showRooms">New</button>
+
+    <input type="text" id="room" *ngIf="!showRooms" placeholder="New room" />
+    <button type="button" class="new" *ngIf="!showRooms" (click)="showRooms = !showRooms">Back</button>
+    <button type="button" class="new back" *ngIf="!showRooms" (click)="showRooms = !showRooms">Add</button>
+  </div>
+  <button type="button" id="find">Find</button>
+</form>
+<div *ngIf="error.id" id="error">Error {{ error.code }}, {{ error.message }}</div>
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674

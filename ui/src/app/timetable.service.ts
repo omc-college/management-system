@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
+<<<<<<< HEAD
 import {TimetableHttpService} from './shared/timetable-http.service';
 
 import {Lesson} from './models/Lesson';
@@ -8,10 +9,16 @@ import {User} from './models/User';
 import {iSubject} from './models/Subject';
 import {Room} from './models/Room';
 
+=======
+import * as moment from 'moment';
+import {TimetableHttpService} from './shared/timetable-http.service';
+
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
 @Injectable({
   providedIn: 'root',
 })
 export class TimetableService {
+<<<<<<< HEAD
   private AddLessonComponentState$: Subject<boolean> = new Subject<boolean>();
   private progressBarState$: Subject<boolean> = new Subject<boolean>();
   private searchResult$: Subject<Lesson[]> = new Subject<Lesson[]>();
@@ -87,4 +94,23 @@ export class TimetableService {
   getProgressBarState(): Observable<boolean> {
     return this.progressBarState$;
   }
+=======
+  selectedDate$: Subject<moment.Moment> = new Subject<moment.Moment>();
+  AddLessonComponentState$: Subject<boolean> = new Subject<boolean>();
+
+  constructor(private TimetableHttpService: TimetableHttpService) {}
+
+  getSelectedDate(): Observable<moment.Moment> {
+    return this.selectedDate$;
+  }
+  selectDate(date: moment.Moment): void {
+    this.selectedDate$.next(date);
+  }
+  changeAddLessonComponentState(bool: boolean): void {
+    this.AddLessonComponentState$.next(bool);
+  }
+  getAddLessonComponentState(): Observable<boolean> {
+    return this.AddLessonComponentState$;
+  }
+>>>>>>> d8b4b4c0e6f7106fb7300ca14f37fe09382ee674
 }
