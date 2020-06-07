@@ -5,7 +5,7 @@ import * as moment from 'moment';
 import {Lesson} from './models/Lesson';
 import {Group} from './models/Group';
 import {Room} from './models/Room';
-import {iSubject} from './models/Subject';
+import {ISubject} from './models/Subject';
 import {User} from './models/User';
 
 @Injectable({
@@ -288,7 +288,7 @@ export class InMemoryDataService implements InMemoryDbService {
         room: '4',
       },
     ];
-    const subjects: iSubject[] = [
+    const subjects: ISubject[] = [
       {
         id: '11',
         nameOfSubject: 'Programming',

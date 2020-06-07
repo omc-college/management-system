@@ -126,5 +126,8 @@
       }
     }
   },
-  "defaultProject": "timetable"
+  "defaultProject": "timetable",
+  "cli": {
+    "analytics": false
+  }
 }
