@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {AppRoutingModule} from '../app-routing.module';
 import {HttpClientModule} from '@angular/common/http';
 import {HttpClientInMemoryWebApiModule} from 'angular-in-memory-web-api';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InMemoryDataService} from '../timetable/in-memory-data.service';
 
 import {AdminComponent} from './admin.component';
@@ -28,6 +28,10 @@ import {MatTableModule} from '@angular/material/table';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -45,6 +49,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
     // Remove it when a real server is ready to receive requests.
@@ -63,6 +68,10 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatToolbarModule,
     MatDialogModule,
     MatCheckboxModule,
+    MatPaginatorModule,
+    MatSidenavModule,
+    MatDatepickerModule,
+    MatSelectModule,
   ],
   exports: [
     AdminComponent,
@@ -87,6 +96,10 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatToolbarModule,
     MatDialogModule,
     MatCheckboxModule,
+    MatPaginatorModule,
+    MatSidenavModule,
+    MatDatepickerModule,
+    MatSelectModule,
   ],
   providers: [],
 })
