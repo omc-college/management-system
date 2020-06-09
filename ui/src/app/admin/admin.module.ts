@@ -9,7 +9,11 @@ import {InMemoryDataService} from '../timetable/in-memory-data.service';
 import {AdminComponent} from './admin.component';
 import {RolesComponent, AddRoleDialogComponent, SelectFeatureDialogComponent} from './roles/roles.component';
 import {UsersManagementComponent} from './users-management/users-management.component';
-import {GroupsManagementComponent} from './groups-management/groups-management.component';
+import {
+  GroupsManagementComponent,
+  SelectUserDialogComponent,
+  GroupUpdateDialogComponent,
+} from './groups-management/groups-management.component';
 import {
   ResourcesManagementComponent,
   MessageDialogComponent,
@@ -43,6 +47,8 @@ import {MatSelectModule} from '@angular/material/select';
     GroupsManagementComponent,
     ResourcesManagementComponent,
     MessageDialogComponent,
+    SelectUserDialogComponent,
+    GroupUpdateDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -82,6 +88,8 @@ import {MatSelectModule} from '@angular/material/select';
     GroupsManagementComponent,
     ResourcesManagementComponent,
     MessageDialogComponent,
+    SelectUserDialogComponent,
+    GroupUpdateDialogComponent,
 
     MatTabsModule,
     MatIconModule,
