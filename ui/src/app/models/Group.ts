@@ -1,9 +1,9 @@
-import {User} from './User';
+import {UserAsResource} from './UserAsResource';
 export interface Group {
   id: number;
   specialisation: string;
   yearOfEducation: number;
   groupNumber: number;
-  curator: User;
-  students: User[];
+  curator: UserAsResource;
+  students: UserAsResource[];
 }

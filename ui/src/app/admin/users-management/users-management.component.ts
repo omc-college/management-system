@@ -11,7 +11,6 @@ import {DeleteDialogComponent} from '../../timetable/slider-menu/slider-menu.com
 import {MessageDialogComponent} from '../resources-management/resources-management.component';
 
 import {User} from '../../models/User';
-import {UrlResolver} from '@angular/compiler';
 
 @Component({
   selector: 'app-users-management',
