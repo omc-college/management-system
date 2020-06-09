@@ -6,6 +6,6 @@ import (
 )
 
 type Config struct {
-	RepositoryConfig db.RepositoryConfig `mapstructure:"repository"`
-	PubSubConfig pubsub.Config `mapstructure:"pubsub"`
+	DBConnection db.ConnectionConfig `mapstructure:"dbconnection"`
+	PubSubConfig pubsub.Config       `mapstructure:"pubsub"`
 }

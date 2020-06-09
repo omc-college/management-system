@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
 	flag "github.com/spf13/pflag"
 	"gopkg.in/yaml.v2"
@@ -22,11 +23,8 @@ func main() {
 	var serviceConfig Config
 	var err error
 
-	ctx := context.Background()
-
 	configPath := flag.StringP("config", "c", "cmd/rbacgen/rbacgen-service-example-config.yaml", "path to service config")
 
-	// Get mode
 	isCreateMode := flag.Bool("create", false, "In this mode utility generates and creates new Role Template and saves into roleTmpl.yaml")
 	isFillMode := flag.Bool("fill", false, "In this mode utility fills DB with features and endpoints from existing Role Template")
 
@@ -37,26 +35,22 @@ func main() {
 		logrus.Fatalf("%s", err)
 	}
 
-	// check whether only one mode flag is provided
 	if *isCreateMode == *isFillMode {
 		err := fmt.Errorf("you should choose only one mode")
 		logrus.Fatalf("%s", err)
 	}
 
 	if *isCreateMode {
-		// generate and get new Role Template
 		roleTmpl, err := openapi.GetRoleTmpl(serviceConfig.RBACGenConfig.SpecsPaths)
 		if err != nil {
 			logrus.Fatalf("%s", err)
 		}
 
-		// Creating output file
 		outputFile, err := os.Create(serviceConfig.RBACGenConfig.TmplPath)
 		if err != nil {
 			logrus.Fatalf("%s", err)
 		}
 
-		// Encoding and writing YAML into new file
 		roleTmplRaw, err = yaml.Marshal(roleTmpl)
 		if err != nil {
 			logrus.Fatalf("%s", err)
@@ -67,14 +61,12 @@ func main() {
 			logrus.Fatalf("%s", err)
 		}
 
-		// Closing new file
 		err = outputFile.Close()
 		if err != nil {
 			logrus.Fatalf("%s", err)
 		}
 	}
 	if *isFillMode {
-		// get existing Role Template from file
 		roleTmplRaw, err := ioutil.ReadFile(serviceConfig.RBACGenConfig.TmplPath)
 		if err != nil {
 			logrus.Fatalf("%s", err)
@@ -82,14 +74,23 @@ func main() {
 
 		yaml.Unmarshal(roleTmplRaw, &roleTmpl)
 
-		// Open DB
-		repository, err := postgres.NewRolesRepository(serviceConfig.RepositoryConfig)
+		dsn := fmt.Sprintf("user=%s password=%s host=%s port=%s database=%s sslmode=%s",
+			serviceConfig.DBConnection.User, serviceConfig.DBConnection.Password, serviceConfig.DBConnection.Host,
+			serviceConfig.DBConnection.Port, serviceConfig.DBConnection.Database, serviceConfig.DBConnection.Sslmode)
+
+		db, err := sqlx.Connect("pgx", dsn)
+		if err != nil {
+			logrus.Fatalf(err.Error())
+		}
+
+		defer db.Close()
+
+		repository := postgres.NewRolesRepository(db)
 		if err != nil {
 			logrus.Fatalf("opening DB error")
 		}
-		defer repository.DB.Close()
 
-		err = repository.CreateRoleTmpl(ctx, roleTmpl)
+		err = repository.CreateRoleTmpl(context.Background(), roleTmpl)
 		if err != nil {
 			logrus.Fatalf("%s", err)
 		}
