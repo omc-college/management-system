@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
 	flag "github.com/spf13/pflag"
 
@@ -25,13 +27,22 @@ func main() {
 	if err != nil {
 		logrus.Fatalf("%s", err)
 	}
-	// Open DB
-	repository, err := postgres.NewRolesRepository(serviceConfig.RepositoryConfig)
+
+	dsn := fmt.Sprintf("user=%s password=%s host=%s port=%s database=%s sslmode=%s",
+		serviceConfig.DBConnection.User, serviceConfig.DBConnection.Password, serviceConfig.DBConnection.Host,
+		serviceConfig.DBConnection.Port, serviceConfig.DBConnection.Database, serviceConfig.DBConnection.Sslmode)
+
+	db, err := sqlx.Connect("pgx", dsn)
+	if err != nil {
+		logrus.Fatalf(err.Error())
+	}
+
+	defer db.Close()
+
+	repository := postgres.NewRolesRepository(db)
 	if err != nil {
 		logrus.Fatalf("opening DB error")
 	}
-
-	defer repository.DB.Close()
 
 	client, err := pubsub.NewQueueGroupClient(serviceConfig.PubSubConfig)
 	if err != nil {
@@ -40,6 +51,5 @@ func main() {
 
 	rolesService := service.NewRolesService(repository, client)
 
-	// Start server
 	logrus.Fatal(http.ListenAndServe(":8000", routers.NewCrudRouter(rolesService)))
 }

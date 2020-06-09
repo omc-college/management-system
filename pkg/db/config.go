@@ -1,6 +1,6 @@
 package db
 
-type RepositoryConfig struct {
+type ConnectionConfig struct {
 	User     string `mapstructure:"user"`
 	Password string `mapstructure:"password"`
 	Host     string `mapstructure:"host"`

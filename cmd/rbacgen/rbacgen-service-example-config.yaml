@@ -1,4 +1,4 @@
-repository:
+dbconnection:
   user: 'postgres'
   password: 'superuser'
   host: 'localhost'
