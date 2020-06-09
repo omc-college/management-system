@@ -25,7 +25,7 @@ func main() {
 
 	err = config.Load(&serviceConfig, *configPath)
 	if err != nil {
-		logrus.Fatalf("%s", err)
+		logrus.Fatalf("cannot load config: %s", err.Error())
 	}
 
 	dsn := fmt.Sprintf("user=%s password=%s host=%s port=%s database=%s sslmode=%s",
@@ -34,19 +34,16 @@ func main() {
 
 	db, err := sqlx.Connect("pgx", dsn)
 	if err != nil {
-		logrus.Fatalf(err.Error())
+		logrus.Fatalf("cannot connect to db: %s", err.Error())
 	}
 
 	defer db.Close()
 
 	repository := postgres.NewRolesRepository(db)
-	if err != nil {
-		logrus.Fatalf("opening DB error")
-	}
 
 	client, err := pubsub.NewQueueGroupClient(serviceConfig.PubSubConfig)
 	if err != nil {
-		logrus.Fatalf(err.Error())
+		logrus.Fatalf("cannot initialize QueueGroupClient: %s", err.Error())
 	}
 
 	rolesService := service.NewRolesService(repository, client)
