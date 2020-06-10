@@ -1,8 +1,9 @@
 package middleware
 
 import (
-	"github.com/omc-college/management-system/pkg/rbac/opa"
 	"net/http"
+
+	"github.com/omc-college/management-system/pkg/rbac/opa"
 )
 
 type AuthorizationMiddleware struct{}
@@ -18,7 +19,7 @@ func (middleware *AuthorizationMiddleware) Middleware(next http.Handler) http.Ha
 			Token:  r.Header.Get("Authorization"),
 		}
 
-		isAccessGranted = opa.GetDecision(requestRegoInput)
+		isAccessGranted = opa.GetDecision(r.Context(), requestRegoInput)
 
 		if !isAccessGranted {
 			http.Error(w, "Access is not granted", http.StatusForbidden)

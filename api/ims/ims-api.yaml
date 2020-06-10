@@ -12,8 +12,8 @@ info:
 paths:
   /signup:
     post:
-      description: This endpoint handles user registartion requests, sent from sign-up form
-      operationId: signUp
+      description: This endpoint handles user registration requests, sent from sign-up form
+      operationId: SignUp
       requestBody:
         content:
           application/json:
@@ -70,7 +70,7 @@ paths:
   /email/available:
     get:
       description: This endpoint compares user's entered email with existing emails and displays an error if there is the same in DB
-      operationId: emailAvailable
+      operationId: EmailAvailable
       parameters:
         - in: query
           name: email
@@ -90,7 +90,7 @@ paths:
   /users/emailVerificationToken/verify:
     get:
       description: To complete the registration you need to confirm your email with token
-      operationId: emailVerificationToken
+      operationId: EmailVerificationToken
       parameters:
         - in: query
           name: token
@@ -292,17 +292,22 @@ components:
         firstName:
           type: string
           maxLength: 255
+          minLength: 1
           description: User's first name
         lastName:
           type: string
           maxLength: 255
+          minLength: 1
           description: User's last name
         email:
           type: string
+          maxLength: 255
           format: email
           description: User's email
         password:
           type: string
+          maxLength: 255
+          minLength: 1
           format: password
           description: User's password
       required:

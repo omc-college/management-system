@@ -1,4 +1,4 @@
-$headerHeight: 70px
+$headerHeight: 60px
 $sidebarWidth: 400px
 $borderSize: 1px
 *
@@ -6,7 +6,7 @@ $borderSize: 1px
     padding: 0px
     box-sizing: border-box
     font-family: 'Roboto', sans-serif
-html, body, app-root, app-header, app-sidebar, app-slider-menu, app-timetable
+html, body, app-root, app-header, app-sidebar, app-slider-menu, app-schedule,app-error-page
     float: left
 a, button, input
     outline: none
@@ -15,21 +15,29 @@ a, button, input
         img
             width: 90%
             height: 90%
-html, body, app-root, app-header
+html, body, app-root, app-header, app-timetable,app-sign-in,app-error-page
     width: 100%
     overflow: hidden
-html, body, app-root
+html, body, app-root, app-timetable,app-sign-in,app-error-page
     height: 100%
 app-header
     height: $headerHeight
     border-bottom: $borderSize+1 solid black
+app-error-page
+    background: black
+    background-image: url('assets/img/gargantuabg.svg')
+    background-size: cover
+    float: left
+    width: 100%
+    height: 100%
+    padding: 20px
 app-sidebar
     width: $sidebarWidth
     height: calc( 100% - $headerHeight )
     border-right: $borderSize solid black
     overflow: auto
     overflow-x: hidden
-app-timetable
+app-schedule
     width: calc( 100% - #{$sidebarWidth} )
     height: calc( 100% - #{$headerHeight} )
     position: relative
@@ -47,7 +55,7 @@ app-calendar
     width: $sidebarWidth - $borderSize
     height: 450px
     border-bottom: 1px solid black
-app-timetable, app-sidebar
+app-schedule, app-sidebar
     height: calc( 100% - #{$headerHeight} )
 ::-webkit-scrollbar-button 
     width:5px

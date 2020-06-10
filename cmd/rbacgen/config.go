@@ -5,8 +5,8 @@ import (
 )
 
 type Config struct {
-	RepositoryConfig db.RepositoryConfig `mapstructure:"repository"`
-	RBACGenConfig    RBACGenConfig       `mapstructure:"rbacgen"`
+	DBConnection  db.ConnectionConfig `mapstructure:"dbconnection"`
+	RBACGenConfig RBACGenConfig       `mapstructure:"rbacgen"`
 }
 
 type RBACGenConfig struct {

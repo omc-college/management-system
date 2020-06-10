@@ -2,20 +2,12 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-// adding in-memory web-api
-// Remove it when a real server is ready to receive requests.
-import {HttpClientInMemoryWebApiModule} from 'angular-in-memory-web-api';
-import {InMemoryDataService} from './in-memory-data.service';
-
 import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
-import {CalendarComponent} from './calendar/calendar.component';
-import {HeaderComponent} from './header/header.component';
-import {SidebarComponent} from './sidebar/sidebar.component';
-import {TimetableComponent} from './timetable/timetable.component';
-import {SliderMenuComponent} from './slider-menu/slider-menu.component';
-import {DeleteDialog} from './slider-menu/slider-menu.component';
-import {SuccessDialog} from './slider-menu/slider-menu.component';
+
+import {TimetableModule} from './timetable/timetable.module';
+import {SignInModule} from './sign-in/sign-in.module';
+import {LandingPageModule} from './landing-page/landing-page.module';
+import {ErrorPageModule} from './error-page/error-page.module';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatDatepickerModule} from '@angular/material/datepicker';
@@ -32,31 +24,24 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatCardModule} from '@angular/material/card';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatDialogModule} from '@angular/material/dialog';
-import {SearchResultComponent} from './search-result/search-result.component';
 import {MatExpansionModule} from '@angular/material/expansion';
 
+import {AppComponent} from './app.component';
+
 @NgModule({
-  declarations: [
-    AppComponent,
-    CalendarComponent,
-    HeaderComponent,
-    SidebarComponent,
-    TimetableComponent,
-    SliderMenuComponent,
-    DeleteDialog,
-    SuccessDialog,
-    SearchResultComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
+    SignInModule,
+    TimetableModule,
+    LandingPageModule,
+    ErrorPageModule,
+
     BrowserModule,
-    AppRoutingModule,
     HttpClientModule,
+    AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
-    // and returns simulated server responses.
-    // Remove it when a real server is ready to receive requests.
-    HttpClientInMemoryWebApiModule.forRoot(InMemoryDataService, {dataEncapsulation: false}),
+
     BrowserAnimationsModule,
     MatDatepickerModule,
     MatFormFieldModule,
@@ -74,7 +59,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatDialogModule,
     MatExpansionModule,
   ],
-  entryComponents: [DeleteDialog, SuccessDialog],
   providers: [],
   bootstrap: [AppComponent],
 })
