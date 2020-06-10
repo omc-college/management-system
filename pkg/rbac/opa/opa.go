@@ -4,12 +4,9 @@ import (
 	"context"
 
 	"github.com/open-policy-agent/opa/rego"
-	"github.com/sirupsen/logrus"
 )
 
-func GetDecision(ctx context.Context, requestRegoInput RegoInput) bool {
-	var err error
-
+func GetDecision(ctx context.Context, requestRegoInput RegoInput) error {
 	authorizationRego := rego.New(
 		rego.Query("data.authorization.isAccessGranted"),
 		rego.Input(requestRegoInput),
@@ -18,8 +15,12 @@ func GetDecision(ctx context.Context, requestRegoInput RegoInput) bool {
 
 	regoResult, err := authorizationRego.Eval(ctx)
 	if err != nil {
-		logrus.Fatalf(err.Error())
+		return err
 	}
 
-	return regoResult[0].Expressions[0].Value.(bool)
+	if !regoResult[0].Expressions[0].Value.(bool) {
+		return ErrNotAuthorized
+	}
+
+	return nil
 }
