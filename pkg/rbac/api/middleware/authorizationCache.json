@@ -1,62 +1,61 @@
 {
   "cache": [{
-      "regExp": "^/group/\\w+$",
+      "pathRegExp": "^/group/\\w+$",
+      "methods": [
+        "GET",
+        "DELETE"
+      ],
       "roles": [
         "1",
         "2"
-      ],
-      "methods": [
-        "GET",
-        "DELETE"
       ]
     },
     {
-      "regExp": "^/student/\\w+$",
+      "pathRegExp": "^/student/\\w+$",
+      "methods": [
+        "GET",
+        "DELETE"
+      ],
       "roles": [
         "2"
-      ],
-      "methods": [
-        "GET",
-        "DELETE"
       ]
     },
     {
-      "regExp": "^/roles/\\w+$",
+      "pathRegExp": "^/roles/\\w+$",
+      "methods": [
+        "GET",
+        "DELETE"
+      ],
       "roles": [
         "1"
-      ],
-      "methods": [
-        "GET",
-        "DELETE"
       ]
     },
     {
-      "regExp": "^/group$",
+      "pathRegExp": "^/group$",
+      "methods": [
+        "GET"
+      ],
       "roles": [
         "1"
-      ],
-      "methods": [
-        "GET"
       ]
     },
     {
-      "regExp": "^/student$",
-      "roles": [
-        "2"
-      ],
+      "pathRegExp": "^/student$",
       "methods": [
         "GET"
+      ],
+      "roles": [
+        "2"
       ]
     },
     {
-      "regExp": "^/roles$",
-      "roles": [
-        "2"
-      ],
+      "pathRegExp": "^/roles$",
       "methods": [
         "GET"
+      ],
+      "roles": [
+        "2"
       ]
     }
   ]
-
 }
