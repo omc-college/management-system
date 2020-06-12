@@ -1,0 +1,204 @@
+openapi: "3.0.3"
+info:
+  version: 0.0.1
+  title: User management
+  description: Web service which manages all calls related to Users, groups and stuffs
+  contact:
+    name: Viktoria Horbatiuk
+    email: v.horbatuk27@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+
+paths:
+  /resources:
+    get:
+      description: Get all resources
+      operationId: GetAllResources
+      parameters:
+        - name: resourceName
+          in: query
+          description: name of resource to filter by
+          required: false
+          style: form
+          schema:
+            type: string
+            maxLength: 255
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Resource"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      description: Creates a new resource
+      operationId: InsertResource
+      requestBody:
+        description: Resource to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Resource"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "422":
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /resources/{ResourceID}:
+    get:
+      description: Get one resource
+      operationId: GetResource
+      parameters:
+        - name: ResourceID
+          in: path
+          description: ID of group to fetch
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      description: Updates an resource
+      operationId: UpdateResource
+      parameters:
+        - name: ResourceID
+          in: path
+          description: ID of group to fetch
+          required: true
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: Resource to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Resource"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resource"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      description: deletes a single resource based on the ID supplied
+      operationId: DeleteResource
+      parameters:
+        - name: ResourceID
+          in: path
+          description: ID of group to delete
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "204":
+          description: group deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Resource:
+      type: object
+      required:
+        - resourceId
+        - resourceName
+        - resourceDescription
+      properties:
+        resourceId:
+          type: integer
+          format: int32
+          readOnly: true
+        resourceName:
+          type: string
+          maxLength: 255
+        resourceDescription:
+          type: string
+          maxLength: 1024
+      example:
+        {
+          resourceId: 55,
+          resourceName: "Projector",
+          resourceDescription: "Required when you are needed to show presentation",
+        }
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+      example: { code: 404, message: "Not found" }
