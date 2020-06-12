@@ -6,10 +6,19 @@ import (
 
 	"github.com/sirupsen/logrus"
 
+	"github.com/omc-college/management-system/pkg/rbac/authcache"
 	"github.com/omc-college/management-system/pkg/rbac/opa"
 )
 
-type AuthorizationMiddleware struct{}
+type AuthorizationMiddleware struct {
+	AuthCache *authcache.Cache
+}
+
+func NewAuthorizationMiddleware(authCache *authcache.Cache) *AuthorizationMiddleware {
+	return &AuthorizationMiddleware{
+		AuthCache: authCache,
+	}
+}
 
 func (middleware *AuthorizationMiddleware) Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -17,6 +26,7 @@ func (middleware *AuthorizationMiddleware) Middleware(next http.Handler) http.Ha
 			Path:   r.URL.Path,
 			Method: r.Method,
 			Token:  r.Header.Get("Authorization"),
+			Cache:  *middleware.AuthCache,
 		}
 
 		err := opa.GetDecision(r.Context(), requestRegoInput)

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/omc-college/management-system/pkg/pubsub"
+	"github.com/omc-college/management-system/pkg/rbac/authcache"
 	"github.com/omc-college/management-system/pkg/rbac/models"
 	"github.com/omc-college/management-system/pkg/rbac/repository/postgres"
 )
@@ -12,6 +13,7 @@ import (
 type RolesService struct {
 	RolesRepository  *postgres.RolesRepository
 	PubSubRepository *pubsub.GroupClient
+	AuthCache        *authcache.Cache
 }
 
 func NewRolesService(rolesRepository *postgres.RolesRepository, pubsubRepository *pubsub.GroupClient) *RolesService {
@@ -40,7 +42,7 @@ func (service *RolesService) GetRole(ctx context.Context, id int) (role models.R
 }
 
 func (service *RolesService) CreateRole(ctx context.Context, role models.Role) (err error) {
-	err = service.RolesRepository.CreateRole(ctx, role)
+	err = service.RolesRepository.CreateRole(ctx, &role)
 	if err != nil {
 		return err
 	}
