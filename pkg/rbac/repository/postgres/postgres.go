@@ -137,7 +137,7 @@ func (repository *RolesRepository) GetRole(ctx context.Context, id int) (models.
 	return toRole(tmpRole), nil
 }
 
-func (repository *RolesRepository) CreateRole(ctx context.Context, role models.Role) error {
+func (repository *RolesRepository) CreateRole(ctx context.Context, role *models.Role) error {
 	var roleId int
 
 	tx, err := repository.db.Beginx()
@@ -172,6 +172,8 @@ func (repository *RolesRepository) CreateRole(ctx context.Context, role models.R
 	if err != nil {
 		return QueryError{queryErrorMessage, err}
 	}
+
+	role.ID = roleId
 
 	return nil
 }

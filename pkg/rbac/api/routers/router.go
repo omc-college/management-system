@@ -12,8 +12,7 @@ import (
 
 // NewCrudRouter Inits RBAC CRUD service router
 func NewCrudRouter(service *service.RolesService) *mux.Router {
-	// Init handlers DB wrap
-	var authorizationMiddleware middleware.AuthorizationMiddleware
+	authorizationMiddleware := middleware.NewAuthorizationMiddleware(service.AuthCache)
 	rolesHandler := handlers.NewRolesHandler(service)
 
 	router := mux.NewRouter()

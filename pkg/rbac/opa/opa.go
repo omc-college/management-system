@@ -10,8 +10,7 @@ func GetDecision(ctx context.Context, requestRegoInput RegoInput) error {
 	authorizationRego := rego.New(
 		rego.Query("data.authorization.isAccessGranted"),
 		rego.Input(requestRegoInput),
-		rego.Load([]string{"../../pkg/rbac/opa/authorization.rego",
-			"../../pkg/rbac/api/middleware/authorizationCache.json"}, nil))
+		rego.Load([]string{"../../pkg/rbac/opa/authorization.rego"}, nil))
 
 	regoResult, err := authorizationRego.Eval(ctx)
 	if err != nil {
