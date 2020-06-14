@@ -1,4 +1,4 @@
-package openapi
+package rbacgen
 
 type roleTmpl struct {
 	Entries map[string]featureEntry `json:"entries"`

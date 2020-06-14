@@ -12,17 +12,12 @@ import (
 	"gopkg.in/yaml.v2"
 
 	"github.com/omc-college/management-system/pkg/config"
-	"github.com/omc-college/management-system/pkg/rbac/models"
-	"github.com/omc-college/management-system/pkg/rbac/openapi"
+	"github.com/omc-college/management-system/pkg/rbac"
 	"github.com/omc-college/management-system/pkg/rbac/repository/postgres"
+	"github.com/omc-college/management-system/pkg/rbacgen"
 )
 
 func main() {
-	var roleTmpl models.RoleTmpl
-	var roleTmplRaw []byte
-	var serviceConfig Config
-	var err error
-
 	configPath := flag.StringP("config", "c", "cmd/rbacgen/rbacgen-service-example-config.yaml", "path to service config")
 
 	isCreateMode := flag.Bool("create", false, "In this mode utility generates and creates new Role Template and saves into roleTmpl.yaml")
@@ -30,7 +25,9 @@ func main() {
 
 	flag.Parse()
 
-	err = config.Load(&serviceConfig, *configPath)
+	var serviceConfig Config
+
+	err := config.Load(&serviceConfig, *configPath)
 	if err != nil {
 		logrus.Fatalf("cannot load config: %s", err.Error())
 	}
@@ -40,7 +37,7 @@ func main() {
 	}
 
 	if *isCreateMode {
-		roleTmpl, err := openapi.GetRoleTmpl(serviceConfig.RBACGenConfig.SpecsPaths)
+		roleTmpl, err := rbacgen.GetRoleTmpl(serviceConfig.RBACGenConfig.SpecsPaths)
 		if err != nil {
 			logrus.Fatalf("cannot get roleTmpl from db: %s", err.Error())
 		}
@@ -50,7 +47,7 @@ func main() {
 			logrus.Fatalf("cannot create new file: %s", err.Error())
 		}
 
-		roleTmplRaw, err = yaml.Marshal(roleTmpl)
+		roleTmplRaw, err := yaml.Marshal(roleTmpl)
 		if err != nil {
 			logrus.Fatalf("cannot marshal roleTmpl: %s", err.Error())
 		}
@@ -70,6 +67,8 @@ func main() {
 		if err != nil {
 			logrus.Fatalf("cannot read roleTmpl from a file: %s", err.Error())
 		}
+
+		var roleTmpl rbac.RoleTmpl
 
 		err = yaml.Unmarshal(roleTmplRaw, &roleTmpl)
 		if err != nil {
