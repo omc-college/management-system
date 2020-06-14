@@ -10,7 +10,8 @@ import (
 
 	"github.com/omc-college/management-system/pkg/config"
 	"github.com/omc-college/management-system/pkg/pubsub"
-	"github.com/omc-college/management-system/pkg/rbac/api/routers"
+	"github.com/omc-college/management-system/pkg/rbac/api"
+	"github.com/omc-college/management-system/pkg/rbac/opa"
 	"github.com/omc-college/management-system/pkg/rbac/repository/postgres"
 	"github.com/omc-college/management-system/pkg/rbac/service"
 )
@@ -48,5 +49,5 @@ func main() {
 
 	rolesService := service.NewRolesService(repository, client)
 
-	logrus.Fatal(http.ListenAndServe(":8000", routers.NewCrudRouter(rolesService)))
+	logrus.Fatal(http.ListenAndServe(":8000", api.NewCrudRouter(rolesService, opa.GetDecision)))
 }

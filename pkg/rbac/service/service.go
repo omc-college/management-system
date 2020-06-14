@@ -5,15 +5,14 @@ import (
 	"encoding/json"
 
 	"github.com/omc-college/management-system/pkg/pubsub"
-	"github.com/omc-college/management-system/pkg/rbac/authcache"
-	"github.com/omc-college/management-system/pkg/rbac/models"
+	"github.com/omc-college/management-system/pkg/rbac"
 	"github.com/omc-college/management-system/pkg/rbac/repository/postgres"
 )
 
 type RolesService struct {
 	RolesRepository  *postgres.RolesRepository
 	PubSubRepository *pubsub.GroupClient
-	AuthCache        *authcache.Cache
+	AuthCache        *rbac.Cache
 }
 
 func NewRolesService(rolesRepository *postgres.RolesRepository, pubsubRepository *pubsub.GroupClient) *RolesService {
@@ -23,55 +22,31 @@ func NewRolesService(rolesRepository *postgres.RolesRepository, pubsubRepository
 	}
 }
 
-func (service *RolesService) GetAllRoles(ctx context.Context) (roles []models.Role, err error) {
-	roles, err = service.RolesRepository.GetAllRoles(ctx)
+func (service *RolesService) GetAllRoles(ctx context.Context) ([]rbac.Role, error) {
+	roles, err := service.RolesRepository.GetAllRoles(ctx)
 	if err != nil {
-		return []models.Role{}, err
+		return []rbac.Role{}, err
 	}
 
 	return roles, nil
 }
 
-func (service *RolesService) GetRole(ctx context.Context, id int) (role models.Role, err error) {
-	role, err = service.RolesRepository.GetRole(ctx, id)
+func (service *RolesService) GetRole(ctx context.Context, id int) (rbac.Role, error) {
+	role, err := service.RolesRepository.GetRole(ctx, id)
 	if err != nil {
-		return models.Role{}, err
+		return rbac.Role{}, err
 	}
 
 	return role, nil
 }
 
-func (service *RolesService) CreateRole(ctx context.Context, role models.Role) (err error) {
-	err = service.RolesRepository.CreateRole(ctx, &role)
+func (service *RolesService) CreateRole(ctx context.Context, role rbac.Role) error {
+	err := service.RolesRepository.CreateRole(ctx, &role)
 	if err != nil {
 		return err
 	}
 
-	msg, err := pubsub.NewEnvelope(role, models.RoleOperationCreate, models.RoleType)
-	if err != nil {
-		return err
-	}
-
-	bytes, err := json.Marshal(msg)
-	if err != nil {
-		return err
-	}
-
-	err = service.PubSubRepository.Publish(bytes, models.RolesTopicName)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (service *RolesService) UpdateRole(ctx context.Context, role models.Role, id int) (err error) {
-	err = service.RolesRepository.UpdateRole(ctx, role, id)
-	if err != nil {
-		return err
-	}
-
-	msg, err := pubsub.NewEnvelope(role, models.RoleOperationUpdate, models.RoleType)
+	msg, err := pubsub.NewEnvelope(role, rbac.RoleOperationCreate, rbac.RoleType)
 	if err != nil {
 		return err
 	}
@@ -81,7 +56,7 @@ func (service *RolesService) UpdateRole(ctx context.Context, role models.Role, i
 		return err
 	}
 
-	err = service.PubSubRepository.Publish(bytes, models.RolesTopicName)
+	err = service.PubSubRepository.Publish(bytes, rbac.RolesTopicName)
 	if err != nil {
 		return err
 	}
@@ -89,20 +64,23 @@ func (service *RolesService) UpdateRole(ctx context.Context, role models.Role, i
 	return nil
 }
 
-func (service *RolesService) DeleteRole(ctx context.Context, id int) (err error) {
-	err = service.RolesRepository.DeleteRole(ctx, id)
+func (service *RolesService) UpdateRole(ctx context.Context, role rbac.Role, id int) error {
+	err := service.RolesRepository.UpdateRole(ctx, role, id)
 	if err != nil {
 		return err
 	}
 
-	msg, err := pubsub.NewEnvelope(id, models.RoleOperationDelete, models.RoleType)
+	msg, err := pubsub.NewEnvelope(role, rbac.RoleOperationUpdate, rbac.RoleType)
+	if err != nil {
+		return err
+	}
 
 	bytes, err := json.Marshal(msg)
 	if err != nil {
 		return err
 	}
 
-	err = service.PubSubRepository.Publish(bytes, models.RolesTopicName)
+	err = service.PubSubRepository.Publish(bytes, rbac.RolesTopicName)
 	if err != nil {
 		return err
 	}
@@ -110,10 +88,31 @@ func (service *RolesService) DeleteRole(ctx context.Context, id int) (err error)
 	return nil
 }
 
-func (service *RolesService) GetRoleTmpl(ctx context.Context) (roleTmpl models.RoleTmpl, err error) {
-	roleTmpl, err = service.RolesRepository.GetRoleTmpl(ctx)
+func (service *RolesService) DeleteRole(ctx context.Context, id int) error {
+	err := service.RolesRepository.DeleteRole(ctx, id)
 	if err != nil {
-		return models.RoleTmpl{}, err
+		return err
+	}
+
+	msg, err := pubsub.NewEnvelope(id, rbac.RoleOperationDelete, rbac.RoleType)
+
+	bytes, err := json.Marshal(msg)
+	if err != nil {
+		return err
+	}
+
+	err = service.PubSubRepository.Publish(bytes, rbac.RolesTopicName)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (service *RolesService) GetRoleTmpl(ctx context.Context) (rbac.RoleTmpl, error) {
+	roleTmpl, err := service.RolesRepository.GetRoleTmpl(ctx)
+	if err != nil {
+		return rbac.RoleTmpl{}, err
 	}
 
 	return roleTmpl, nil

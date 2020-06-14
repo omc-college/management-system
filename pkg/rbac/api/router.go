@@ -1,19 +1,19 @@
-package routers
+package api
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
-	"github.com/omc-college/management-system/pkg/rbac/api/handlers"
-	"github.com/omc-college/management-system/pkg/rbac/api/middleware"
+	"github.com/omc-college/management-system/pkg/rbac"
 	"github.com/omc-college/management-system/pkg/rbac/service"
 )
 
 // NewCrudRouter Inits RBAC CRUD service router
-func NewCrudRouter(service *service.RolesService) *mux.Router {
-	authorizationMiddleware := middleware.NewAuthorizationMiddleware(service.AuthCache)
-	rolesHandler := handlers.NewRolesHandler(service)
+func NewCrudRouter(service *service.RolesService, decide func(context.Context, rbac.Input) error) *mux.Router {
+	authorizationMiddleware := rbac.NewRBACMiddleware(service.AuthCache, decide)
+	rolesHandler := NewRolesHandler(service)
 
 	router := mux.NewRouter()
 
