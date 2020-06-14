@@ -1,4 +1,4 @@
-package handlers
+package api
 
 import (
 	"encoding/json"
@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 
-	"github.com/omc-college/management-system/pkg/rbac/models"
+	"github.com/omc-college/management-system/pkg/rbac"
 	"github.com/omc-college/management-system/pkg/rbac/repository/postgres"
 	"github.com/omc-college/management-system/pkg/rbac/service"
 )
@@ -28,22 +28,22 @@ func NewRolesHandler(service *service.RolesService) *RolesHandler {
 
 // Handles existing error in handlers
 func handleError(err error, w http.ResponseWriter) {
-	var error models.Error
+	var error rbac.Error
 	var queryErr *postgres.QueryError
 	var scanErr *postgres.ScanError
 
 	if errors.As(err, &queryErr) {
-		error = models.Error{http.StatusInternalServerError, queryErr.Message}
+		error = rbac.Error{http.StatusInternalServerError, queryErr.Message}
 	} else if errors.As(err, &scanErr) {
-		error = models.Error{http.StatusInternalServerError, queryErr.Message}
+		error = rbac.Error{http.StatusInternalServerError, queryErr.Message}
 	} else if errors.Is(err, postgres.ErrCloseStmt) {
-		error = models.Error{http.StatusInternalServerError, err.Error()}
+		error = rbac.Error{http.StatusInternalServerError, err.Error()}
 	} else if errors.Is(err, postgres.ErrConvertId) {
-		error = models.Error{http.StatusBadRequest, err.Error()}
+		error = rbac.Error{http.StatusBadRequest, err.Error()}
 	} else if errors.Is(err, postgres.ErrNoRows) {
-		error = models.Error{http.StatusNotFound, err.Error()}
+		error = rbac.Error{http.StatusNotFound, err.Error()}
 	} else {
-		error = models.Error{http.StatusInternalServerError, err.Error()}
+		error = rbac.Error{http.StatusInternalServerError, err.Error()}
 	}
 
 	logrus.Errorf(error.Message)
@@ -108,7 +108,7 @@ func (handler *RolesHandler) GetRole(w http.ResponseWriter, r *http.Request) {
 func (handler *RolesHandler) CreateRole(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var role models.Role
+	var role rbac.Role
 	var err error
 
 	body, err := ioutil.ReadAll(r.Body)
@@ -141,7 +141,7 @@ func (handler *RolesHandler) CreateRole(w http.ResponseWriter, r *http.Request) 
 func (handler *RolesHandler) UpdateRole(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var role models.Role
+	var role rbac.Role
 	var err error
 
 	params := mux.Vars(r)

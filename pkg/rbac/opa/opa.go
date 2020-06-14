@@ -3,10 +3,11 @@ package opa
 import (
 	"context"
 
+	"github.com/omc-college/management-system/pkg/rbac"
 	"github.com/open-policy-agent/opa/rego"
 )
 
-func GetDecision(ctx context.Context, requestRegoInput RegoInput) error {
+func GetDecision(ctx context.Context, requestRegoInput rbac.Input) error {
 	authorizationRego := rego.New(
 		rego.Query("data.authorization.isAccessGranted"),
 		rego.Input(requestRegoInput),
@@ -18,7 +19,7 @@ func GetDecision(ctx context.Context, requestRegoInput RegoInput) error {
 	}
 
 	if !regoResult[0].Expressions[0].Value.(bool) {
-		return ErrNotAuthorized
+		return rbac.ErrNotAuthorized
 	}
 
 	return nil

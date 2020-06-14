@@ -1,4 +1,4 @@
-package authcache
+package rbac
 
 import (
 	"encoding/json"
@@ -8,11 +8,10 @@ import (
 	"strings"
 
 	"github.com/omc-college/management-system/pkg/pubsub"
-	"github.com/omc-college/management-system/pkg/rbac/models"
 )
 
 type Cache struct {
-	authRules
+	rules
 }
 
 // NewCache inits Cache based on full history from MQ
@@ -22,11 +21,11 @@ func NewCache() {
 
 func (cache *Cache) Update(envelope *pubsub.Envelope) error {
 	switch envelope.Operation {
-	case models.RoleOperationCreate:
+	case RoleOperationCreate:
 		return cache.createRole(envelope.Payload)
-	case models.RoleOperationUpdate:
+	case RoleOperationUpdate:
 		return cache.updateRole(envelope.Payload)
-	case models.RoleOperationDelete:
+	case RoleOperationDelete:
 		return cache.deleteRole(envelope.Payload)
 	default:
 		return fmt.Errorf("cannot recognize operation")
@@ -34,7 +33,7 @@ func (cache *Cache) Update(envelope *pubsub.Envelope) error {
 }
 
 func (cache *Cache) createRole(rawNewRole json.RawMessage) error {
-	var newRole models.Role
+	var newRole Role
 
 	err := json.Unmarshal(rawNewRole, &newRole)
 	if err != nil {
@@ -48,11 +47,9 @@ func (cache *Cache) createRole(rawNewRole json.RawMessage) error {
 
 	for _, newFeature := range newRole.Entries {
 		for _, newEndpoint := range newFeature.Endpoints {
+			var newPathRegExp = fmt.Sprintf("^%s$", paramRegExp.ReplaceAll([]byte(newEndpoint.Path), []byte("\\w+")))
 			var existingCacheRuleIndex int
-			var existingCacheAuthMethodIndex int
-
-			newPathRegExp := fmt.Sprintf("^%s$", paramRegExp.ReplaceAll([]byte(newEndpoint.Path), []byte("\\w+")))
-			isPathRegExpExisting := false
+			var isPathRegExpExisting bool
 
 			for cacheRuleIndex, cacheRule := range cache.Rules {
 				if newPathRegExp == cacheRule.PathRegExp {
@@ -64,14 +61,14 @@ func (cache *Cache) createRole(rawNewRole json.RawMessage) error {
 			}
 
 			if !isPathRegExpExisting {
-				newAuthMethod := authMethod{
+				newAuthMethod := method{
 					Name:  newEndpoint.Method,
 					Roles: []int{newRole.ID},
 				}
 
-				newAuthRule := authRule{
+				newAuthRule := rule{
 					PathRegExp: newPathRegExp,
-					Methods:    []authMethod{newAuthMethod},
+					Methods:    []method{newAuthMethod},
 				}
 
 				cache.Rules = append(cache.Rules, newAuthRule)
@@ -79,7 +76,8 @@ func (cache *Cache) createRole(rawNewRole json.RawMessage) error {
 				continue
 			}
 
-			isMethodExisting := false
+			var existingCacheAuthMethodIndex int
+			var isMethodExisting bool
 
 			for cacheAuthMethodID, cacheAuthMethod := range cache.Rules[existingCacheRuleIndex].Methods {
 				if newEndpoint.Method == cacheAuthMethod.Name {
@@ -90,7 +88,7 @@ func (cache *Cache) createRole(rawNewRole json.RawMessage) error {
 			}
 
 			if !isMethodExisting {
-				newAuthMethod := authMethod{
+				newAuthMethod := method{
 					Name:  newEndpoint.Method,
 					Roles: []int{newRole.ID},
 				}
@@ -120,7 +118,7 @@ func (cache *Cache) createRole(rawNewRole json.RawMessage) error {
 }
 
 func (cache *Cache) updateRole(rawNewRole json.RawMessage) error {
-	var newRole models.Role
+	var newRole Role
 
 	err := json.Unmarshal(rawNewRole, &newRole)
 	if err != nil {
@@ -153,7 +151,7 @@ func (cache *Cache) deleteRole(rawRoleID json.RawMessage) error {
 		return err
 	}
 
-	isRuleDeleted := false
+	var isRuleDeleted bool
 
 	for cacheRuleIndex, cacheRule := range cache.Rules {
 		for cacheAuthMethodIndex, cacheAuthMethod := range cacheRule.Methods {
