@@ -56,9 +56,18 @@ func (cr *CredRepository) InsertCredentials(c *models.Credentials) error {
 
 func (сr *CredRepository) InsertAccessToken(userId string, accessToken string) error {
 
-	_, err := сr.db.Exec("INSERT INTO user_acsess_tokens VALUES($1, $2, CURRENT_TIMESTAMP)", userId, accessToken)
+	_, err := сr.db.Exec("INSERT INTO user_access_tokens VALUES($1, $2, CURRENT_TIMESTAMP)", userId, accessToken)
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func (cr *CredRepository) UpdateAccessToken(userId string, accessToken string) error {
+	_, err := cr.db.Exec("UPDATE user_access_tokens SET  access_token= $1, generated_at=current_timestamp WHERE id= $2", accessToken, userId)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
