@@ -21,14 +21,22 @@ func token() string {
 type SignUpService struct {
 	db *sqlx.DB
 }
+type CredService struct {
+	db *sqlx.DB
+}
 
+func NewCredService(DB *sqlx.DB) *CredService {
+	return &CredService{
+		db: DB,
+	}
+}
 func NewSignUpService(DB *sqlx.DB) *SignUpService {
 	return &SignUpService{
 		db: DB,
 	}
 }
 
-func (service *SignUpService) SignUp (request *models.SignupRequest) error {
+func (service *SignUpService) SignUp(request *models.SignupRequest) error {
 	var cred models.Credentials
 	var tok models.EmailVerificationTokens
 	var err error
@@ -84,7 +92,7 @@ func (service *SignUpService) SignUp (request *models.SignupRequest) error {
 	return nil
 }
 
-func (service *SignUpService) EmailAvailable (email string) (bool, error) {
+func (service *SignUpService) EmailAvailable(email string) (bool, error) {
 	var user *models.User
 	var exist bool
 	var err error
@@ -103,7 +111,7 @@ func (service *SignUpService) EmailAvailable (email string) (bool, error) {
 	return exist, nil
 }
 
-func (service *SignUpService) EmailVerificationToken (token *models.EmailVerificationTokens) error {
+func (service *SignUpService) EmailVerificationToken(token *models.EmailVerificationTokens) error {
 	var user models.User
 	var err error
 
@@ -140,4 +148,31 @@ func (service *SignUpService) EmailVerificationToken (token *models.EmailVerific
 	return nil
 }
 
-// Send Email Verification Token function must be here!
+func (service *CredService) ChangePassword(request *models.Credentials) error {
+
+	var err error
+	var user models.User
+
+	tx, err := service.db.Beginx()
+	if err != nil {
+		return err
+	}
+
+	defer tx.Rollback()
+
+	credRepo := postgresql.NewCredentialsRepository(tx)
+
+	request.ID = user.ID
+
+	err = credRepo.UpdateCredentials(request)
+	if err != nil {
+		return err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
