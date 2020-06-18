@@ -11,11 +11,11 @@ import (
 
 type RolesService struct {
 	RolesRepository  *postgres.RolesRepository
-	PubSubRepository *pubsub.GroupClient
+	PubSubRepository *pubsub.Client
 	AuthCache        *rbac.Cache
 }
 
-func NewRolesService(rolesRepository *postgres.RolesRepository, pubsubRepository *pubsub.GroupClient) *RolesService {
+func NewRolesService(rolesRepository *postgres.RolesRepository, pubsubRepository *pubsub.Client) *RolesService {
 	return &RolesService{
 		RolesRepository:  rolesRepository,
 		PubSubRepository: pubsubRepository,
