@@ -42,9 +42,10 @@ func main() {
 
 	repository := postgres.NewRolesRepository(db)
 
-	client, err := pubsub.NewQueueGroupClient(serviceConfig.PubSubConfig)
+	client := pubsub.NewClient(serviceConfig.PubSubConfig)
+	err = client.Connection()
 	if err != nil {
-		logrus.Fatalf("cannot initialize QueueGroupClient: %s", err.Error())
+		logrus.Fatalf("cannot initialize Client: %s", err.Error())
 	}
 
 	rolesService := service.NewRolesService(repository, client)

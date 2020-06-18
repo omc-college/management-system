@@ -4,22 +4,33 @@ import (
 	stan "github.com/nats-io/stan.go"
 )
 
-//GroupClient contains stan.Conn
-type GroupClient struct {
+//Client is a struct that contains stan.Conn and config
+type Client struct {
 	stan stan.Conn
+	config Config
 }
 
-//NewQueueGroupClient connected to stan server and return pointer to a GroupClient
-func NewQueueGroupClient(conf Config) (*GroupClient, error) {
-	sc, err := stan.Connect(conf.ClusterID, conf.ClientID, stan.Pings(conf.PingsInterval, conf.MaxUnsuccessfulPings))
+//NewClient is a constructor function to a Client
+func NewClient(conf Config) *Client {
+	return &Client{
+		config: conf,
+	}
+}
 
-	return &GroupClient{
-		stan: sc,
-	}, err
+//Connection connected to stan server
+func (stanConn *Client)Connection() error {
+	sc, err := stan.Connect(stanConn.config.ClusterID, stanConn.config.ClientID, stan.Pings(stanConn.config.PingsInterval, stanConn.config.MaxUnsuccessfulPings))
+	if err != nil {
+		return err
+	}
+
+	stanConn.stan = sc
+
+	return nil
 }
 
 //Publish publishes a message
-func (stanConn *GroupClient) Publish(msg []byte, topicName string) error {
+func (stanConn *Client) Publish(msg []byte, topicName string) error {
 	err := stanConn.stan.Publish(topicName, msg)
 	if err != nil {
 		return err
