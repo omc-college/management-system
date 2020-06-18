@@ -1,8 +1,13 @@
-
 package main
 
-import "fmt"
+import (
+	"github.com/omc-college/management-system/pkg/ims/api/routers"
+	"github.com/omc-college/management-system/pkg/ims/service"
+	"log"
+	"net/http"
+)
 
 func main() {
-	fmt.Println("I'm identity management service")
-}
+	routers.NewSignUpRouter(&service.SignUpService{})
+		log.Fatal(http.ListenAndServe(":8080", nil))
+	}
