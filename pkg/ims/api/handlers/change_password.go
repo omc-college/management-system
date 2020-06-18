@@ -1,14 +1,17 @@
 package handlers
 
 import (
+	"github.com/sirupsen/logrus"
+
 	"encoding/json"
 	"errors"
+	"net/http"
+
 	"github.com/gorilla/mux"
+
 	"github.com/omc-college/management-system/pkg/ims/models"
 	"github.com/omc-college/management-system/pkg/ims/service"
 	"github.com/omc-college/management-system/pkg/ims/validation"
-	"github.com/sirupsen/logrus"
-	"net/http"
 )
 
 type CredHandler struct {
@@ -27,6 +30,8 @@ func ErrorHandler(err error, w http.ResponseWriter) {
 
 	if errors.Is(err, validation.ErrNoSymbols) || errors.Is(err, validation.ErrToMuchSymbols) {
 		error = models.Error{http.StatusBadRequest, err.Error()}
+	} else if errors.Is(err, validation.ErrConflict) {
+		error = models.Error{http.StatusConflict, err.Error()}
 	}
 
 	logrus.Errorf(error.Message)
@@ -47,7 +52,11 @@ func (h *CredHandler) UpdateCredentials(w http.ResponseWriter, r *http.Request) 
 		ErrorHandler(err, w)
 		return
 	}
-
+	if params["newPassword "] == cred.Password {
+		err = validation.ErrConflict
+		ErrorHandler(err, w)
+		return
+	}
 	cred.Password = params["newPassword"]
 
 	err = h.CredService.ChangePassword(&cred)

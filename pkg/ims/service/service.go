@@ -148,7 +148,6 @@ func (service *SignUpService) EmailVerificationToken(token *models.EmailVerifica
 	return nil
 }
 
-// Send Email Verification Token function must be here!
 func (service *CredService) ChangePassword(request *models.Credentials) error {
 
 	var err error
@@ -166,13 +165,11 @@ func (service *CredService) ChangePassword(request *models.Credentials) error {
 	request.ID = user.ID
 
 	err = credRepo.UpdateCredentials(request)
-
 	if err != nil {
 		return err
 	}
 
 	err = tx.Commit()
-
 	if err != nil {
 		return err
 	}
