@@ -227,3 +227,20 @@ func (service *ImsService) RefreshAccesssToken(id string) error {
 	}
 	return nil
 }
+
+func (service *ImsService) ChangePassword(request *models.Credentials) error {
+
+	var err error
+	var user models.User
+
+	credRepo := postgresql.NewCredentialsRepository(service.db)
+
+	request.ID = user.ID
+
+	err = credRepo.UpdateCredentials(request)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
