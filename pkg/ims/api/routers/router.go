@@ -16,10 +16,15 @@ func NewImsRouter(service *service.ImsService) *mux.Router {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/signup", ImsHandler.SignUp).Methods(http.MethodPost)
-	router.HandleFunc("/email/available/{email}", ImsHandler.EmailAvailable).Methods(http.MethodGet)
-	router.HandleFunc("/users/emailVerificationToken/verify/{verification_token}", ImsHandler.CheckEmailVerificationToken).Methods(http.MethodGet)
+
+	router.HandleFunc("/signup", signUpHandler.SignUp).Methods(http.MethodPost)
+	router.HandleFunc("/email/available/{email}", signUpHandler.EmailAvailable).Methods(http.MethodGet)
+	router.HandleFunc("/users/emailVerificationToken/verify/{verification_token}", signUpHandler.CheckEmailVerificationToken).Methods(http.MethodGet)
+	router.HandleFunc("/reset", signUpHandler.ResetPassword).Methods(http.MethodGet)
+	router.HandleFunc("/confirmreset", signUpHandler.ConfirmReset).Methods(http.MethodGet)
 	router.HandleFunc("/sessions", ImsHandler.Login).Methods(http.MethodPost)
 	router.HandleFunc("/sessions/refresh", ImsHandler.RefreshAccessToken).Methods(http.MethodPost)
+	
+
 	return router
 }
