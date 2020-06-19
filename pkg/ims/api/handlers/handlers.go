@@ -197,3 +197,30 @@ func (h *ImsHandler) RefreshAccessToken(w http.ResponseWriter, r *http.Request) 
 	}
 	w.WriteHeader(http.StatusOK)
 }
+
+func (h *ImsHandler) ChangePassword(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	var cred models.Credentials
+	var err error
+
+	params := mux.Vars(r)
+
+	if params["newPassword "] == "" {
+		err = validate.ErrNoSymbols
+		handleError(err, w)
+		return
+	}
+	if params["newPassword "] == cred.ExistingPassword {
+		err = validate.ErrConflict
+		handleError(err, w)
+		return
+	}
+	cred.ExistingPassword = params["newPassword"]
+
+	err = h.ImsService.ChangePassword(&cred)
+	if err != nil {
+		handleError(err, w)
+		return
+	}
+}
