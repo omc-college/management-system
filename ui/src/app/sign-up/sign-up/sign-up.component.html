@@ -1,0 +1,59 @@
+<mat-drawer-container class="entering">
+   <mat-card>
+      <form [formGroup]="signUpForm" class="sigh" autocomplete="off" novalidate (ngSubmit)="signUp(signUpForm.value)">
+         <mat-card-content>
+            <mat-form-field>
+               <input matInput type="text" placeholder="First Name" formControlName="first_name" id="first_name"/>
+               <mat-hint>No more than 255 characters long</mat-hint>
+               <mat-error *ngIf="hasSignUpError('first_name', 'required')">First Name is required</mat-error>
+               <mat-error *ngIf="hasSignUpError('first_name', 'maxlength')">You have more than 255 characters</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+               <input matInput type="text" placeholder="Last Name" formControlName="last_name" id="last_name" />
+               <mat-hint>No more than 255 characters long</mat-hint>
+               <mat-error *ngIf="hasSignUpError('last_name', 'required')">Last Name is required</mat-error>
+               <mat-error *ngIf="hasSignUpError('last_name', 'maxlength')">You have more than 255 characters</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+               <input matInput type="text" placeholder="Email" formControlName="email" id="email" />
+               <mat-hint>No more than 60 characters long</mat-hint>
+               <mat-error *ngIf="hasSignUpError('email', 'required')">Email is required</mat-error>
+               <mat-error *ngIf="hasSignUpError('email', 'maxlength')">You have more than 60 characters</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+               <input
+                  matInput
+                  type="text"
+                  placeholder="Password"
+                  formControlName="password"
+                  id="password"
+                  [type]="hidePassword ? 'password' : 'text'"
+               />
+               <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="hidePassword = !hidePassword"
+                  [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="hidePassword"
+               >
+                  <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+               </button>
+               <mat-hint>No more than 255 characters long</mat-hint>
+               <mat-error *ngIf="hasSignUpError('password', 'required')">Password is required</mat-error>
+               <mat-error *ngIf="hasSignUpError('password', 'maxlength')">You have more than 255 characters</mat-error>
+            </mat-form-field>
+         </mat-card-content>
+         <mat-card-actions>
+            <button
+               mat-raised-button
+               type="submit"
+               color="primary"
+               [disabled]="!signUpForm.valid"
+               class="center"
+            >
+               Sign Up
+            </button>
+         </mat-card-actions>
+      </form>
+   </mat-card>
+</mat-drawer-container>
