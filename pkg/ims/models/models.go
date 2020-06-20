@@ -27,10 +27,12 @@ type Claims struct {
 }
 
 type Credentials struct {
-	ID           int       `json:"id" db:"id"`
-	PasswordHash string    `json:"password_hash" db:"password_hash"`
-	Salt         string    `json:"salt" db:"salt"`
-	UpdatedAt    time.Time `json:"updated_at" db:"updated_at"`
+	ID               int       `json:"id" db:"id"`
+	PasswordHash     string    `json:"password_hash" db:"password_hash"`
+	Salt             string    `json:"salt" db:"salt"`
+	UpdatedAt        time.Time `json:"updated_at" db:"updated_at"`
+	ExistingPassword string    `json:"existing_password" db:"existingPassword"`
+	NewPassword      string    `json:"newPassword" db:"newPassword"`
 }
 
 type EmailVerificationTokens struct {

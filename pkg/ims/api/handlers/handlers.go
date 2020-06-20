@@ -40,6 +40,8 @@ func handleError(err error, w http.ResponseWriter) {
 		error = models.Error{http.StatusInternalServerError, scanErr.Message}
 	} else if errors.Is(err, validate.ErrNoSymbols) || errors.Is(err, validate.ErrToMuchSymbols) {
 		error = models.Error{http.StatusBadRequest, err.Error()}
+	} else if errors.Is(err, validate.ErrConflict) {
+		error = models.Error{http.StatusConflict, err.Error()}
 	} else if errors.Is(err, validate.ErrEmailExists) || errors.Is(err, validate.ErrInvalidEmail) {
 		error = models.Error{http.StatusBadRequest, err.Error()}
 	} else {
@@ -196,4 +198,31 @@ func (h *ImsHandler) RefreshAccessToken(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *ImsHandler) ChangePassword(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	var cred models.Credentials
+	var err error
+
+	params := mux.Vars(r)
+
+	if params["newPassword "] == "" {
+		err = validate.ErrNoSymbols
+		handleError(err, w)
+		return
+	}
+	if params["newPassword "] == cred.ExistingPassword {
+		err = validate.ErrConflict
+		handleError(err, w)
+		return
+	}
+	cred.ExistingPassword = params["newPassword"]
+
+	err = h.ImsService.ChangePassword(&cred)
+	if err != nil {
+		handleError(err, w)
+		return
+	}
 }
