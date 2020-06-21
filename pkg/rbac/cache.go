@@ -11,7 +11,7 @@ import (
 )
 
 type Cache struct {
-	rules
+	Rules []Rule `json:"rules"`
 }
 
 // NewCache inits Cache based on full history from MQ
@@ -20,6 +20,10 @@ func NewCache() {
 }
 
 func (cache *Cache) Update(envelope pubsub.Envelope) error {
+	if envelope.EntityType() != RoleType {
+		return ErrInvalidType
+	}
+
 	switch envelope.Operation() {
 	case RoleOperationCreate:
 		return cache.createRole(envelope.Payload())
@@ -28,7 +32,7 @@ func (cache *Cache) Update(envelope pubsub.Envelope) error {
 	case RoleOperationDelete:
 		return cache.deleteRole(envelope.Payload())
 	default:
-		return fmt.Errorf("cannot recognize operation")
+		return ErrInvalidOperation
 	}
 }
 
@@ -37,7 +41,7 @@ func (cache *Cache) createRole(rawNewRole json.RawMessage) error {
 
 	err := json.Unmarshal(rawNewRole, &newRole)
 	if err != nil {
-		return err
+		return ErrInvalidPayload
 	}
 
 	paramRegExp, err := regexp.Compile(`{\w+}`)
@@ -51,6 +55,16 @@ func (cache *Cache) createRole(rawNewRole json.RawMessage) error {
 			var existingCacheRuleIndex int
 			var isPathRegExpExisting bool
 
+			for _, cacheRuleID := range cache.Rules {
+				for _, cacheMethod := range cacheRuleID.Methods {
+					for _, cacheRoleID := range cacheMethod.Roles {
+						if newRole.ID == cacheRoleID {
+							return ErrCreateExistingRole
+						}
+					}
+				}
+			}
+
 			for cacheRuleIndex, cacheRule := range cache.Rules {
 				if newPathRegExp == cacheRule.PathRegExp {
 					isPathRegExpExisting = true
@@ -61,14 +75,15 @@ func (cache *Cache) createRole(rawNewRole json.RawMessage) error {
 			}
 
 			if !isPathRegExpExisting {
-				newAuthMethod := method{
+
+				newAuthMethod := Method{
 					Name:  newEndpoint.Method,
 					Roles: []int{newRole.ID},
 				}
 
-				newAuthRule := rule{
+				newAuthRule := Rule{
 					PathRegExp: newPathRegExp,
-					Methods:    []method{newAuthMethod},
+					Methods:    []Method{newAuthMethod},
 				}
 
 				cache.Rules = append(cache.Rules, newAuthRule)
@@ -88,7 +103,7 @@ func (cache *Cache) createRole(rawNewRole json.RawMessage) error {
 			}
 
 			if !isMethodExisting {
-				newAuthMethod := method{
+				newAuthMethod := Method{
 					Name:  newEndpoint.Method,
 					Roles: []int{newRole.ID},
 				}
@@ -98,13 +113,7 @@ func (cache *Cache) createRole(rawNewRole json.RawMessage) error {
 				continue
 			}
 
-			for _, cacheRoleID := range cache.Rules[existingCacheRuleIndex].Methods[existingCacheAuthMethodIndex].Roles {
-				if newRole.ID == cacheRoleID {
-					return fmt.Errorf("cannot write already existing role to auth cache")
-				}
-
-				cache.Rules[existingCacheRuleIndex].Methods[existingCacheAuthMethodIndex].Roles = append(cache.Rules[existingCacheRuleIndex].Methods[existingCacheAuthMethodIndex].Roles, newRole.ID)
-			}
+			cache.Rules[existingCacheRuleIndex].Methods[existingCacheAuthMethodIndex].Roles = append(cache.Rules[existingCacheRuleIndex].Methods[existingCacheAuthMethodIndex].Roles, newRole.ID)
 		}
 	}
 
@@ -122,12 +131,12 @@ func (cache *Cache) updateRole(rawNewRole json.RawMessage) error {
 
 	err := json.Unmarshal(rawNewRole, &newRole)
 	if err != nil {
-		return err
+		return ErrInvalidPayload
 	}
 
 	RawNewRoleID, err := json.Marshal(newRole.ID)
 	if err != nil {
-		return err
+		return ErrInvalidPayload
 	}
 
 	err = cache.deleteRole(RawNewRoleID)
@@ -148,10 +157,11 @@ func (cache *Cache) deleteRole(rawRoleID json.RawMessage) error {
 
 	err := json.Unmarshal(rawRoleID, &roleID)
 	if err != nil {
-		return err
+		return ErrInvalidPayload
 	}
 
 	var isRuleDeleted bool
+	var isRoleDeleted bool
 
 	for cacheRuleIndex, cacheRule := range cache.Rules {
 		for cacheAuthMethodIndex, cacheAuthMethod := range cacheRule.Methods {
@@ -159,18 +169,23 @@ func (cache *Cache) deleteRole(rawRoleID json.RawMessage) error {
 				if roleID == cacheRoleID {
 					cache.Rules[cacheRuleIndex].Methods[cacheAuthMethodIndex].Roles = append(cacheAuthMethod.Roles[:cacheRoleIDIndex], cacheAuthMethod.Roles[cacheRoleIDIndex+1:]...)
 
-					if len(cacheAuthMethod.Roles) == 0 {
+					if len(cache.Rules[cacheRuleIndex].Methods[cacheAuthMethodIndex].Roles) == 0 {
 						cache.Rules[cacheRuleIndex].Methods = append(cacheRule.Methods[:cacheAuthMethodIndex], cacheRule.Methods[cacheAuthMethodIndex+1:]...)
 
-						if len(cacheRule.Methods) == 0 {
+						if len(cache.Rules[cacheRuleIndex].Methods) == 0 {
 							isRuleDeleted = true
 
 							cache.Rules = append(cache.Rules[:cacheRuleIndex], cache.Rules[cacheRuleIndex+1:]...)
 						}
 					}
+					isRoleDeleted = true
 				}
 			}
 		}
+	}
+
+	if !isRoleDeleted {
+		return ErrDeleteNotExistingRole
 	}
 
 	if isRuleDeleted {
