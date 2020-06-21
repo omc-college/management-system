@@ -12,6 +12,7 @@ import (
 
 	"github.com/omc-college/management-system/pkg/ims/models"
 	"github.com/omc-college/management-system/pkg/ims/repository/postgresql"
+	"github.com/omc-college/management-system/pkg/ims/validate"
 	tokenCreate "github.com/omc-college/management-system/pkg/jwt"
 	"github.com/omc-college/management-system/pkg/pwd"
 )
@@ -26,10 +27,10 @@ func token() string {
 type ImsService struct {
 	db             *sqlx.DB
 	signingKey     []byte
-	expirationTime time.Time
+	expirationTime time.Duration
 }
 
-func NewIMSService(DB *sqlx.DB, signingKey []byte, expirationTime time.Time) *ImsService {
+func NewIMSService(DB *sqlx.DB, signingKey []byte, expirationTime time.Duration) *ImsService {
 	return &ImsService{
 		db:             DB,
 		signingKey:     signingKey,
@@ -160,6 +161,7 @@ func (service *ImsService) Login(request *models.LoginRequest) error {
 	credRepo := postgresql.NewCredentialsRepository(service.db)
 	user, err = userRepo.GetUserByEmail(request.Email)
 	if err != nil {
+		err = validate.ErrInvalidUserLoginInformation
 		return err
 	}
 
@@ -174,14 +176,14 @@ func (service *ImsService) Login(request *models.LoginRequest) error {
 	if err != nil {
 		return err
 	}
-
+	exp := time.Now().Add(service.expirationTime)
 	claims := tokenCreate.Claims{
 		id,
 		user.FirstName,
 		user.Email,
 		user.Roles,
 		jwt.StandardClaims{
-			ExpiresAt: service.expirationTime.Unix(),
+			ExpiresAt: exp.Unix(),
 		},
 	}
 
@@ -196,17 +198,20 @@ func (service *ImsService) Login(request *models.LoginRequest) error {
 	return nil
 }
 
-func (service *ImsService) RefreshAccesssToken(id string) error {
+func (service *ImsService) RefreshAccesssToken(email string) error {
 	var user *models.User
 	var err error
 	var ss string
 
 	userRepo := postgresql.NewUsersRepository(service.db)
 	credRepo := postgresql.NewCredentialsRepository(service.db)
-	user, err = userRepo.GetUserByEmail(id)
+	user, err = userRepo.GetUserByEmail(email)
 	if err != nil {
 		return err
 	}
+	id := strconv.Itoa(user.ID)
+
+	exp := time.Now().Add(service.expirationTime)
 
 	claims := tokenCreate.Claims{
 		id,
@@ -214,7 +219,7 @@ func (service *ImsService) RefreshAccesssToken(id string) error {
 		user.Email,
 		user.Roles,
 		jwt.StandardClaims{
-			ExpiresAt: service.expirationTime.Unix(),
+			ExpiresAt: exp.Unix(),
 		},
 	}
 	ss, err = tokenCreate.GenerateToken(claims, service.signingKey)

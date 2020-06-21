@@ -32,7 +32,7 @@ export class SignInComponent implements OnInit {
   signIn(value) {
     if (this.signInForm.valid) {
       let signInValue: SignIn = {
-        login: value.login,
+        email: value.email,
         password: value.password,
       };
       this.executeSignIn(signInValue);
