@@ -10,9 +10,12 @@ const RoleOperationUpdate = "role.update"
 const RoleOperationDelete = "role.delete"
 const RolesTopicName = "roles"
 
-const authCacheFilename = "authCache.json"
-
 var ErrNotAuthorized = fmt.Errorf("cannot authorize")
+var ErrInvalidType = fmt.Errorf("cannot recognize type")
+var ErrInvalidOperation = fmt.Errorf("cannot recognize operation")
+var ErrInvalidPayload = fmt.Errorf("invalid payload passed")
+var ErrCreateExistingRole = fmt.Errorf("already existing role should not be created")
+var ErrDeleteNotExistingRole = fmt.Errorf("unexisting role should not be deleted")
 
 type Role struct {
 	ID      int            `json:"id"`
@@ -38,16 +41,12 @@ type RoleTmpl struct {
 	Entries []FeatureEntry `json:"entries"`
 }
 
-type rules struct {
-	Rules []rule `json:"rules"`
-}
-
-type rule struct {
+type Rule struct {
 	PathRegExp string   `json:"pathRegExp"`
-	Methods    []method `json:"methods"`
+	Methods    []Method `json:"methods"`
 }
 
-type method struct {
+type Method struct {
 	Name  string `json:"name"`
 	Roles []int  `json:"roles"`
 }
