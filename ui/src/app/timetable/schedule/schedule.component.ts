@@ -19,7 +19,7 @@ export class ScheduleComponent implements OnInit {
   private timestampUrl = 'api/timestamp1';
 
   readonly DAYSTOSHOW: number = 6;
-  sliderAddNewState: boolean = false;
+  sliderAddNewState = false;
 
   timestamp: string[] = [];
   cards: moment.Moment[];

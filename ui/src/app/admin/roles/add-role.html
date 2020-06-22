@@ -1,0 +1,10 @@
+<h1 mat-dialog-title style="width: 100%; text-align: center;">{{data.message}}</h1>
+<div mat-dialog-content style="display: flex; align-items: center; justify-content: center;">
+  <mat-form-field>
+    <input matInput [(ngModel)]="name" />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions style="float: right;">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="!name" [mat-dialog-close]="name" cdkFocusInitial>Ok</button>
+</div>

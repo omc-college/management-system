@@ -1,8 +1,16 @@
-type Role = 'student' | 'lecturer' | 'parent' | 'director';
+import * as moment from 'moment';
+
 export interface User {
-  id: string;
+  userId: number;
   firstName: string;
   lastName: string;
   surname: string;
-  role: Role;
+  dateOFBirth: moment.Moment;
+  email: string;
+  mobilePhone: string;
+  createdAt: moment.Moment;
+  modifiedAt: moment.Moment;
+  roles: string[];
+  verified: boolean;
+  userPhoto: any;
 }

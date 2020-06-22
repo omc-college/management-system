@@ -9,5 +9,6 @@ import {MatCardModule} from '@angular/material/card';
 @NgModule({
   declarations: [ErrorPageComponent],
   imports: [CommonModule, MatCardModule, AppRoutingModule],
+  exports: [ErrorPageComponent],
 })
 export class ErrorPageModule {}
