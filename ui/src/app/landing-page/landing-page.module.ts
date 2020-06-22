@@ -11,7 +11,13 @@ import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   declarations: [LandingPageComponent, LandingHeaderComponent, LandingSidenavComponent, LandingMainContentComponent],
-  imports: [CommonModule, AppRoutingModule, MatButtonModule],
-  exports: [LandingPageComponent, LandingHeaderComponent, LandingSidenavComponent, LandingMainContentComponent],
+  imports: [CommonModule, MatButtonModule, AppRoutingModule],
+  exports: [
+    LandingPageComponent,
+    LandingHeaderComponent,
+    LandingSidenavComponent,
+    LandingMainContentComponent,
+    MatButtonModule,
+  ],
 })
 export class LandingPageModule {}
