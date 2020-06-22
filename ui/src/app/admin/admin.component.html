@@ -1,0 +1,33 @@
+<mat-tab-group mat-align-tabs="center" color="accent" backgroundColor="primary">
+  <mat-tab label="Resources">
+    <ng-template matTabContent>
+      <app-resources-management></app-resources-management>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Roles">
+    <ng-template matTabContent> <app-roles class="roles"></app-roles> </ng-template
+  ></mat-tab>
+
+  <mat-tab label="Users">
+    <ng-template matTabContent>
+      <app-users-management></app-users-management>
+    </ng-template>
+  </mat-tab>
+
+  <mat-tab label="Groups">
+    <ng-template matTabContent>
+      <app-groups-management></app-groups-management>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
+<button
+  mat-fab
+  color="primary"
+  class="home"
+  matTooltip="Returns to the main page"
+  matTooltipPosition="above"
+  aria-label="Example icon button with a home icon"
+  routerLink="/landing"
+>
+  <mat-icon>home</mat-icon>
+</button>

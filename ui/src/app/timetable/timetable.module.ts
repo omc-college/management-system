@@ -8,8 +8,8 @@ import {HeaderComponent} from './header/header.component';
 import {SidebarComponent} from './sidebar/sidebar.component';
 import {ScheduleComponent} from './schedule/schedule.component';
 import {SliderMenuComponent} from './slider-menu/slider-menu.component';
-import {DeleteDialog} from './slider-menu/slider-menu.component';
-import {SuccessDialog} from './slider-menu/slider-menu.component';
+import {DeleteDialogComponent} from './slider-menu/slider-menu.component';
+import {SuccessDialogComponent} from './slider-menu/slider-menu.component';
 import {SearchResultComponent} from './search-result/search-result.component';
 
 import {BrowserModule} from '@angular/platform-browser';
@@ -44,8 +44,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     SidebarComponent,
     TimetableComponent,
     SliderMenuComponent,
-    DeleteDialog,
-    SuccessDialog,
+    DeleteDialogComponent,
+    SuccessDialogComponent,
     SearchResultComponent,
   ],
   imports: [
@@ -83,11 +83,27 @@ import {MatExpansionModule} from '@angular/material/expansion';
     SidebarComponent,
     TimetableComponent,
     SliderMenuComponent,
-    DeleteDialog,
-    SuccessDialog,
+    DeleteDialogComponent,
+    SuccessDialogComponent,
     SearchResultComponent,
+
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatNativeDateModule,
+    MatSelectModule,
+    MatSliderModule,
+    MatSlideToggleModule,
+    MatButtonModule,
+    MatBottomSheetModule,
+    MatIconModule,
+    MatProgressBarModule,
+    MatCardModule,
+    MatSidenavModule,
+    MatDialogModule,
+    MatExpansionModule,
   ],
-  entryComponents: [DeleteDialog, SuccessDialog],
+  entryComponents: [DeleteDialogComponent, SuccessDialogComponent],
   providers: [],
 })
 export class TimetableModule {}
