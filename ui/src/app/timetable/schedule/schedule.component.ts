@@ -1,6 +1,6 @@
-import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import * as moment from 'moment';
-import {MatSidenav, MatDrawer} from '@angular/material/sidenav';
+import {MatSidenav} from '@angular/material/sidenav';
 
 import {TimetableHttpService} from '../shared/timetable-http.service';
 import {TimetableService} from '../timetable.service';
@@ -116,7 +116,7 @@ export class ScheduleComponent implements OnInit {
     this.timetableService.changeAddLessonComponentState(this.sliderAddNewState);
   }
 
-  trackByMethod(index: number, el: any): number {
+  trackById(index: number, el: any): number {
     return el.id;
   }
 }

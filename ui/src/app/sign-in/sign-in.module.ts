@@ -14,6 +14,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatStepperModule} from '@angular/material/stepper';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 @NgModule({
   declarations: [SignInComponent],
   imports: [
@@ -30,6 +31,7 @@ import {MatStepperModule} from '@angular/material/stepper';
     MatIconModule,
     MatToolbarModule,
     MatStepperModule,
+    MatCheckboxModule,
   ],
   exports: [
     SignInComponent,
@@ -43,6 +45,7 @@ import {MatStepperModule} from '@angular/material/stepper';
     MatIconModule,
     MatToolbarModule,
     MatStepperModule,
+    MatCheckboxModule,
   ],
 })
 export class SignInModule {}

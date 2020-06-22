@@ -21,9 +21,9 @@ export class GroupsManagementService {
     return this.http.get<Group[]>(this.GroupsUrl);
   }
 
-  addGroups(Group: Group): Observable<Group> {
+  addGroups(group: Group): Observable<Group> {
     console.log('added');
-    return this.http.post<Group>(this.GroupsUrl, Group, this.httpOptions);
+    return this.http.post<Group>(this.GroupsUrl, group, this.httpOptions);
   }
 
   updateGroup(group: Group): Observable<Group> {
@@ -31,9 +31,9 @@ export class GroupsManagementService {
     return this.http.put<Group>(this.GroupsUrl, group, this.httpOptions);
   }
 
-  deleteGroups(Group: Group): Observable<Group> {
+  deleteGroups(group: Group): Observable<Group> {
     console.log('deleted');
-    const url = `api/fullGroups/${Group.id}`;
+    const url = `api/fullGroups/${group.id}`;
     return this.http.delete<Group>(url, this.httpOptions);
   }
 

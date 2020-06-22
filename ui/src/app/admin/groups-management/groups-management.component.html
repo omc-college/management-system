@@ -9,14 +9,14 @@
   </mat-toolbar>
 
   <mat-accordion>
-    <mat-expansion-panel *ngFor="let group of groups; let id = index">
+    <mat-expansion-panel *ngFor="let group of groups; let id = index; trackBy: trackById">
       <mat-expansion-panel-header>
         <mat-panel-title style="width: 5%;">
           <b> {{ group.specialisation }}-{{ group.yearOfEducation }}{{ group.groupNumber }} </b>
         </mat-panel-title>
 
         <mat-panel-title style="width: 10%;">
-          <b>Students in group: {{ group.students.length }}</b>
+          <b>Students in group: {{ group.students.length ? group.students.length : 0 }}</b>
         </mat-panel-title>
 
         <mat-panel-title style="width: 70%;">

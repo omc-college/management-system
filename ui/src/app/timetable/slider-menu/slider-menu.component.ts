@@ -10,7 +10,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 import {Lesson} from '../../models/Lesson';
 import {GroupAsResource} from '../../models/GroupAsResource';
 import {UserAsResource} from '../../models/UserAsResource';
-import {iSubject} from '../../models/Subject';
+import {SubjectInterface} from '../../models/Subject';
 import {Room} from '../../models/Room';
 
 @Component({
@@ -36,7 +36,7 @@ export class SliderMenuComponent implements OnInit {
 
   groups: GroupAsResource[] = [];
   lecturers: UserAsResource[] = [];
-  subjects: iSubject[] = [];
+  subjects: SubjectInterface[] = [];
   rooms: Room[] = [];
   constructor(
     private timetableHttpService: TimetableHttpService,
@@ -124,7 +124,7 @@ export class SliderMenuComponent implements OnInit {
     this.addNewForm.reset();
   }
   updateLesson(
-    subject: iSubject,
+    subject: SubjectInterface,
     room: Room,
     lecturer: UserAsResource,
     group: GroupAsResource,
@@ -192,8 +192,6 @@ export class SliderMenuComponent implements OnInit {
       if (this.isDelete) {
         this.executeDeleteLesson();
         this.isDelete = false;
-      } else {
-        console.log('canceled');
       }
     });
   }
@@ -205,11 +203,16 @@ export class SliderMenuComponent implements OnInit {
       this.hideComponent();
     });
   }
+
   hideComponent(): void {
     this.addNewForm.reset();
     this.sliderAddNewState = false;
     this.timetableService.changeAddLessonComponentState(this.sliderAddNewState);
     this.hide.close();
+  }
+
+  trackById(index: number, el: any): number {
+    return el.id;
   }
 }
 

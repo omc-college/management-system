@@ -133,6 +133,10 @@ export class RolesComponent implements OnInit {
       }
     });
   }
+
+  trackById(index, item) {
+    return item.id;
+  }
 }
 
 @Component({
@@ -154,6 +158,10 @@ export class SelectFeatureDialogComponent {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  trackById(index, item) {
+    return item.id;
   }
 }
 

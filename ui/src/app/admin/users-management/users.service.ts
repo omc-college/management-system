@@ -20,14 +20,14 @@ export class UsersService {
     return this.http.get<User[]>(`${this.UsersUrl}${query}`);
   }
 
-  addUsers(User: User): Observable<User> {
+  addUsers(user: User): Observable<User> {
     console.log('added');
-    return this.http.post<User>(this.UsersUrl, User, this.httpOptions);
+    return this.http.post<User>(this.UsersUrl, user, this.httpOptions);
   }
 
-  deleteUsers(User: User): Observable<User> {
+  deleteUsers(user: User): Observable<User> {
     console.log('deleted');
-    const url = `api/fullUsers/${User.userId}`;
+    const url = `api/fullUsers/${user.userId}`;
     return this.http.delete<User>(url, this.httpOptions);
   }
 }

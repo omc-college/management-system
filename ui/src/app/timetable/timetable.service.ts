@@ -4,7 +4,7 @@ import {Observable, Subject} from 'rxjs';
 import {Lesson} from '../models/Lesson';
 import {GroupAsResource} from '../models/GroupAsResource';
 import {UserAsResource} from '../models/UserAsResource';
-import {iSubject} from '../models/Subject';
+import {SubjectInterface} from '../models/Subject';
 import {Room} from '../models/Room';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class TimetableService {
   private selectedDate$: Subject<Date> = new Subject<Date>();
 
   private lecturers$: Subject<UserAsResource[]> = new Subject<UserAsResource[]>();
-  private subjects$: Subject<iSubject[]> = new Subject<iSubject[]>();
+  private subjects$: Subject<SubjectInterface[]> = new Subject<SubjectInterface[]>();
   private groups$: Subject<GroupAsResource[]> = new Subject<GroupAsResource[]>();
   private rooms$: Subject<Room[]> = new Subject<Room[]>();
 
@@ -37,11 +37,11 @@ export class TimetableService {
     this.searchResult$.next(result);
   }
 
-  setSubjects(subjects: iSubject[]): void {
+  setSubjects(subjects: SubjectInterface[]): void {
     this.subjects$.next(subjects);
   }
 
-  getSubjects(): Observable<iSubject[]> {
+  getSubjects(): Observable<SubjectInterface[]> {
     return this.subjects$;
   }
 

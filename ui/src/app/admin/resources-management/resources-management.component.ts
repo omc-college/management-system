@@ -102,12 +102,12 @@ export class ResourcesManagementComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         newResource.resourceName = result;
-        const dialogRef = this.dialog.open(AddRoleDialogComponent, {
+        const dialogRef2 = this.dialog.open(AddRoleDialogComponent, {
           width: '300px',
           data: {message: 'Description of resource:'},
         });
 
-        dialogRef.afterClosed().subscribe(description => {
+        dialogRef2.afterClosed().subscribe(description => {
           if (description) {
             newResource.resourceDescription = description;
           }
@@ -127,6 +127,10 @@ export class ResourcesManagementComponent implements OnInit {
     } else {
       this.selectedResources.push(resource);
     }
+  }
+
+  trackById(index, item) {
+    return item.id;
   }
 }
 

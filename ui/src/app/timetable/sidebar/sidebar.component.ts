@@ -8,7 +8,7 @@ import {SearchResultComponent} from '../search-result/search-result.component';
 
 import {GroupAsResource} from '../../models/GroupAsResource';
 import {UserAsResource} from '../../models/UserAsResource';
-import {iSubject} from '../../models/Subject';
+import {SubjectInterface} from '../../models/Subject';
 import {Room} from '../../models/Room';
 import {Error} from '../../models/Error';
 
@@ -29,7 +29,7 @@ export class SidebarComponent implements OnInit {
 
   groups: GroupAsResource[] = [];
   lecturers: UserAsResource[] = [];
-  subjects: iSubject[] = [];
+  subjects: SubjectInterface[] = [];
   rooms: Room[] = [];
   constructor(
     private timetableHttpService: TimetableHttpService,
@@ -109,14 +109,18 @@ export class SidebarComponent implements OnInit {
       query += `&lecturerid=${filters.lecturerFormControl.id}`;
     }
     if (filters.startDateFormControl && query.length === 1) {
-      query += `datefrom=${filters.startDateFormControl.getFullYear()}-${filters.startDateFormControl.getMonth()}-${filters.startDateFormControl.getDate()}`;
+      query += `datefrom=${filters.startDateFormControl.getFullYear()}-\
+      ${filters.startDateFormControl.getMonth()}-${filters.startDateFormControl.getDate()}`;
     } else if (filters.startDateFormControl) {
-      query += `&datefrom=${filters.startDateFormControl.getFullYear()}-${filters.startDateFormControl.getMonth()}-${filters.startDateFormControl.getDate()}`;
+      query += `&datefrom=${filters.startDateFormControl.getFullYear()}-\
+      ${filters.startDateFormControl.getMonth()}-${filters.startDateFormControl.getDate()}`;
     }
     if (filters.endDateFormControl && query.length === 1) {
-      query += `dateto=${filters.endDateFormControl.getFullYear()}-${filters.endDateFormControl.getMonth()}-${filters.endDateFormControl.getDate()}`;
+      query += `dateto=${filters.endDateFormControl.getFullYear()}-\
+      ${filters.endDateFormControl.getMonth()}-${filters.endDateFormControl.getDate()}`;
     } else if (filters.endDateFormControl) {
-      query += `&dateto=${filters.endDateFormControl.getFullYear()}-${filters.endDateFormControl.getMonth()}-${filters.endDateFormControl.getDate()}`;
+      query += `&dateto=${filters.endDateFormControl.getFullYear()}-\
+      ${filters.endDateFormControl.getMonth()}-${filters.endDateFormControl.getDate()}`;
     }
     if (filters.startTimeFormControl && query.length === 1) {
       query += `timefrom=${filters.startTimeFormControl}`;
@@ -155,6 +159,10 @@ export class SidebarComponent implements OnInit {
   setProgressBar() {
     this.showProgressBar = !this.showProgressBar;
     this.timetableService.changeProgressBarState(this.showProgressBar);
+  }
+
+  trackById(index: number, el: any): number {
+    return el.id;
   }
 }
 

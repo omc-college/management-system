@@ -15,10 +15,7 @@
   <button type="button" id="account">
     <img src="../../assets/img/user.svg" />
   </button>
-  <button mat-raised-button *ngIf="!AddLessonBtnState" (click)="addLesson()" color="primary" class="addBtn">
-    New Lesson
-  </button>
-  <button mat-raised-button *ngIf="AddLessonBtnState" (click)="addLesson()" color="primary" class="addBtn">
-    Back
+  <button mat-raised-button (click)="addLesson()" color="primary" class="addBtn">
+    {{ AddLessonBtnState ? 'Back' : 'New Lesson' }}
   </button>
 </header>

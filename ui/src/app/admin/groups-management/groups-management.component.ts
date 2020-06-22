@@ -68,9 +68,11 @@ export class GroupsManagementComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.length) {
-        group.students = group.students.concat(result);
-        this.updateGroup(group, id);
+      if (result) {
+        if (result.length) {
+          group.students = group.students.concat(result);
+          this.updateGroup(group, id);
+        }
       }
     });
   }
@@ -137,21 +139,21 @@ export class GroupsManagementComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        let newGroup = {
+        const newGroup = {
           specialisation: result[0],
           yearOfEducation: result[1],
           groupNumber: result[2],
           curator: result[3],
         } as Group;
 
-        const dialogRef = this.dialog.open(SelectUserDialogComponent, {
+        const dialogRef2 = this.dialog.open(SelectUserDialogComponent, {
           width: '80%',
           data: {query: '?role=student'},
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-          if (result) {
-            newGroup.students = result;
+        dialogRef2.afterClosed().subscribe(result2 => {
+          if (result2) {
+            newGroup.students = result2;
           }
           this.createGroup(newGroup);
         });
@@ -175,6 +177,10 @@ export class GroupsManagementComponent implements OnInit {
       this.dataSource[id].filter = filterValue.trim().toLowerCase();
     }
   }
+
+  trackById(index, item) {
+    return item.id;
+  }
 }
 
 // ---------------------------------------select user-------------------------
@@ -183,7 +189,7 @@ export class GroupsManagementComponent implements OnInit {
   selector: 'app-select-users-dialog',
   templateUrl: 'user-list.html',
 })
-export class SelectUserDialogComponent {
+export class SelectUserDialogComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   users: UserAsResource[];
@@ -261,7 +267,7 @@ export class SelectUserDialogComponent {
   selector: 'app-update-group-dialog',
   templateUrl: 'group-update.html',
 })
-export class GroupUpdateDialogComponent {
+export class GroupUpdateDialogComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   lecturers: UserAsResource[];
@@ -278,8 +284,8 @@ export class GroupUpdateDialogComponent {
   ngOnInit(): void {
     this.getLecturers();
     this.getSpecialisations();
-    this.yearsOfEducation = this.yearsOfEducation.filter(y => y != this.data.yearOfEducation);
-    this.groupNums = this.groupNums.filter(y => y != this.data.groupNum);
+    this.yearsOfEducation = this.yearsOfEducation.filter(y => y !== this.data.yearOfEducation);
+    this.groupNums = this.groupNums.filter(y => y !== this.data.groupNum);
   }
 
   getLecturers(): void {
@@ -300,5 +306,9 @@ export class GroupUpdateDialogComponent {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  trackById(index, item) {
+    return item.id;
   }
 }

@@ -4,28 +4,30 @@
   <mat-form-field appearance="fill">
     <mat-label>Subject</mat-label>
     <mat-select #subject formControlName="subjectFormControl">
-      <mat-option [value]="subject" *ngFor="let subject of subjects">{{ subject.nameOfSubject }}</mat-option>
+      <mat-option [value]="subject" *ngFor="let subject of subjects; trackBy: trackById">{{
+        subject.nameOfSubject
+      }}</mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Room</mat-label>
     <mat-select #room formControlName="roomFormControl">
-      <mat-option [value]="room" *ngFor="let room of rooms">{{ room.room }}</mat-option>
+      <mat-option [value]="room" *ngFor="let room of rooms; trackBy: trackById">{{ room.room }}</mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Group</mat-label>
     <mat-select #group formControlName="groupFormControl">
-      <mat-option [value]="group" *ngFor="let group of groups">{{ group.name }}</mat-option>
+      <mat-option [value]="group" *ngFor="let group of groups; trackBy: trackById">{{ group.name }}</mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Lecturer</mat-label>
     <mat-select #lecturer formControlName="lecturerFormControl">
-      <mat-option [value]="lecturer" *ngFor="let lecturer of lecturers"
+      <mat-option [value]="lecturer" *ngFor="let lecturer of lecturers; trackBy: trackById"
         >{{ lecturer.firstName }} {{ lecturer.lastName }}</mat-option
       >
     </mat-select>

@@ -4,7 +4,7 @@ import {TimetableHttpService} from '../shared/timetable-http.service';
 
 import {GroupAsResource} from '../../models/GroupAsResource';
 import {UserAsResource} from '../../models/UserAsResource';
-import {iSubject} from '../../models/Subject';
+import {SubjectInterface} from '../../models/Subject';
 import {Room} from '../../models/Room';
 @Component({
   selector: 'app-search-result',
@@ -18,7 +18,7 @@ export class SearchResultComponent implements OnInit {
   private usersUrl = 'api/users';
   groups: GroupAsResource[] = [];
   lecturers: UserAsResource[] = [];
-  subjects: iSubject[] = [];
+  subjects: SubjectInterface[] = [];
   rooms: Room[] = [];
   constructor(
     private timetableHttpService: TimetableHttpService,
@@ -43,11 +43,17 @@ export class SearchResultComponent implements OnInit {
       this.lecturers = lecturers;
     });
   }
+
   dateFilter(d: Date | null): boolean {
     const day = (d || new Date()).getDay();
     return day !== 0;
   }
+
   close(): void {
     this.dialogRef.close();
+  }
+
+  trackById(index: number, el: any): number {
+    return el.id;
   }
 }

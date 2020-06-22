@@ -144,11 +144,11 @@ export class UsersManagementComponent implements OnInit {
     }
   }
 
-  selectUnselectUser(User: User): void {
-    if (this.selectedUsers.find(u => u === User)) {
-      this.selectedUsers = this.selectedUsers.filter(u => u !== User);
+  selectUnselectUser(user: User): void {
+    if (this.selectedUsers.find(u => u === user)) {
+      this.selectedUsers = this.selectedUsers.filter(u => u !== user);
     } else {
-      this.selectedUsers.push(User);
+      this.selectedUsers.push(user);
     }
   }
 

@@ -20,19 +20,19 @@ export class ResourcesService {
     return this.http.get<Resource[]>(this.resourcesUrl);
   }
 
-  addResources(Resource: Resource): Observable<Resource> {
+  addResources(resource: Resource): Observable<Resource> {
     console.log('added');
-    return this.http.post<Resource>(this.resourcesUrl, Resource, this.httpOptions);
+    return this.http.post<Resource>(this.resourcesUrl, resource, this.httpOptions);
   }
 
-  deleteResources(Resource: Resource): Observable<Resource> {
+  deleteResources(resource: Resource): Observable<Resource> {
     console.log('deleted');
-    const url = `api/Resources/${Resource.resourceId}`;
+    const url = `api/Resources/${resource.resourceId}`;
     return this.http.delete<Resource>(url, this.httpOptions);
   }
 
-  updateResources(Resource): Observable<Resource> {
+  updateResources(resource): Observable<Resource> {
     console.log('updated');
-    return this.http.put<Resource>(this.resourcesUrl, Resource, this.httpOptions);
+    return this.http.put<Resource>(this.resourcesUrl, resource, this.httpOptions);
   }
 }

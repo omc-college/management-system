@@ -5,7 +5,7 @@ import * as moment from 'moment';
 import {Lesson} from '../models/Lesson';
 import {GroupAsResource} from '../models/GroupAsResource';
 import {Room} from '../models/Room';
-import {iSubject} from '../models/Subject';
+import {SubjectInterface} from '../models/Subject';
 import {UserAsResource} from '../models/UserAsResource';
 import {Role, FeatureEntry, Endpoint} from '../models/role';
 import {Resource} from '../models/Resource';
@@ -580,7 +580,7 @@ export class InMemoryDataService implements InMemoryDbService {
         room: '4',
       },
     ];
-    const subjects: iSubject[] = [
+    const subjects: SubjectInterface[] = [
       {
         id: '11',
         nameOfSubject: 'Programming',
