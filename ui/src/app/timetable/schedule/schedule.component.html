@@ -3,28 +3,18 @@
     <div id="container" #container>
       <div id="time">
         <div id="divider"></div>
-        <div class="timestamp" *ngFor="let timestamp of timestamp; trackBy: trackByMethod">
+        <div class="timestamp" *ngFor="let timestamp of timestamp; trackBy: trackById">
           <p>{{ timestamp }}</p>
         </div>
       </div>
 
       <div id="week" #week>
-        <div class="weekstamp">
-          <p>M</p>
-        </div>
+        <div class="weekstamp"><p>M</p></div>
         <div class="weekstamp"><p>T</p></div>
         <div class="weekstamp"><p>W</p></div>
         <div class="weekstamp"><p>T</p></div>
         <div class="weekstamp"><p>F</p></div>
-        <div class="weekstamp unique">
-          <p>S</p>
-          <button mat-icon-button color="primary">
-            <mat-icon>arrow_drop_up</mat-icon>
-          </button>
-          <button mat-icon-button color="primary">
-            <mat-icon>arrow_drop_down</mat-icon>
-          </button>
-        </div>
+        <div class="weekstamp"><p>S</p></div>
       </div>
 
       <div id="timetable">
@@ -36,15 +26,15 @@
             card.date() === selectedDate.date()
           "
           (click)="showAddLessonComponent(card); drawer.open()"
-          *ngFor="let card of cards"
+          *ngFor="let card of cards; trackBy: trackById"
         ></div>
         <mat-card
           class="lesson"
-          *ngFor="let lesson of lessons; trackBy: trackByMethod"
+          *ngFor="let lesson of lessons; trackBy: trackById"
           [style]="
-            'margin-top:' +
+            'top:' +
             (container.offsetHeight / DAYSTOSHOW) * (+lesson.startAt.day() - 1) +
-            'px;margin-left:' +
+            'px;left:' +
             ((container.offsetWidth - week.offsetWidth) / (timestamp.length * 60)) *
               ((+lesson.startAt.hour() - 8) * 60 + +lesson.startAt.minute()) +
             'px;width:' +

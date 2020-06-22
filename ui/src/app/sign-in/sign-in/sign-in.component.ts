@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthorizationService} from '../authorization.service';
 import {SignIn} from '../../models/signIn';
+import {Title} from '@angular/platform-browser';
+import {Meta} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-sign-in',
@@ -10,37 +12,34 @@ import {SignIn} from '../../models/signIn';
 })
 export class SignInComponent implements OnInit {
   signInForm: FormGroup;
-  signUpForm: FormGroup;
-  showSignUp = false;
+
   hide = true;
-  constructor(private authorisationService: AuthorizationService) {}
+  constructor(private authorisationService: AuthorizationService, private titleService: Title, private meta: Meta) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('Authentication');
+    this.meta.updateTag({name: 'description', content: 'Sign in/up to OMC learning management system'});
+
     this.signInForm = new FormGroup({
-      login: new FormControl('', [Validators.required, Validators.maxLength(60)]),
-      password: new FormControl('', [Validators.required, Validators.maxLength(255)]),
-    });
-    this.signUpForm = new FormGroup({
-      firstName: new FormControl('', [Validators.required, Validators.maxLength(255)]),
-      lastname: new FormControl('', [Validators.required, Validators.maxLength(255)]),
-      surname: new FormControl('', [Validators.required, Validators.maxLength(255)]),
-      email: new FormControl('', [Validators.required, Validators.maxLength(60)]),
-      password: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+      login: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(64)]),
+      password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(64)]),
+      isRememberMe: new FormControl(''),
     });
   }
 
   signIn(value) {
     if (this.signInForm.valid) {
-      let signInValue: SignIn = {
+      const signInValue: SignIn = {
         login: value.login,
         password: value.password,
+        isRememberMe: value.isRememberMe,
       };
       this.executeSignIn(signInValue);
     }
   }
 
   private executeSignIn(value: SignIn) {
-    this.authorisationService.signIn(value).subscribe(request => console.log(request));
+    this.authorisationService.signIn(value).subscribe();
   }
 
   hasSignInError(controlName: string, errorName: string) {

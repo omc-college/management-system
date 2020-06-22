@@ -8,9 +8,9 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 import {Lesson} from '../../models/Lesson';
-import {Group} from '../../models/Group';
-import {User} from '../../models/User';
-import {iSubject} from '../../models/Subject';
+import {GroupAsResource} from '../../models/GroupAsResource';
+import {UserAsResource} from '../../models/UserAsResource';
+import {SubjectInterface} from '../../models/Subject';
 import {Room} from '../../models/Room';
 
 @Component({
@@ -29,14 +29,14 @@ export class SliderMenuComponent implements OnInit {
   private roomsUrl = 'api/rooms';
   private subjectsUrl = 'api/subjects';
   private usersUrl = 'api/users';
-  private isDelete: boolean = false;
+  private isDelete = false;
 
-  isChange: boolean = false;
+  isChange = false;
   addNewForm: FormGroup;
 
-  groups: Group[] = [];
-  lecturers: User[] = [];
-  subjects: iSubject[] = [];
+  groups: GroupAsResource[] = [];
+  lecturers: UserAsResource[] = [];
+  subjects: SubjectInterface[] = [];
   rooms: Room[] = [];
   constructor(
     private timetableHttpService: TimetableHttpService,
@@ -81,7 +81,7 @@ export class SliderMenuComponent implements OnInit {
   }
   private executeAddNewLesson(lessonFormValue) {
     this.timetableService.changeProgressBarState(true);
-    let newLesson: Lesson = {
+    const newLesson: Lesson = {
       subject: lessonFormValue.subjectFormControl,
       room: lessonFormValue.roomFormControl,
       lecturer: lessonFormValue.lecturerFormControl,
@@ -102,7 +102,7 @@ export class SliderMenuComponent implements OnInit {
     this.timetableHttpService.addLesson(newLesson).subscribe(
       lesson => {
         this.timetableService.changeProgressBarState(false);
-        let dialogRef = this.dialog.open(SuccessDialog, {
+        const dialogRef = this.dialog.open(SuccessDialogComponent, {
           height: '170px',
           width: '300px',
           disableClose: true,
@@ -113,7 +113,7 @@ export class SliderMenuComponent implements OnInit {
         this.addNewForm.reset();
       },
       error => {
-        //temporary as well
+        // temporary as well
         this.timetableService.changeProgressBarState(false);
       },
     );
@@ -124,10 +124,10 @@ export class SliderMenuComponent implements OnInit {
     this.addNewForm.reset();
   }
   updateLesson(
-    subject: iSubject,
+    subject: SubjectInterface,
     room: Room,
-    lecturer: User,
-    group: Group,
+    lecturer: UserAsResource,
+    group: GroupAsResource,
     dateFrom: Date,
     dateTo: Date,
     timeFrom: string,
@@ -151,22 +151,22 @@ export class SliderMenuComponent implements OnInit {
       this.isChange = true;
     }
     if (dateFrom) {
-      let date = moment(`${dateFrom.getFullYear()}-${dateFrom.getMonth() + 1}-${dateFrom.getDate()}`, 'YYYY-MM-DD');
+      const date = moment(`${dateFrom.getFullYear()}-${dateFrom.getMonth() + 1}-${dateFrom.getDate()}`, 'YYYY-MM-DD');
       this.lesson.startAt.year(date.year()).month(date.month()).date(date.date());
       this.isChange = true;
     }
     if (dateTo) {
-      let date = moment(`${dateTo.getFullYear()}-${dateTo.getMonth() + 1}-${dateTo.getDate()}`, 'YYYY-MM-DD');
+      const date = moment(`${dateTo.getFullYear()}-${dateTo.getMonth() + 1}-${dateTo.getDate()}`, 'YYYY-MM-DD');
       this.lesson.endAt.year(date.year()).month(date.month()).date(date.date());
       this.isChange = true;
     }
     if (timeFrom !== this.lesson.startAt.format('HH:mm')) {
-      let time = moment(timeFrom, 'HH:mm');
+      const time = moment(timeFrom, 'HH:mm');
       this.lesson.startAt.hour(time.hour()).minute(time.minute());
       this.isChange = true;
     }
     if (timeTo !== this.lesson.endAt.format('HH:mm')) {
-      let time = moment(timeTo, 'HH:mm');
+      const time = moment(timeTo, 'HH:mm');
       this.lesson.endAt.hour(time.hour()).minute(time.minute());
       this.isChange = true;
     }
@@ -182,7 +182,7 @@ export class SliderMenuComponent implements OnInit {
   }
 
   deleteLesson() {
-    const dialogRef = this.dialog.open(DeleteDialog, {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
       width: '250px',
       data: {isDelete: this.isDelete},
     });
@@ -192,8 +192,6 @@ export class SliderMenuComponent implements OnInit {
       if (this.isDelete) {
         this.executeDeleteLesson();
         this.isDelete = false;
-      } else {
-        console.log('canceled');
       }
     });
   }
@@ -205,31 +203,36 @@ export class SliderMenuComponent implements OnInit {
       this.hideComponent();
     });
   }
+
   hideComponent(): void {
     this.addNewForm.reset();
     this.sliderAddNewState = false;
     this.timetableService.changeAddLessonComponentState(this.sliderAddNewState);
     this.hide.close();
   }
+
+  trackById(index: number, el: any): number {
+    return el.id;
+  }
 }
 
 @Component({
-  selector: 'delete-dialog',
+  selector: 'app-delete-dialog',
   templateUrl: 'delete-dialog.html',
 })
-export class DeleteDialog {
-  constructor(public dialogRef: MatDialogRef<DeleteDialog>, @Inject(MAT_DIALOG_DATA) public data) {}
+export class DeleteDialogComponent {
+  constructor(public dialogRef: MatDialogRef<DeleteDialogComponent>, @Inject(MAT_DIALOG_DATA) public data) {}
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 }
 @Component({
-  selector: 'success-dialog',
+  selector: 'app-success-dialog',
   templateUrl: 'success-dialog.html',
 })
-export class SuccessDialog {
-  constructor(public dialogRef: MatDialogRef<SuccessDialog>, @Inject(MAT_DIALOG_DATA) public data) {}
+export class SuccessDialogComponent {
+  constructor(public dialogRef: MatDialogRef<SuccessDialogComponent>, @Inject(MAT_DIALOG_DATA) public data) {}
 
   onNoClick(): void {
     this.dialogRef.close();

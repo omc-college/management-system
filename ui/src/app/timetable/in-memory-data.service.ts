@@ -3,10 +3,14 @@ import {InMemoryDbService} from 'angular-in-memory-web-api';
 import * as moment from 'moment';
 
 import {Lesson} from '../models/Lesson';
-import {Group} from '../models/Group';
+import {GroupAsResource} from '../models/GroupAsResource';
 import {Room} from '../models/Room';
-import {iSubject} from '../models/Subject';
+import {SubjectInterface} from '../models/Subject';
+import {UserAsResource} from '../models/UserAsResource';
+import {Role, FeatureEntry, Endpoint} from '../models/role';
+import {Resource} from '../models/Resource';
 import {User} from '../models/User';
+import {Group} from '../models/Group';
 
 @Injectable({
   providedIn: 'root',
@@ -183,7 +187,288 @@ export class InMemoryDataService implements InMemoryDbService {
         },
       },
     ];
-    const users: User[] = [
+    const fullUsers: User[] = [
+      {
+        userId: 9,
+        firstName: 'Name',
+        lastName: 'Lastname',
+        surname: 'Surname',
+        dateOFBirth: moment('08-06-2020', 'DD-MM-YYYY'),
+        email: 'www.ex.dmail.com',
+        mobilePhone: '801475918',
+        createdAt: moment('08-06-2020', 'DD-MM-YYYY'),
+        modifiedAt: moment(),
+        roles: ['admin', 'director', 'teacher'],
+        verified: false,
+        userPhoto: 'photo',
+      },
+      {
+        userId: 1,
+        firstName: 'Name2',
+        lastName: 'Lastnam2',
+        surname: 'Surnam2',
+        dateOFBirth: moment('07-06-2020', 'DD-MM-YYYY'),
+        email: 'sw.ex.dmail.com',
+        mobilePhone: '801475918',
+        createdAt: moment('08-06-2020', 'DD-MM-YYYY'),
+        modifiedAt: moment(),
+        roles: ['student'],
+        verified: true,
+        userPhoto: 'photo2',
+      },
+      {
+        userId: 2,
+        firstName: 'Name3',
+        lastName: 'Lastnam3',
+        surname: 'Surnam3',
+        dateOFBirth: moment('09-05-2020', 'DD-MM-YYYY'),
+        email: 'awww.ex.dmail.com',
+        mobilePhone: '801475918',
+        createdAt: moment('07-06-2020', 'DD-MM-YYYY'),
+        modifiedAt: moment(),
+        roles: ['teacher', 'parent'],
+        verified: true,
+        userPhoto: 'photo3',
+      },
+      {
+        userId: 0,
+        firstName: 'Name',
+        lastName: 'Lastname',
+        surname: 'Surname',
+        dateOFBirth: moment('08-06-2020', 'DD-MM-YYYY'),
+        email: 'www.ex.dmail.com',
+        mobilePhone: '801475918',
+        createdAt: moment('08-06-2020', 'DD-MM-YYYY'),
+        modifiedAt: moment(),
+        roles: ['admin', 'director', 'teacher'],
+        verified: false,
+        userPhoto: 'photo',
+      },
+      {
+        userId: 1,
+        firstName: 'Name2',
+        lastName: 'Lastnam2',
+        surname: 'Surnam2',
+        dateOFBirth: moment('07-06-2020', 'DD-MM-YYYY'),
+        email: 'sw.ex.dmail.com',
+        mobilePhone: '801475918',
+        createdAt: moment('08-06-2020', 'DD-MM-YYYY'),
+        modifiedAt: moment(),
+        roles: ['student'],
+        verified: true,
+        userPhoto: 'photo2',
+      },
+      {
+        userId: 2,
+        firstName: 'Name3',
+        lastName: 'Lastnam3',
+        surname: 'Surnam3',
+        dateOFBirth: moment('09-05-2020', 'DD-MM-YYYY'),
+        email: 'awww.ex.dmail.com',
+        mobilePhone: '801475918',
+        createdAt: moment('07-06-2020', 'DD-MM-YYYY'),
+        modifiedAt: moment(),
+        roles: ['teacher', 'parent'],
+        verified: true,
+        userPhoto: 'photo3',
+      },
+      {
+        userId: 0,
+        firstName: 'Name',
+        lastName: 'Lastname',
+        surname: 'Surname',
+        dateOFBirth: moment('08-06-2020', 'DD-MM-YYYY'),
+        email: 'www.ex.dmail.com',
+        mobilePhone: '801475918',
+        createdAt: moment('08-06-2020', 'DD-MM-YYYY'),
+        modifiedAt: moment(),
+        roles: ['admin', 'director', 'teacher'],
+        verified: false,
+        userPhoto: 'photo',
+      },
+      {
+        userId: 1,
+        firstName: 'Name2',
+        lastName: 'Lastnam2',
+        surname: 'Surnam2',
+        dateOFBirth: moment('07-06-2020', 'DD-MM-YYYY'),
+        email: 'sw.ex.dmail.com',
+        mobilePhone: '801475918',
+        createdAt: moment('08-06-2020', 'DD-MM-YYYY'),
+        modifiedAt: moment(),
+        roles: ['student'],
+        verified: true,
+        userPhoto: 'photo2',
+      },
+      {
+        userId: 2,
+        firstName: 'Name3',
+        lastName: 'Lastnam3',
+        surname: 'Surnam3',
+        dateOFBirth: moment('09-05-2020', 'DD-MM-YYYY'),
+        email: 'awww.ex.dmail.com',
+        mobilePhone: '801475918',
+        createdAt: moment('07-06-2020', 'DD-MM-YYYY'),
+        modifiedAt: moment(),
+        roles: ['teacher', 'parent'],
+        verified: true,
+        userPhoto: 'photo3',
+      },
+      {
+        userId: 0,
+        firstName: 'Name',
+        lastName: 'Lastname',
+        surname: 'Surname',
+        dateOFBirth: moment('08-06-2020', 'DD-MM-YYYY'),
+        email: 'www.ex.dmail.com',
+        mobilePhone: '801475918',
+        createdAt: moment('08-06-2020', 'DD-MM-YYYY'),
+        modifiedAt: moment(),
+        roles: ['admin', 'director', 'teacher'],
+        verified: false,
+        userPhoto: 'photo',
+      },
+      {
+        userId: 1,
+        firstName: 'Name2',
+        lastName: 'Lastnam2',
+        surname: 'Surnam2',
+        dateOFBirth: moment('07-06-2020', 'DD-MM-YYYY'),
+        email: 'sw.ex.dmail.com',
+        mobilePhone: '801475918',
+        createdAt: moment('08-06-2020', 'DD-MM-YYYY'),
+        modifiedAt: moment(),
+        roles: ['student'],
+        verified: true,
+        userPhoto: 'photo2',
+      },
+      {
+        userId: 2,
+        firstName: 'Name3',
+        lastName: 'Lastnam3',
+        surname: 'Surnam3',
+        dateOFBirth: moment('09-05-2020', 'DD-MM-YYYY'),
+        email: 'awww.ex.dmail.com',
+        mobilePhone: '801475918',
+        createdAt: moment('07-06-2020', 'DD-MM-YYYY'),
+        modifiedAt: moment(),
+        roles: ['teacher', 'parent'],
+        verified: true,
+        userPhoto: 'photo3',
+      },
+    ];
+
+    const fullGroups: Group[] = [
+      {
+        id: 0,
+        specialisation: 'SD',
+        yearOfEducation: 3,
+        groupNumber: 1,
+        curator: {
+          id: '2',
+          firstName: 'Curator',
+          lastName: 'Curatorivna',
+          surname: 'Surnam3',
+          role: 'lecturer',
+        },
+        students: [
+          {
+            id: '3',
+            firstName: 'Student',
+            lastName: 'Stud',
+            surname: 'Surnam3',
+            role: 'student',
+          },
+          {
+            id: '4',
+            firstName: 'Student2',
+            lastName: 'Stud',
+            surname: 'Surnam3',
+            role: 'student',
+          },
+          {
+            id: '5',
+            firstName: 'Student3',
+            lastName: 'Stud',
+            surname: 'Surnam3',
+            role: 'student',
+          },
+        ],
+      },
+      {
+        id: 1,
+        specialisation: 'SD',
+        yearOfEducation: 3,
+        groupNumber: 2,
+        curator: {
+          id: '33',
+          firstName: 'Curator2',
+          lastName: 'Curatorivna2',
+          surname: 'Surnam3',
+          role: 'lecturer',
+        },
+        students: [
+          {
+            id: '3',
+            firstName: 'Student',
+            lastName: 'Stud',
+            surname: 'Surnam3',
+            role: 'student',
+          },
+          {
+            id: '4',
+            firstName: 'Student2',
+            lastName: 'Stud',
+            surname: 'Surnam3',
+            role: 'student',
+          },
+          {
+            id: '5',
+            firstName: 'Student3',
+            lastName: 'Stud',
+            surname: 'Surnam3',
+            role: 'student',
+          },
+        ],
+      },
+      {
+        id: 2,
+        specialisation: 'UFC',
+        yearOfEducation: 4,
+        groupNumber: 1,
+        curator: {
+          id: '0',
+          firstName: 'Curator3',
+          lastName: 'Curatorivna3',
+          surname: 'Surnam3',
+          role: 'lecturer',
+        },
+        students: [
+          {
+            id: '3',
+            firstName: 'Student',
+            lastName: 'Stud',
+            surname: 'Surnam3',
+            role: 'student',
+          },
+          {
+            id: '4',
+            firstName: 'Student2',
+            lastName: 'Stud',
+            surname: 'Surnam3',
+            role: 'student',
+          },
+          {
+            id: '5',
+            firstName: 'Student3',
+            lastName: 'Stud',
+            surname: 'Surnam3',
+            role: 'student',
+          },
+        ],
+      },
+    ];
+    const users: UserAsResource[] = [
       {
         id: '1',
         firstName: 'Andriy',
@@ -193,22 +478,29 @@ export class InMemoryDataService implements InMemoryDbService {
       },
       {
         id: '12',
-        firstName: 'Tetyana',
-        lastName: 'Lumpova',
+        firstName: 'Tet',
+        lastName: 'Lum',
         surname: 'Nonamivna',
         role: 'lecturer',
       },
       {
         id: '21',
         firstName: 'Borys',
-        lastName: 'Gaprindashvili',
+        lastName: 'Borysovich',
+        surname: 'Vyachespavovich',
+        role: 'lecturer',
+      },
+      {
+        id: '21',
+        firstName: 'Vasya',
+        lastName: 'Pupkin',
         surname: 'Vyachespavovich',
         role: 'lecturer',
       },
       {
         id: '32',
         firstName: 'Tetyana',
-        lastName: 'Garivna',
+        lastName: 'Garr',
         surname: 'Noname',
         role: 'director',
       },
@@ -220,7 +512,7 @@ export class InMemoryDataService implements InMemoryDbService {
         role: 'parent',
       },
     ];
-    const groups: Group[] = [
+    const groups: GroupAsResource[] = [
       {
         id: '131',
         name: 'SD-31',
@@ -288,7 +580,7 @@ export class InMemoryDataService implements InMemoryDbService {
         room: '4',
       },
     ];
-    const subjects: iSubject[] = [
+    const subjects: SubjectInterface[] = [
       {
         id: '11',
         nameOfSubject: 'Programming',
@@ -336,8 +628,420 @@ export class InMemoryDataService implements InMemoryDbService {
       '22',
       '23',
     ];
+    // ------------------------------------------Roles--------------------------------------------------
+    const roles: Role[] = [
+      {
+        id: 0,
+        name: 'Administrator',
+        entries: [
+          {
+            id: 1,
+            name: 'roles managenent',
+            description: 'ffffffffffffffff dddddddd f df dfffdfsd sfgsdfsdf sdfsdfsd vvvsvsd vvdfs',
+            endpoints: [
+              {
+                id: 2,
+                name: 'Del role',
+                path: '/www/exe',
+                method: 'post',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 2,
+        name: 'Manager',
+        entries: [
+          {
+            id: 1,
+            name: 'smth managenent',
+            description: 'ffffffffffffffff dddddddd f df dfffdfsd sfgsdfsdf sdfsdfsd vvvsvsd vvdfs',
+            endpoints: [
+              {
+                id: 2,
+                name: 'Del role',
+                path: '/www/exe',
+                method: 'post',
+              },
+              {
+                id: 3,
+                name: 'post role',
+                path: '/www/nnn',
+                method: 'delete',
+              },
+            ],
+          },
+          {
+            id: 2,
+            name: 'smth222 managenent',
+            description:
+              'ffffffffffffff vvdfs ffffffffffffffff dddddddd f df dfffdfsd sfgsdfsdf sdfsdfsd vvvsvsd vvdfs',
+            endpoints: [
+              {
+                id: 2,
+                name: 'Del role',
+                path: '/www/exe',
+                method: 'post',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 3,
+        name: 'Lecturer',
+        entries: [
+          {
+            id: 7,
+            name: 'roles managenent',
+            description: 'ffffffffffffffff dddddddd f df dfffdfsd sfgsdfsdf sdfsdfsd vvvsvsd vvdfs',
+            endpoints: [
+              {
+                id: 2,
+                name: 'Del role',
+                path: '/www/exe',
+                method: 'post',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 4,
+        name: 'Student',
+        entries: [
+          {
+            id: 1,
+            name: 'smth managenent',
+            description: 'ffffffffffffffff dddddddd f df dfffdfsd sfgsdfsdf sdfsdfsd vvvsvsd vvdfs',
+            endpoints: [
+              {
+                id: 2,
+                name: 'Del role',
+                path: '/www/exe',
+                method: 'post',
+              },
+              {
+                id: 3,
+                name: 'post role',
+                path: '/www/nnn',
+                method: 'delete',
+              },
+            ],
+          },
+          {
+            id: 2,
+            name: 'smth222 managenent',
+            description: 'ffffffffffffff df dfffdfsd sfgsdfsdf f sdfsdfsd vvvsvsd vvdfs',
+            endpoints: [
+              {
+                id: 2,
+                name: 'Del role',
+                path: '/www/exe',
+                method: 'post',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 0,
+        name: 'Administrator',
+        entries: [
+          {
+            id: 1,
+            name: 'roles managenent',
+            description: 'ffffffffffffffff dddddddd f df dfffdfsd sfgsdfsdf sdfsdfsd vvvsvsd vvdfs',
+            endpoints: [
+              {
+                id: 2,
+                name: 'Del role',
+                path: '/www/exe',
+                method: 'post',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 2,
+        name: 'Manager',
+        entries: [
+          {
+            id: 1,
+            name: 'smth managenent',
+            description: 'ffffffffffffffff dddddddd f df dfffdfsd sfgsdfsdf sdfsdfsd vvvsvsd vvdfs',
+            endpoints: [
+              {
+                id: 2,
+                name: 'Del role',
+                path: '/www/exe',
+                method: 'post',
+              },
+              {
+                id: 3,
+                name: 'post role',
+                path: '/www/nnn',
+                method: 'delete',
+              },
+            ],
+          },
+          {
+            id: 2,
+            name: 'smth222 managenent',
+            description: 'fffffffffdddd f dffdfsd sfgsdfsdf sdfsdfsd vvvsvsd vvdfs',
+            endpoints: [
+              {
+                id: 2,
+                name: 'Del role',
+                path: '/www/exe',
+                method: 'post',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 3,
+        name: 'Lecturer',
+        entries: [
+          {
+            id: 1,
+            name: 'roles managenent',
+            description: 'ffffffffffffffff dddddddd f df dfffdfsd sfgsdfsdf sdfsdfsd vvvsvsd vvdfs',
+            endpoints: [
+              {
+                id: 2,
+                name: 'Del role',
+                path: '/www/exe',
+                method: 'post',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 4,
+        name: 'Student',
+        entries: [
+          {
+            id: 1,
+            name: 'smth managenent',
+            description: 'ffffffffffffffff dddddddd f df dfffdfsd sfgsdfsdf sdfsdfsd vvvsvsd vvdfs',
+            endpoints: [
+              {
+                id: 2,
+                name: 'Del role',
+                path: '/www/exe',
+                method: 'post',
+              },
+              {
+                id: 3,
+                name: 'post role',
+                path: '/www/nnn',
+                method: 'delete',
+              },
+            ],
+          },
+          {
+            id: 2,
+            name: 'smth222 managenent',
+            description: 'fffffffffffffdd f df dfffdfsd sfgsdfsd f df dfffdfsd sfgsdfsdf sdfsdfsd vvvsvsd vvdfs',
+            endpoints: [
+              {
+                id: 2,
+                name: 'Del role',
+                path: '/www/exe',
+                method: 'post',
+              },
+            ],
+          },
+        ],
+      },
+    ];
+    const endpoints: Endpoint[] = [
+      {
+        id: 1,
+        name: 'Delete Lesson',
+        path: '/timetable',
+        method: 'delete',
+      },
+      {
+        id: 2,
+        name: 'Add Lesson',
+        path: '/timetable',
+        method: 'post',
+      },
+      {
+        id: 3,
+        name: 'Update Lesson',
+        path: '/timetable',
+        method: 'put',
+      },
+      {
+        id: 4,
+        name: 'Get Lesson',
+        path: '/timetable',
+        method: 'get',
+      },
+      {
+        id: 5,
+        name: 'Delete lecturer',
+        path: '/admin',
+        method: 'delete',
+      },
+      {
+        id: 6,
+        name: 'Add lecturer',
+        path: '/admin',
+        method: 'delete',
+      },
+      {
+        id: 7,
+        name: 'Update lecturer',
+        path: '/admin',
+        method: 'put',
+      },
+      {
+        id: 8,
+        name: 'Get lecturer',
+        path: '/admin',
+        method: 'get',
+      },
+    ];
+    const featureEntry: FeatureEntry[] = [
+      {
+        id: 7,
+        name: 'roles managenent',
+        description: 'ffffffffffffffff dddddddd f df dfffdfsd sfgsdfsdf sdfsdfsd vvvsvsd vvdfs',
+        endpoints: [
+          {
+            id: 2,
+            name: 'Del role',
+            path: '/www/exe',
+            method: 'post',
+          },
+        ],
+      },
+      {
+        id: 8,
+        name: 'Full access to lessons',
+        description: 'c r u d',
+        endpoints: [
+          {
+            id: 1,
+            name: 'Delete Lesson',
+            path: '/timetable',
+            method: 'delete',
+          },
+          {
+            id: 2,
+            name: 'Add Lesson',
+            path: '/timetable',
+            method: 'post',
+          },
+          {
+            id: 3,
+            name: 'Update Lesson',
+            path: '/timetable',
+            method: 'put',
+          },
+          {
+            id: 4,
+            name: 'Get Lesson',
+            path: '/timetable',
+            method: 'get',
+          },
+        ],
+      },
+      {
+        id: 9,
+        name: 'Full acess to lecturers',
+        description: 'c r u d',
+        endpoints: [
+          {
+            id: 5,
+            name: 'Delete lecturer',
+            path: '/admin',
+            method: 'delete',
+          },
+          {
+            id: 6,
+            name: 'Add lecturer',
+            path: '/admin',
+            method: 'delete',
+          },
+          {
+            id: 7,
+            name: 'Update lecturer',
+            path: '/admin',
+            method: 'put',
+          },
+          {
+            id: 8,
+            name: 'Get lecturer',
+            path: '/admin',
+            method: 'get',
+          },
+        ],
+      },
+    ];
+    const resources: Resource[] = [
+      {
+        resourceId: 0,
+        resourceName: 'Projector',
+        resourceDescription: 'Required when you are needed to show presentation',
+      },
+      {
+        resourceId: 1,
+        resourceName: 'Projector 2',
+        resourceDescription: 'Required when you are needed to show presentation',
+      },
+      {
+        resourceId: 2,
+        resourceName: 'Projector 3',
+        resourceDescription: 'Required when you are needed to show presentation',
+      },
+      {
+        resourceId: 3,
+        resourceName: 'Projector 4',
+        resourceDescription: 'Required when you are needed to show presentation',
+      },
+      {
+        resourceId: 4,
+        resourceName: 'Projector 5',
+        resourceDescription: 'Required when you are needed to show presentation',
+      },
+      {
+        resourceId: 5,
+        resourceName: 'Projector 6',
+        resourceDescription: 'Required when you are needed to show presentation',
+      },
+      {
+        resourceId: 6,
+        resourceName: 'Projector 7',
+        resourceDescription: 'Required when you are needed to show presentation',
+      },
+    ];
 
-    return {lessons, groups, rooms, subjects, users, timestamp1};
+    const specialisations: string[] = ['SD', 'UFC', 'OO', 'EP'];
+
+    return {
+      lessons,
+      groups,
+      rooms,
+      subjects,
+      users,
+      timestamp1,
+      roles,
+      endpoints,
+      featureEntry,
+      resources,
+      fullUsers,
+      fullGroups,
+      specialisations,
+    };
   }
 
   // Overrides the genId method to ensure that a hero always has an id.

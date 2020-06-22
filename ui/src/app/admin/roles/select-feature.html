@@ -1,0 +1,37 @@
+<h1 mat-dialog-title>Select new features</h1>
+<div mat-dialog-content>
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let feature of data.features;let i = index; trackBy: trackById;">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-checkbox color="primary" (change)="selectUnselectFeature(feature)">Select</mat-checkbox>
+        </mat-panel-title>
+
+        <mat-panel-title>
+          {{feature.name}}
+        </mat-panel-title>
+
+        <mat-panel-description>
+          {{feature.description}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div style="width: 100%; float: left; border-bottom: 1px solid black;">
+        <div style="width: 30%; float: left;">Name</div>
+        <div style="width: 30%; float: left;">Path</div>
+        <div style="width: 30%; float: left;">Method</div>
+      </div>
+
+      <div *ngFor="let endpoint of feature.endpoints; trackBy: trackById;" style="width: 100%; float: left;">
+        <div style="width: 30%; float: left;">{{endpoint.name}}</div>
+        <div style="width: 30%; float: left;">{{endpoint.path}}</div>
+        <div style="width: 30%; float: left;">{{endpoint.method}}</div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+
+<div mat-dialog-actions style="float: right;">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="selectedFeatures" cdkFocusInitial>Ok</button>
+</div>

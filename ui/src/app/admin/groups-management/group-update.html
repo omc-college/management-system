@@ -1,0 +1,54 @@
+<mat-form-field appearance="fill">
+  <mat-label>Specialisation:</mat-label>
+  <mat-select #spec cdkFocusInitial>
+    <mat-option [value]="spec" *ngFor="let spec of specialisations; trackBy: trackById">{{ spec }} </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field appearance="fill">
+  <mat-label>Year of education:</mat-label>
+  <mat-select #year>
+    <mat-option [value]="year" *ngFor="let year of yearsOfEducation; trackBy: trackById">{{ year }} </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field appearance="fill">
+  <mat-label>Group number:</mat-label>
+  <mat-select #groupNum>
+    <mat-option [value]="num" *ngFor="let num of groupNums; trackBy: trackById">{{ num }} </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field appearance="fill">
+  <mat-label>Curator:</mat-label>
+  <mat-select #curator>
+    <mat-option [value]="lecturer" *ngFor="let lecturer of lecturers; trackBy: trackById"
+      >{{ lecturer.firstName }} {{ lecturer.lastName }} {{ lecturer.surname }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div mat-dialog-actions style="float: right;">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button
+    *ngIf="!data.isAddNewGroup"
+    mat-raised-button
+    color="primary"
+    [disabled]="!curator.value && !spec.value && !year.value && !groupNum.value"
+    [mat-dialog-close]="[spec.value, year.value, groupNum.value, curator.value]"
+    cdkFocusInitial
+  >
+    Ok
+  </button>
+
+  <button
+    *ngIf="data.isAddNewGroup"
+    mat-raised-button
+    color="primary"
+    [disabled]="!curator.value || !spec.value || !year.value || !groupNum.value"
+    [mat-dialog-close]="[spec.value, year.value, groupNum.value, curator.value]"
+    cdkFocusInitial
+  >
+    Ok
+  </button>
+</div>

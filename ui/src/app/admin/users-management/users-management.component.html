@@ -1,0 +1,218 @@
+<mat-drawer-container class="userContainer" autosize>
+  <mat-toolbar>
+    <mat-form-field class="userFilter">
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Search filter" />
+    </mat-form-field>
+    <div class="addUserBtn">
+      <button type="button" mat-raised-button color="primary" (click)="drawer.toggle()" style="float: right;">
+        Add user
+      </button>
+      <button type="button" mat-raised-button color="warn" (click)="deleteUsers()" style="float: right;">
+        Delete selected user
+      </button>
+    </div>
+  </mat-toolbar>
+  <mat-card>
+    <mat-paginator [pageSizeOptions]="[10, 20]" showFirstLastButtons></mat-paginator>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="Checkbox">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox
+            (change)="selectUnselectAllUsers()"
+            [checked]="isChecked"
+            [disabled]="isDisabled"
+            color="primary"
+          ></mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox (change)="selectUnselectUser(element)" [checked]="isChecked" color="primary"></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="Name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.firstName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="LastName">
+        <th mat-header-cell *matHeaderCellDef>Last name</th>
+        <td mat-cell *matCellDef="let element">{{ element.lastName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="Surname">
+        <th mat-header-cell *matHeaderCellDef>Surname</th>
+        <td mat-cell *matCellDef="let element">{{ element.surname }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="DateOfBirth">
+        <th mat-header-cell *matHeaderCellDef>Date of birth</th>
+        <td mat-cell *matCellDef="let element">{{ element.dateOFBirth }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="Email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="Phone">
+        <th mat-header-cell *matHeaderCellDef>Phone</th>
+        <td mat-cell *matCellDef="let element">{{ element.mobilePhone }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="CreatedAt">
+        <th mat-header-cell *matHeaderCellDef>Created At</th>
+        <td mat-cell *matCellDef="let element">{{ element.createdAt }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="ModifiedAt">
+        <th mat-header-cell *matHeaderCellDef>Modified at</th>
+        <td mat-cell *matCellDef="let element">{{ element.modifiedAt }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="IsVerified">
+        <th mat-header-cell *matHeaderCellDef>Is verified</th>
+        <td mat-cell *matCellDef="let element">{{ element.verified }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="Details">
+        <th mat-header-cell *matHeaderCellDef>
+          <button mat-button>Full info:</button>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-button color="primary" style="text-decoration: underline;">
+            View full info
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </mat-card>
+
+  <!---------------------------------new user------------------------------->
+
+  <mat-drawer #drawer class="addUser" mode="side" position="end">
+    <mat-card>
+      <form
+        [formGroup]="addNewForm"
+        autocomplete="off"
+        novalidate
+        (ngSubmit)="addNewUser(addNewForm.value); drawer.toggle()"
+      >
+        <mat-form-field appearance="fill">
+          <mat-label>First name:</mat-label>
+          <input matInput type="text" required #firstName formControlName="firstNameFormControl" />
+          <button
+            mat-button
+            *ngIf="firstName.value"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="firstName.value = ''"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-error *ngIf="hasError('firstNameFormControl', 'required')">
+            {{ showRequiredErrorMessage('First name') }}</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Last name:</mat-label>
+          <input matInput type="text" required #lastName formControlName="lastNameFormControl" />
+          <button
+            mat-button
+            *ngIf="lastName.value"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="lastName.value = ''"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-error *ngIf="hasError('lastNameFormControl', 'required')">
+            {{ showRequiredErrorMessage('Last name') }}</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Surname:</mat-label>
+          <input matInput type="text" required #surname formControlName="surnameFormControl" />
+          <button
+            mat-button
+            *ngIf="surname.value"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="surname.value = ''"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-error *ngIf="hasError('surnameFormControl', 'required')">
+            {{ showRequiredErrorMessage('surname') }}</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Email:</mat-label>
+          <input matInput type="text" required #email formControlName="emailFormControl" />
+          <button
+            mat-button
+            *ngIf="email.value"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="email.value = ''"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-error *ngIf="hasError('emailFormControl', 'required')">
+            {{ showRequiredErrorMessage('surname') }}
+          </mat-error>
+          <mat-error *ngIf="hasError('emailFormControl', 'email')">
+            Please, input correct email
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Mobile phone:</mat-label>
+          <input matInput type="text" required #mobile formControlName="mobilePhoneFormControl" />
+          <button
+            mat-button
+            *ngIf="mobile.value"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="mobile.value = ''"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-error *ngIf="hasError('mobilePhoneFormControl', 'required')">
+            {{ showRequiredErrorMessage('Mobile phone') }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="datepicker">
+          <mat-label>Date of birth</mat-label>
+          <input matInput [matDatepicker]="dateOfBirth" required formControlName="dateOfBirthFormControl" />
+          <mat-datepicker-toggle matSuffix [for]="dateOfBirth"></mat-datepicker-toggle>
+          <mat-datepicker #dateOfBirth startView="year"></mat-datepicker>
+          <mat-error *ngIf="hasError('dateOfBirthFormControl', 'required')">{{
+            showRequiredErrorMessage('date of birth')
+          }}</mat-error>
+        </mat-form-field>
+
+        <mat-card-actions class="btnCard">
+          <button mat-raised-button color="primary" [disabled]="!addNewForm.valid" class="btn btn-r">
+            Create
+          </button>
+          <button type="button" mat-raised-button color="warn" (click)="onCancel(); drawer.toggle()" class="btn">
+            Cancel
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+  </mat-drawer>
+</mat-drawer-container>

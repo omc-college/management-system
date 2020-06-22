@@ -9,7 +9,7 @@ import {MatCalendar} from '@angular/material/datepicker';
   styleUrls: ['./calendar.component.sass'],
 })
 export class CalendarComponent implements OnInit {
-  selectedDate: Date = new Date(); // date which is chosen at this moment
+  selectedDate: Date = new Date();
 
   @ViewChild(MatCalendar) calendar: MatCalendar<Date>;
 

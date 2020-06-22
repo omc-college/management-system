@@ -2,9 +2,9 @@ import {Component, OnInit, Inject} from '@angular/core';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {TimetableHttpService} from '../shared/timetable-http.service';
 
-import {Group} from '../../models/Group';
-import {User} from '../../models/User';
-import {iSubject} from '../../models/Subject';
+import {GroupAsResource} from '../../models/GroupAsResource';
+import {UserAsResource} from '../../models/UserAsResource';
+import {SubjectInterface} from '../../models/Subject';
 import {Room} from '../../models/Room';
 @Component({
   selector: 'app-search-result',
@@ -16,9 +16,9 @@ export class SearchResultComponent implements OnInit {
   private roomsUrl = 'api/rooms';
   private subjectsUrl = 'api/subjects';
   private usersUrl = 'api/users';
-  groups: Group[] = [];
-  lecturers: User[] = [];
-  subjects: iSubject[] = [];
+  groups: GroupAsResource[] = [];
+  lecturers: UserAsResource[] = [];
+  subjects: SubjectInterface[] = [];
   rooms: Room[] = [];
   constructor(
     private timetableHttpService: TimetableHttpService,
@@ -43,11 +43,17 @@ export class SearchResultComponent implements OnInit {
       this.lecturers = lecturers;
     });
   }
-  dateFilter = (d: Date | null): boolean => {
+
+  dateFilter(d: Date | null): boolean {
     const day = (d || new Date()).getDay();
     return day !== 0;
-  };
+  }
+
   close(): void {
     this.dialogRef.close();
+  }
+
+  trackById(index: number, el: any): number {
+    return el.id;
   }
 }
