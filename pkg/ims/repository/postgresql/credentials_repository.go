@@ -17,8 +17,8 @@ func NewCredentialsRepository(db sqlx.Ext) *CredRepository {
 }
 
 //UpdateCredentials
-func (cr *CredRepository) UpdateCredentials(c *models.Credentials) error {
-	_, err := cr.db.Exec("UPDATE credentials SET password_hash= $1, salt= $2, updated_at=current_timestamp WHERE id= $3", c.PasswordHash, c.Salt, c.ID)
+func (cr *CredRepository) UpdateCredentials(c *models.Credentials, userId int) error {
+	_, err := cr.db.Exec("UPDATE credentials SET password_hash= $1, salt= $2, updated_at=current_timestamp WHERE id= $3", c.PasswordHash, c.Salt, userId)
 	if err != nil {
 		return err
 	}

@@ -227,3 +227,45 @@ func (service *ImsService) RefreshAccesssToken(id string) error {
 	}
 	return nil
 }
+
+func (service *ImsService) ChangePassword(request *models.ChangePasswordRequest) error {
+	var cred *models.Credentials
+	var err error
+	var user *models.User
+
+	credRepo := postgresql.NewCredentialsRepository(service.db)
+	userRepo := postgresql.NewUsersRepository(service.db)
+
+	user, err = userRepo.GetUserByEmail(request.Email)
+	if err != nil {
+		return err
+	}
+
+	id := strconv.Itoa(user.ID)
+	cred, err = credRepo.GetCredentialByUserID(id)
+	if err != nil {
+		return err
+	}
+	pwd1 := []byte(request.ExistingPassword + cred.Salt)
+	hashedPasword := []byte(cred.PasswordHash)
+	err = bcrypt.CompareHashAndPassword(hashedPasword, pwd1)
+	if err != nil {
+		return err
+	}
+
+	cred.Salt = pwd.Salt(256 - len(request.NewPassword))
+
+	cred.PasswordHash, err = pwd.Hash(request.NewPassword, cred.Salt)
+	if err != nil {
+		return err
+	}
+
+	cred.ID = user.ID
+
+	err = credRepo.UpdateCredentials(cred, cred.ID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
