@@ -197,3 +197,40 @@ func (h *ImsHandler) RefreshAccessToken(w http.ResponseWriter, r *http.Request) 
 	}
 	w.WriteHeader(http.StatusOK)
 }
+
+func (h *ImsHandler) ChangePassword(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var request models.ChangePasswordRequest
+	var err error
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		handleError(err, w)
+		return
+	}
+
+	err = r.Body.Close()
+	if err != nil {
+		handleError(err, w)
+		return
+	}
+
+	err = json.Unmarshal(body, &request)
+	if err != nil {
+		handleError(err, w)
+		return
+	}
+
+	err = validate.ChangePasswordRequest(&request)
+	if err != nil {
+		handleError(err, w)
+		return
+	}
+
+	err = h.ImsService.ChangePassword(&request)
+	if err != nil {
+		handleError(err, w)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}

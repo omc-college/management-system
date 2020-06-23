@@ -332,6 +332,11 @@ components:
     ChangePasswordRequest:
       type: object
       properties:
+        email:
+          type: string
+          maxLength: 255
+          format: email
+          description: User's email
         existingPassword:
           type: string
           format: password
@@ -343,6 +348,7 @@ components:
       required:
         - existingPassword
         - newPassword
+        - email
     ResetPasswordRequest:
       type: object
       required:

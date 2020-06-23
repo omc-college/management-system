@@ -21,6 +21,7 @@ func NewImsRouter(service *service.ImsService) *mux.Router {
 	router.HandleFunc("/users/emailVerificationToken/verify/{verification_token}", imsHandler.CheckEmailVerificationToken).Methods(http.MethodGet)
 	router.HandleFunc("/sessions", imsHandler.Login).Methods(http.MethodPost)
 	router.HandleFunc("/sessions/refresh", imsHandler.RefreshAccessToken).Methods(http.MethodPost)
+	router.HandleFunc("/password", imsHandler.ChangePassword).Methods(http.MethodPost)
 
 	return router
 }

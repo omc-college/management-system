@@ -71,3 +71,23 @@ func LoginRequest(request *models.LoginRequest) error {
 
 	return nil
 }
+
+func ChangePasswordRequest(request *models.ChangePasswordRequest) error {
+	var err error
+	if request.ExistingPassword == "" {
+		err = ErrNoSymbols
+		return err
+	} else if len(request.ExistingPassword) > 256 {
+		err = ErrToMuchSymbols
+		return err
+	}
+	if request.NewPassword == "" {
+		err = ErrNoSymbols
+		return err
+	} else if len(request.NewPassword) > 256 {
+		err = ErrToMuchSymbols
+		return err
+	}
+
+	return nil
+}
