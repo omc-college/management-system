@@ -22,8 +22,8 @@ func NewQueueGroupSubscriber(conf Config) *GroupSubscriber {
 }
 
 //Subscribe put receive message to the channel
-func (stanConn *GroupSubscriber)Subscribe(topicName string) (<-chan *Envelope, error) {
-	output := make(chan *Envelope)
+func (stanConn *GroupSubscriber)Subscribe(topicName string) (<-chan Envelope, error) {
+	output := make(chan Envelope)
 
 	sub, err := stanConn.subscribe(output, topicName)
 	if err != nil {
@@ -35,9 +35,9 @@ func (stanConn *GroupSubscriber)Subscribe(topicName string) (<-chan *Envelope, e
 	return output, nil
 }
 
-func (stanConn *GroupSubscriber)subscribe(output chan *Envelope, topicName string) (stan.Subscription, error) {
+func (stanConn *GroupSubscriber)subscribe(output chan Envelope, topicName string) (stan.Subscription, error) {
 	return stanConn.stanSubscriber.stan.Subscribe(topicName, func(m *stan.Msg) {
-		var e = &Envelope{}
+		var e = &envelope{}
 
 		e.msg = m
 

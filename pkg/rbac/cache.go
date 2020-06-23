@@ -19,14 +19,14 @@ func NewCache() {
 
 }
 
-func (cache *Cache) Update(envelope *pubsub.Envelope) error {
-	switch envelope.Operation {
+func (cache *Cache) Update(envelope pubsub.Envelope) error {
+	switch envelope.Operation() {
 	case RoleOperationCreate:
-		return cache.createRole(envelope.Payload)
+		return cache.createRole(envelope.Payload())
 	case RoleOperationUpdate:
-		return cache.updateRole(envelope.Payload)
+		return cache.updateRole(envelope.Payload())
 	case RoleOperationDelete:
-		return cache.deleteRole(envelope.Payload)
+		return cache.deleteRole(envelope.Payload())
 	default:
 		return fmt.Errorf("cannot recognize operation")
 	}
