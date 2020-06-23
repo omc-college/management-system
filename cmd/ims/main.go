@@ -9,6 +9,8 @@ import (
 	"github.com/sirupsen/logrus"
 	flag "github.com/spf13/pflag"
 
+	"github.com/gorilla/handlers"
+
 	"github.com/omc-college/management-system/pkg/ims/api/routers"
 	"github.com/omc-college/management-system/pkg/ims/service"
 	"github.com/omc-college/management-system/pkg/config"
@@ -41,6 +43,10 @@ func main() {
 
 	signupService := service.NewIMSService(db, nil, time.Time{})
 
+	headers := handlers.AllowedHeaders([]string{"Content-Type"})
+	methods := handlers.AllowedMethods([]string{"GET", "DELETE", "POST", "PUT"})
+	origins := handlers.AllowedOrigins([]string{"*"})
+
 	// Start server
-	logrus.Fatal(http.ListenAndServe(conf.WebAPIAddress, routers.NewImsRouter(signupService)))
+	logrus.Fatal(http.ListenAndServe(conf.WebAPIAddress, handlers.CORS(headers, methods, origins)(routers.NewImsRouter(signupService))))
 }

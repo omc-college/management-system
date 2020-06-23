@@ -9,7 +9,7 @@ import (
 	"github.com/omc-college/management-system/pkg/ims/service"
 )
 
-//NewSignUpRouter inits Sign Up router
+//NewSignUpRouter inits IMS router
 func NewImsRouter(service *service.ImsService) *mux.Router {
 
 	imsHandler := handlers.NewImsHandler(service)
