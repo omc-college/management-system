@@ -3,15 +3,14 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
 	flag "github.com/spf13/pflag"
 
+	"github.com/omc-college/management-system/pkg/config"
 	"github.com/omc-college/management-system/pkg/ims/api/routers"
 	"github.com/omc-college/management-system/pkg/ims/service"
-	"github.com/omc-college/management-system/pkg/config"
 )
 
 func main() {
@@ -39,8 +38,8 @@ func main() {
 
 	defer db.Close()
 
-	signupService := service.NewIMSService(db, nil, time.Time{})
+	ImsService := service.NewIMSService(db, conf.SigningKey, conf.ExpirationTime)
 
 	// Start server
-	logrus.Fatal(http.ListenAndServe(conf.WebAPIAddress, routers.NewImsRouter(signupService)))
+	logrus.Fatal(http.ListenAndServe(conf.WebAPIAddress, routers.NewImsRouter(ImsService)))
 }

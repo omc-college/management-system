@@ -1,9 +1,10 @@
 webapi_address: ':8080'
 dbconnection:
   user: 'postgres'
-  password: 'krimyllexadmin'
+  password: '2701'
   host: 'localhost'
   port: '5432'
-  database: 'ims'
+  database: 'postgres'
   sslmode: 'disable'
-
+siningkey: 'signingKey12345678900987654321'
+expirationtime: 24h

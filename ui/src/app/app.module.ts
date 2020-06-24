@@ -6,6 +6,7 @@ import {AppRoutingModule} from './app-routing.module';
 
 import {TimetableModule} from './timetable/timetable.module';
 import {SignInModule} from './sign-in/sign-in.module';
+import {LoginModule} from './login/login.module';
 import {LandingPageModule} from './landing-page/landing-page.module';
 import {ErrorPageModule} from './error-page/error-page.module';
 
@@ -32,6 +33,7 @@ import {AppComponent} from './app.component';
   declarations: [AppComponent],
   imports: [
     SignInModule,
+    LoginModule,
     TimetableModule,
     LandingPageModule,
     ErrorPageModule,

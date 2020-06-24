@@ -180,17 +180,34 @@ func (h *ImsHandler) Login(w http.ResponseWriter, r *http.Request) {
 func (h *ImsHandler) RefreshAccessToken(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	var request models.LoginRequest
 	var err error
 
-	params := mux.Vars(r)
-
-	if params["id"] == "" {
-		err = validate.ErrNoSymbols
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
 		handleError(err, w)
 		return
 	}
 
-	err = h.ImsService.RefreshAccesssToken(params["id"])
+	err = r.Body.Close()
+	if err != nil {
+		handleError(err, w)
+		return
+	}
+
+	err = json.Unmarshal(body, &request)
+	if err != nil {
+		handleError(err, w)
+		return
+	}
+
+	err = validate.LoginRequest(&request)
+	if err != nil {
+		handleError(err, w)
+		return
+	}
+
+	err = h.ImsService.RefreshAccesssToken(request.Email)
 	if err != nil {
 		handleError(err, w)
 		return
