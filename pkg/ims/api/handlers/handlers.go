@@ -177,18 +177,12 @@ func (h *ImsHandler) Login(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (h *SignUpHandler)ResetPassword(w http.ResponseWriter, r *http.Request) {
+func (h *ImsHandler)ResetPassword(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var request models.SignupRequest
+	var rrequest models.ResetRequest
 	var err error
 
 	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		handleError(err, w)
-		return
-	}
-
-	err = json.Unmarshal(body, &request)
 	if err != nil {
 		handleError(err, w)
 		return
@@ -200,32 +194,34 @@ func (h *SignUpHandler)ResetPassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = validation.Data(&request)
+	err = json.Unmarshal(body, &rrequest)
 	if err != nil {
 		handleError(err, w)
 		return
 	}
 
-	err = h.SignUpService.ResetPassword(&request)
-	if err != nil {
-		handleError(err, w)
+	if validation.Email(rrequest.Email) != true{
+		err = validation.ErrInvalidEmail
+		handleError(err,w)
 		return
 	}
+
+	err = h.SignUpService.ResetPassword(&rrequest)
+	if err != nil {
+		handleError(err, w)
+		return 
+	}
+	w.Write([]byte("200 - Successfully sent email :)"))
+	return
 }
 
-func (h *SignUpHandler)ConfirmReset(w http.ResponseWriter, r *http.Request) {
+func (h *ImsHandler)ConfirmReset(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var request models.SignupRequest
+	var crequest models.ConfirmResetRequest
+	crequest.ID = 0;
 	var err error
-	var tok models.EmailVerificationTokens
 
 	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		handleError(err, w)
-		return
-	}
-
-	err = json.Unmarshal(body, &request)
 	if err != nil {
 		handleError(err, w)
 		return
@@ -237,26 +233,64 @@ func (h *SignUpHandler)ConfirmReset(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = validation.Data(&request)
+	err = json.Unmarshal(body, &crequest)
+	if err != nil {
+		handleError(err, w)
+		return
+	}
+	if crequest.Password == "" || crequest.ID == 0 {
+		err = validation.ErrNoSymbols
+		handleError(err,w)
+		return
+	}
+
+	err = h.SignUpService.ConfirmReset(crequest)
+	if err != nil {
+			handleError(err, w)
+			return
+	}
+	w.Write([]byte("200 - Successful new password :)"))
+	return
+	}
+
+func (h *ImsHandler)CheckResetToken(w http.ResponseWriter, r *http.Request) {//має повертати http.response
+	w.Header().Set("Content-Type", "application/json")
+	var crequest models.CheckResetToken
+	var err error
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		handleError(err, w)
+		return
+	}
+
+	err = r.Body.Close()
+	if err != nil {
+		handleError(err, w)
+		return
+	}
+
+	err = json.Unmarshal(body, &crequest)
 	if err != nil {
 		handleError(err, w)
 		return
 	}
 	params := mux.Vars(r)
-
+	crequest.Token.VerificationToken = params["token"]
 	if params["token"] == "" {
 		err = validation.ErrNoSymbols
 		handleError(err, w)
 		return
 	}
-	tok.VerificationToken = params["token"]
-		err = h.SignUpService.ConfirmReset(&request,&tok)
-		if err != nil {
-			handleError(err, w)
-			return
-		}
+
+	err = h.SignUpService.CheckToken(crequest)
+	if err != nil {
+		handleError(err, w)
+		return
 	}
-	
+	w.Write([]byte("200 - Successfuly opened password change access :)"))
+	return
+}
 func (h *ImsHandler) RefreshAccessToken(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
