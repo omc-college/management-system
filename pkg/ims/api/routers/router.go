@@ -11,9 +11,9 @@ import (
 )
 
 //NewSignUpRouter inits Sign Up router
-func NewSignUpRouter (service *service.SignUpService,client *pubsub.GroupClient) *mux.Router {
+func NewImsRouter(service *service.ImsService,client *pubsub.GroupClient) *mux.Router {
 
-	signUpHandler := handlers.NewSignUpHandler(service,client)
+	ImsHandler := handlers.NewImsHandler(service,client)
 
 	router := mux.NewRouter()
 
