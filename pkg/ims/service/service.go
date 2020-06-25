@@ -149,13 +149,11 @@ func (service *ImsService) EmailVerificationToken(token *models.EmailVerificatio
 	return nil
 }
 
-
-func (service *SignUpService) ResetPassword(request *models.SignupRequest) error {
+func (service *ImsService) ResetPassword(request *models.ResetRequest) error {
 	var user *models.User
 	var err error
 	var tok models.EmailVerificationTokens
-
-	user.Email = request.Email
+	var chemail string =  request.Email
 	tok.VerificationToken = token()
 
 	tx, err := service.db.Beginx()
@@ -164,27 +162,24 @@ func (service *SignUpService) ResetPassword(request *models.SignupRequest) error
 	}
 
 	userRepo := postgresql.NewUsersRepository(tx)
-	user, err = userRepo.GetUserByEmail(user.Email)
+	user, err = userRepo.GetUserByEmail(chemail)
 	if err != nil {
 		return err
 	}
 
-	if user.Email != ""{
-		message := fmt.Sprintf(
+	if validation.Email(user.Email){
+		meage := fmt.Sprintf(
 `Dear %s,
 You recently requested to reset your password for your managementsystem account. Click the link below to reset it.
 %s
 If you did not request a password reset, please ignore this email or reply to let us know. This password reset link is only valid for the next 2 hours.
 `,user.FirstName,fmt.Sprintf("http://managementsystem.com/confirmreset?token=%s",tok))
-		var pbsb pubsub.Config
-		pbsb.ClusterID = "test-cluster"
-		pbsb.ClientID = "client-id"
-		pbsb.QueueName = "new-queue"
-		pbsb.PingsInterval = 20
-		pbsb.MaxUnsuccessfulPings = 5
-        clin := &pubsub.GroupClient{}
-		clin, err = pubsub.NewQueueGroupClient(pbsb)
-		clin.Publish([]byte(message),"Password Reset")
+	var byme []byte
+		byme,err = json.Marshal(meage)
+		service.PbSbClient.Publish(byme,"ConfirmTopicName")
+	}else{err = validation.ErrInvalidEmail}
+	if err != nil {
+		return err
 	}
 
 	signUpRepo := postgresql.NewSignUpRepository(tx)
@@ -198,8 +193,7 @@ If you did not request a password reset, please ignore this email or reply to le
 	}
 	return nil
 }
-func (service *SignUpService) ConfirmReset(request *models.SignupRequest,tok *models.EmailVerificationTokens) error {
-	var user *models.User
+func (service *ImsService) ConfirmReset(request models.ConfirmResetRequest) error {
 	var cred *models.Credentials
 	var err error
 
@@ -208,21 +202,10 @@ func (service *SignUpService) ConfirmReset(request *models.SignupRequest,tok *mo
 		return err
 	}
 
-	userRepo := postgresql.NewUsersRepository(tx)
 	credRepo := postgresql.NewCredentialsRepository(tx)
 
 
-	user.Email, err = userRepo.GetEmailByToken(tok)
-	if err != nil {
-		return err
-	}
-
-	user, err = userRepo.GetUserByEmail(user.Email)
-	if err != nil {
-		return err
-	}
-
-    cred, err = credRepo.GetCredentialByUserID(string(user.ID))
+	cred, err = credRepo.GetCredentialByUserID(string(request.ID))
 	if err != nil {
 		return err
 	}
@@ -234,7 +217,7 @@ func (service *SignUpService) ConfirmReset(request *models.SignupRequest,tok *mo
 		return err
 	}
 
-    err = credRepo.UpdateCredentials(cred)
+	err = credRepo.UpdateCredentials(cred)
 	if err != nil {
 		return err
 	}
@@ -246,7 +229,37 @@ func (service *SignUpService) ConfirmReset(request *models.SignupRequest,tok *mo
 
 	return nil
 }
+func (service *ImsService) CheckToken(request models.CheckResetToken) error {
+		var user *models.User
+		var err error
 
+		tx, err := service.db.Beginx()
+		if err != nil {
+		return err
+	}
+
+		userRepo := postgresql.NewUsersRepository(tx)
+
+
+		user.Email, err = userRepo.GetEmailByToken(&request.Token)
+		if err != nil {
+		return err
+	}
+
+		user, err = userRepo.GetUserByEmail(user.Email)
+		if err != nil {
+		return err
+	}
+
+
+		err = tx.Commit()
+		if err != nil {
+		return err
+	}
+
+		return nil
+
+	}
 func (service *ImsService) Login(request *models.LoginRequest) error {
 	var user *models.User
 	var cred *models.Credentials
