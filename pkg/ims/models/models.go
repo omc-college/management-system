@@ -55,3 +55,13 @@ type LoginRequest struct {
 	Email    string `json:"email" db:"email"`
 	Password string `json:"password" db:"password"`
 }
+type ResetRequest struct{
+	Email   string `json:"email" db:"email"`
+}
+type CheckResetToken struct{
+	Token EmailVerificationTokens `json:"token" db:"token"`
+}
+type ConfirmResetRequest struct{
+	ID       int 	 `json:"id" db:"id"`
+	Password string `json:"password" db:"password"`
+}
