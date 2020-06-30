@@ -315,7 +315,7 @@ func (repository *RolesRepository) CreateRoleTmpl(ctx context.Context, roleTmpl 
 	defer tx.Rollback()
 
 	query := "SELECT name FROM features"
-	rows, err := repository.db.Query(query)
+	rows, err := tx.Query(query)
 	if err != nil {
 		return QueryError{queryErrorMessage, err}
 	}
@@ -339,6 +339,8 @@ func (repository *RolesRepository) CreateRoleTmpl(ctx context.Context, roleTmpl 
 		return ScanError{scanErrorMessage, err}
 	}
 
+	var addedEndpoints []rbac.Endpoint
+
 	for _, feature := range roleTmpl.Entries {
 		var currentFeatureId int
 		var isFeatureUpdated bool
@@ -346,31 +348,29 @@ func (repository *RolesRepository) CreateRoleTmpl(ctx context.Context, roleTmpl 
 		_, isFeatureUpdated = existingFeatures[feature.Name]
 		if isFeatureUpdated {
 			query := "UPDATE features SET description = $1 WHERE name = $2 RETURNING (id)"
-			err := repository.db.QueryRow(query, feature.Description, feature.Name).Scan(&currentFeatureId)
+			err := tx.QueryRow(query, feature.Description, feature.Name).Scan(&currentFeatureId)
 			if err != nil {
 				return QueryError{queryErrorMessage, err}
 			}
 
 			query = "DELETE FROM features_to_endpoints WHERE feature_id = $1"
-			_, err = repository.db.Exec(query, currentFeatureId)
+			_, err = tx.Exec(query, currentFeatureId)
 			if err != nil {
 				return QueryError{queryErrorMessage, err}
 			}
 		} else {
 			query := "INSERT INTO features(name, description) VALUES ($1, $2) RETURNING (id)"
-			err := repository.db.QueryRow(query, feature.Name, feature.Description).Scan(&currentFeatureId)
+			err := tx.QueryRow(query, feature.Name, feature.Description).Scan(&currentFeatureId)
 			if err != nil {
 				return QueryError{queryErrorMessage, err}
 			}
 		}
 
-		var addedEndpoints []rbac.Endpoint
-
 		for _, endpoint := range feature.Endpoints {
 			// delete endpoint of existing feature
 			if isFeatureUpdated {
 				query := "DELETE FROM endpoints WHERE name = $1"
-				_, err := repository.db.Exec(query, endpoint.Name)
+				_, err := tx.Exec(query, endpoint.Name)
 				if err != nil {
 					return QueryError{queryErrorMessage, err}
 				}
@@ -394,22 +394,23 @@ func (repository *RolesRepository) CreateRoleTmpl(ctx context.Context, roleTmpl 
 
 			if !isEndpointExisting {
 				query := "INSERT INTO endpoints(name, path, method) VALUES ($1, $2, $3) RETURNING (id)"
-				err := repository.db.QueryRow(query, endpoint.Name, endpoint.Path, endpoint.Method).Scan(&currentEndpointId)
+				err := tx.QueryRow(query, endpoint.Name, endpoint.Path, endpoint.Method).Scan(&currentEndpointId)
 				if err != nil {
+					panic(err)
 					return QueryError{queryErrorMessage, err}
 				}
 
 				addedEndpoints = append(addedEndpoints, endpoint)
 			} else {
 				query := "SELECT id FROM endpoints WHERE name = $1"
-				err := repository.db.QueryRow(query, endpoint.Name).Scan(&currentEndpointId)
+				err := tx.QueryRow(query, endpoint.Name).Scan(&currentEndpointId)
 				if err != nil {
 					return QueryError{queryErrorMessage, err}
 				}
 			}
 
 			query := "INSERT INTO features_to_endpoints(feature_id, endpoint_id) VALUES ($1, $2)"
-			_, err := repository.db.Exec(query, currentFeatureId, currentEndpointId)
+			_, err := tx.Exec(query, currentFeatureId, currentEndpointId)
 			if err != nil {
 				return QueryError{queryErrorMessage, err}
 			}

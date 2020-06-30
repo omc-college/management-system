@@ -1,12 +1,21 @@
 entries:
-- name: roomsReading
-  description: Get information about rooms
+- name: subjectsManagement
+  description: Add, update and delete subjects
   endpoints:
-  - name: giveOneRoom
-    path: /room/{id}
+  - name: deleteSubject
+    path: /subject/{id}
+    method: DELETE
+  - name: giveOneSubject
+    path: /subject/{id}
     method: GET
-  - name: giveRooms
-    path: /room
+  - name: updateSubject
+    path: /subject/{id}
+    method: PUT
+  - name: addSubject
+    path: /subject
+    method: POST
+  - name: giveSubjects
+    path: /subject
     method: GET
 - name: subjectsReading
   description: Get information about subjects
@@ -17,30 +26,36 @@ entries:
   - name: giveSubjects
     path: /subject
     method: GET
-- name: groupsManagement
-  description: Add, update and delete groups
+- name: roomsManagement
+  description: Add, update and delete rooms
   endpoints:
-  - name: updateGroup
-    path: /group/{id}
-    method: PUT
-  - name: addGroup
-    path: /group
-    method: POST
-  - name: giveGroups
-    path: /group
+  - name: giveOneRoom
+    path: /room/{id}
     method: GET
-  - name: deleteGroup
-    path: /group/{id}
+  - name: updateRoom
+    path: /room/{id}
+    method: PUT
+  - name: deleteRoom
+    path: /room/{id}
     method: DELETE
-  - name: giveOneGroup
-    path: /group/{id}
+  - name: giveRooms
+    path: /room
+    method: GET
+  - name: addRoom
+    path: /room
+    method: POST
+- name: lecturersReading
+  description: Get information about lecturers
+  endpoints:
+  - name: giveLecturers
+    path: /lecturer
+    method: GET
+  - name: giveOneLecturer
+    path: /lecturer/{id}
     method: GET
 - name: lecturersManagement
   description: Add, update and delete lecturers
   endpoints:
-  - name: deleteLecturer
-    path: /lecturer/{id}
-    method: DELETE
   - name: giveOneLecturer
     path: /lecturer/{id}
     method: GET
@@ -53,15 +68,36 @@ entries:
   - name: addLecturer
     path: /lecturer
     method: POST
-- name: lecturersReading
-  description: Get information about lecturers
-  endpoints:
-  - name: giveLecturers
-    path: /lecturer
-    method: GET
-  - name: giveOneLecturer
+  - name: deleteLecturer
     path: /lecturer/{id}
+    method: DELETE
+- name: groupsReading
+  description: Get information about groups
+  endpoints:
+  - name: giveGroups
+    path: /group
     method: GET
+  - name: giveOneGroup
+    path: /group/{id}
+    method: GET
+- name: groupsManagement
+  description: Add, update and delete groups
+  endpoints:
+  - name: giveGroups
+    path: /group
+    method: GET
+  - name: addGroup
+    path: /group
+    method: POST
+  - name: giveOneGroup
+    path: /group/{id}
+    method: GET
+  - name: updateGroup
+    path: /group/{id}
+    method: PUT
+  - name: deleteGroup
+    path: /group/{id}
+    method: DELETE
 - name: lessonsReading
   description: Get information about lessons
   endpoints:
@@ -89,48 +125,12 @@ entries:
   - name: updateLesson
     path: /lesson/{id}
     method: PUT
-- name: groupsReading
-  description: Get information about groups
+- name: roomsReading
+  description: Get information about rooms
   endpoints:
-  - name: giveOneGroup
-    path: /group/{id}
-    method: GET
-  - name: giveGroups
-    path: /group
-    method: GET
-- name: roomsManagement
-  description: Add, update and delete rooms
-  endpoints:
-  - name: deleteRoom
-    path: /room/{id}
-    method: DELETE
-  - name: giveOneRoom
-    path: /room/{id}
-    method: GET
-  - name: updateRoom
-    path: /room/{id}
-    method: PUT
   - name: giveRooms
     path: /room
     method: GET
-  - name: addRoom
-    path: /room
-    method: POST
-- name: subjectsManagement
-  description: Add, update and delete subjects
-  endpoints:
-  - name: giveOneSubject
-    path: /subject/{id}
+  - name: giveOneRoom
+    path: /room/{id}
     method: GET
-  - name: updateSubject
-    path: /subject/{id}
-    method: PUT
-  - name: giveSubjects
-    path: /subject
-    method: GET
-  - name: addSubject
-    path: /subject
-    method: POST
-  - name: deleteSubject
-    path: /subject/{id}
-    method: DELETE
