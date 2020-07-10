@@ -20,7 +20,7 @@ import (
 )
 
 func main() {
-	configPath := flag.StringP("config", "c", "cmd/rbacgen/rbacgen-service-example-config.yaml", "path to service config")
+	configPath := flag.StringP("config", "c", "./cmd/rbacgen/rbacgen-service-example-config.yaml", "path to service config")
 
 	isCreateMode := flag.Bool("create", false, "In this mode utility generates and creates new Role Template and saves into roleTmpl.yaml")
 	isFillMode := flag.Bool("fill", false, "In this mode utility fills DB with features and endpoints from existing Role Template")
@@ -41,7 +41,7 @@ func main() {
 	if *isCreateMode {
 		roleTmpl, err := rbacgen.GetRoleTmpl(serviceConfig.RBACGenConfig.SpecsPaths)
 		if err != nil {
-			logrus.Fatalf("cannot get roleTmpl from db: %s", err.Error())
+			logrus.Fatalf("cannot generate roleTmpl from specs: %s", err.Error())
 		}
 
 		outputFile, err := os.Create(serviceConfig.RBACGenConfig.TmplPath)
@@ -100,7 +100,7 @@ func main() {
 			logrus.Fatalf("cannot get roleTmpl from db: %s", err.Error())
 		}
 
-		mqURL := fmt.Sprintf("nats:%s:%s",
+		mqURL := fmt.Sprintf("nats://%s:%s",
 			serviceConfig.MQConnection.Host,
 			serviceConfig.MQConnection.Port)
 

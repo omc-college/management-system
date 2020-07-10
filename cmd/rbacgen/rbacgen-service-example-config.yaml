@@ -1,13 +1,13 @@
 dbconnection:
   user: 'postgres'
   password: 'superuser'
-  host: 'localhost'
+  host: 'rbac-db'
   port: '5432'
   database: 'roles'
   sslmode: 'disable'
 
 mqconnection:
-  host: '127.0.0.1'
+  host: 'nats-streaming'
   port: '4222'
 
 pubsub:
@@ -19,7 +19,7 @@ pubsub:
   
 rbacgen:
   specsPaths: 
-    - 'api/ims/ims-api.yaml'
-    - 'api/rbac/rbac-api.yaml'
-    - 'api/timetable/timetable-api.yaml'
-  tmplPath: 'cmd/rbacgen/roleTmpl.yaml'
+    - './api/ims/ims-api.yaml'
+    - './api/rbac/rbac-api.yaml'
+    - './api/timetable/timetable-api.yaml'
+  tmplPath: './cmd/rbacgen/roleTmpl.yaml'
