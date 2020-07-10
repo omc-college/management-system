@@ -1,0 +1,60 @@
+version: "3.8"
+services:
+  rbac-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.rbac
+    ports: 
+      - "8001:8000"
+    volumes:
+      - ./cmd/rbac/rbac-service-example-config.yaml:/go/src/app/cmd/rbac/rbac-service-example-config.yaml
+    depends_on: 
+      - rbac-db
+      - rbac-db-migrator
+      - rbacgen
+      - nats-streaming
+    restart: always 
+  
+  rbacgen:
+    build:
+      context: .
+      dockerfile: Dockerfile.rbacgen
+    ports: 
+      - "8002:8000"
+    volumes:
+      - ./cmd/rbacgen/rbacgen-service-example-config.yaml:/go/src/app/cmd/rbacgen/rbacgen-service-example-config.yaml
+    depends_on:
+      - rbac-db
+      - rbac-db-migrator
+      - nats-streaming
+    restart: on-failure
+
+  rbac-db:
+    image: postgres:12
+    ports: 
+      - "9090:5432"
+    volumes:
+      - roles-db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: superuser
+      POSTGRES_DB: roles
+    restart: always
+
+  rbac-db-migrator:
+    build:
+      context: .
+      dockerfile: Dockerfile.rbac-db-migrator
+    volumes:
+      - ./pkg/rbac/repository/postgres/migrations:/migrations
+    depends_on:
+      - rbac-db
+    restart: on-failure
+
+  nats-streaming:
+    image: nats-streaming:0.18
+    ports: 
+      - "4222:4222"
+    restart: always
+volumes: 
+  roles-db:

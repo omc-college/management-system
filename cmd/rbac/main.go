@@ -21,7 +21,7 @@ func main() {
 	var serviceConfig Config
 	var err error
 
-	configPath := flag.StringP("config", "c", "./rbac-service-example-config.yaml", "path to service config")
+	configPath := flag.StringP("config", "c", "./cmd/rbac/rbac-service-example-config.yaml", "path to service config")
 
 	flag.Parse()
 
@@ -43,7 +43,7 @@ func main() {
 
 	repository := postgres.NewRolesRepository(db)
 
-	mqURL := fmt.Sprintf("nats:%s:%s",
+	mqURL := fmt.Sprintf("nats://%s:%s",
 		serviceConfig.MQConnection.Host,
 		serviceConfig.MQConnection.Port)
 
