@@ -12,7 +12,6 @@ import (
 type RolesService struct {
 	RolesRepository  *postgres.RolesRepository
 	PubSubRepository *pubsub.Client
-	AuthCache        *rbac.Cache
 }
 
 func NewRolesService(rolesRepository *postgres.RolesRepository, pubsubRepository *pubsub.Client) *RolesService {

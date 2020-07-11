@@ -9,20 +9,18 @@ import (
 
 type GroupSubscriber struct {
 	stanSubscriber Client
-	subscription stan.Subscription
+	subscription   stan.Subscription
 }
 
 //NewQueueGroupSubscriber is a constructor function to a GroupSubscriber
-func NewQueueGroupSubscriber(conf Config) *GroupSubscriber {
+func NewQueueGroupSubscriber(client Client) *GroupSubscriber {
 	return &GroupSubscriber{
-		stanSubscriber: Client{
-			config: conf,
-		},
+		stanSubscriber: client,
 	}
 }
 
 //Subscribe put receive message to the channel
-func (stanConn *GroupSubscriber)Subscribe(topicName string) (<-chan Envelope, error) {
+func (stanConn *GroupSubscriber) Subscribe(topicName string) (<-chan Envelope, error) {
 	output := make(chan Envelope)
 
 	sub, err := stanConn.subscribe(output, topicName)
@@ -35,24 +33,26 @@ func (stanConn *GroupSubscriber)Subscribe(topicName string) (<-chan Envelope, er
 	return output, nil
 }
 
-func (stanConn *GroupSubscriber)subscribe(output chan Envelope, topicName string) (stan.Subscription, error) {
+func (stanConn *GroupSubscriber) subscribe(output chan Envelope, topicName string) (stan.Subscription, error) {
 	return stanConn.stanSubscriber.stan.Subscribe(topicName, func(m *stan.Msg) {
 		var e = &envelope{}
 
-		e.msg = m
-
-		err := json.Unmarshal(m.Data, &e)
+		err := json.Unmarshal(m.Data, e)
 		if err != nil {
 			logrus.Error(err.Error())
 			return
 		}
 
+		e.Msg = m
+
 		output <- e
-	}, stan.SetManualAckMode())
+
+		m.Ack()
+	}, stan.SetManualAckMode(), stan.DeliverAllAvailable())
 }
 
 //Unsubscribe removes interest in the subscription
-func (stanConn *GroupSubscriber)Unsubscribe() error {
+func (stanConn *GroupSubscriber) Unsubscribe() error {
 	err := stanConn.subscription.Unsubscribe()
 	if err != nil {
 		return err
@@ -62,7 +62,7 @@ func (stanConn *GroupSubscriber)Unsubscribe() error {
 }
 
 //Close removes subscriber from the server
-func (stanConn *GroupSubscriber)Close() error {
+func (stanConn *GroupSubscriber) Close() error {
 	err := stanConn.subscription.Close()
 	if err != nil {
 		return err

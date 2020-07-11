@@ -10,6 +10,7 @@ import (
 
 	"github.com/omc-college/management-system/pkg/config"
 	"github.com/omc-college/management-system/pkg/pubsub"
+	"github.com/omc-college/management-system/pkg/rbac"
 	"github.com/omc-college/management-system/pkg/rbac/api"
 	"github.com/omc-college/management-system/pkg/rbac/opa"
 	"github.com/omc-college/management-system/pkg/rbac/repository/postgres"
@@ -48,7 +49,17 @@ func main() {
 		logrus.Fatalf("cannot initialize Client: %s", err.Error())
 	}
 
+	subscriber := pubsub.NewQueueGroupSubscriber(*client)
+	rolesChannel, err := subscriber.Subscribe(rbac.RolesTopicName)
+	if err != nil {
+		logrus.Fatalf("cannot subscribe on roles updates: %s", err.Error())
+	}
+
+	cache := rbac.NewCache()
+
+	go cache.ListenUpdates(rolesChannel)
+
 	rolesService := service.NewRolesService(repository, client)
 
-	logrus.Fatal(http.ListenAndServe(":8000", api.NewCrudRouter(rolesService, opa.GetDecision)))
+	logrus.Fatal(http.ListenAndServe(":8000", api.NewCrudRouter(rolesService, cache, opa.GetDecision)))
 }

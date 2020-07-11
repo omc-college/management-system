@@ -28,6 +28,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      x-rbac-features:
+        - signup
   /sessions:
     post:
       description: User login 
@@ -50,6 +52,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      x-rbac-features:
+        - login
   /sessions/refresh:
     post:
       operationId: refreshToken
@@ -67,6 +71,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      x-rbac-features:
+        - login
   /email/available:
     get:
       description: This endpoint compares user's entered email with existing emails and displays an error if there is the same in DB
@@ -87,6 +93,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      x-rbac-features:
+        - signup
   /users/emailVerificationToken/verify:
     get:
       description: To complete the registration you need to confirm your email with token
@@ -106,6 +114,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      x-rbac-features:
+        - signup
   /users:
     get:
       description: Get all users
@@ -125,6 +135,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      x-rbac-features:
+        - usersReading
+        - usersManagment
     post:
       description: Creates a new user in the store.
       operationId: AddUser
@@ -166,6 +179,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      x-rbac-features:
+        - usersManagment
   /users/{UserID}:
     get:
       description: Get one user
@@ -191,6 +206,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      x-rbac-features:
+        - usersReading
+        - usersManagment
     put:
       description: Updates an user in the store.
       operationId: UpdateUser
@@ -228,6 +246,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      x-rbac-features:
+        - usersManagment
     delete:
       description: deletes a single user based on the ID supplied
       operationId: DeleteUser
@@ -248,6 +268,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      x-rbac-features:
+        - usersManagment
   /password:
     post:
       description: This endpoint handles change password
@@ -266,16 +288,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      x-rbac-features:
+        - personalAccountManagement
   /resetpassword:
     put:
-     description: This endpoint handles resetting the password
-     operationId: ResetPassword
-     requestBody:
+      description: This endpoint handles resetting the password
+      operationId: ResetPassword
+      requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/ResetPasswordRequest'
-     responses:
+      responses:
         '200':
           description:  Successful new password
         default:
@@ -284,6 +308,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      x-rbac-features:
+        - login
 components:
   schemas:
     SignupRequest:
@@ -412,3 +438,14 @@ components:
       required:
        - code
        - message
+  x-rbac-features:
+    signup:
+      description: Sign up
+    login:
+      description: Login
+    usersReading:
+      description: Get information about users
+    usersManagment:
+      description: Add, update and delete users
+    personalAccountManagement:
+      description: Update information about oneself's account

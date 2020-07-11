@@ -55,7 +55,7 @@ type Input struct {
 	Path   string `json:"path"`
 	Method string `json:"method"`
 	Token  string `json:"token"`
-	Cache  Cache  `json:"cache"`
+	Cache  *Cache `json:"cache"`
 }
 
 type Error struct {

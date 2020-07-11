@@ -11,8 +11,8 @@ import (
 )
 
 // NewCrudRouter Inits RBAC CRUD service router
-func NewCrudRouter(service *service.RolesService, decide func(context.Context, rbac.Input) error) *mux.Router {
-	authorizationMiddleware := rbac.NewRBACMiddleware(service.AuthCache, decide)
+func NewCrudRouter(service *service.RolesService, cache *rbac.Cache, decide func(context.Context, rbac.Input) error) *mux.Router {
+	authorizationMiddleware := rbac.NewRBACMiddleware(cache, decide)
 	rolesHandler := NewRolesHandler(service)
 
 	router := mux.NewRouter()

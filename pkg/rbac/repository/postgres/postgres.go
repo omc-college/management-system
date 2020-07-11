@@ -280,7 +280,7 @@ func (repository *RolesRepository) GetRoleTmpl(ctx context.Context) (rbac.RoleTm
 		var tmpFeature featureEntry
 		var tmpEndpoint endpoint
 
-		err := rows.Scan(&tmpFeature.ID, &tmpFeature.Name, &tmpFeature.Description, &tmpEndpoint.ID, &tmpEndpoint.Name, &tmpEndpoint.Method, &tmpEndpoint.Path)
+		err := rows.Scan(&tmpFeature.ID, &tmpFeature.Name, &tmpFeature.Description, &tmpEndpoint.ID, &tmpEndpoint.Name, &tmpEndpoint.Path, &tmpEndpoint.Method)
 		if err != nil {
 			return rbac.RoleTmpl{}, ScanError{scanErrorMessage, err}
 		}
@@ -396,7 +396,6 @@ func (repository *RolesRepository) CreateRoleTmpl(ctx context.Context, roleTmpl 
 				query := "INSERT INTO endpoints(name, path, method) VALUES ($1, $2, $3) RETURNING (id)"
 				err := tx.QueryRow(query, endpoint.Name, endpoint.Path, endpoint.Method).Scan(&currentEndpointId)
 				if err != nil {
-					panic(err)
 					return QueryError{queryErrorMessage, err}
 				}
 
@@ -461,11 +460,11 @@ func toRoleTmpl(tmpRoleTmpl roleTmpl) rbac.RoleTmpl {
 		var genericEndpoints = []rbac.Endpoint{}
 
 		for _, tmpEndpoint := range tmpFeature.Endpoints {
-			genericEndpoint := rbac.Endpoint{Name: tmpEndpoint.Name.String, Path: tmpEndpoint.Path.String, Method: tmpEndpoint.Method.String}
+			genericEndpoint := rbac.Endpoint{ID: int(tmpEndpoint.ID.Int64), Name: tmpEndpoint.Name.String, Path: tmpEndpoint.Path.String, Method: tmpEndpoint.Method.String}
 			genericEndpoints = append(genericEndpoints, genericEndpoint)
 		}
 
-		genericFeature := rbac.FeatureEntry{Name: tmpFeature.Name.String, Description: tmpFeature.Description.String, Endpoints: genericEndpoints}
+		genericFeature := rbac.FeatureEntry{ID: int(tmpFeature.ID.Int64), Name: tmpFeature.Name.String, Description: tmpFeature.Description.String, Endpoints: genericEndpoints}
 		genericFeatures = append(genericFeatures, genericFeature)
 	}
 

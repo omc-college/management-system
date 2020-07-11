@@ -701,7 +701,7 @@ paths:
           content:
             application/json:
               schema:
-                 $ref: '#/components/schemas/error'
+                $ref: '#/components/schemas/error'
       x-rbac-features:
         - groupsReading
         - groupsManagement
@@ -921,8 +921,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/error'
       x-rbac-features:
-      - subjectsReading
-      - subjectsManagement
+        - subjectsReading
+        - subjectsManagement
                 
     put:
       summary: updates a single subject based on the ID supplied
@@ -1170,7 +1170,7 @@ components:
       description: Server error
     503Unavailable:
       description: Service unavailable in this moment
-
+    
   x-rbac-features:
     lessonsReading:
       description: Get information about lessons

@@ -4,28 +4,29 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/omc-college/management-system/pkg/rbac"
 	"reflect"
 	"testing"
+
+	"github.com/omc-college/management-system/pkg/rbac"
 )
 
 type testEnvelope struct {
-	entityType string
-	operation string
-	payload json.RawMessage
-	isFaling error
+	EntityType string
+	Operation  string
+	Payload    json.RawMessage
+	isFaling   error
 }
 
-func (te *testEnvelope) EntityType() string {
-	return te.entityType
+func (te *testEnvelope) GetEntityType() string {
+	return te.EntityType
 }
 
-func (te *testEnvelope) Operation() string {
-	return te.operation
+func (te *testEnvelope) GetOperation() string {
+	return te.Operation
 }
 
-func (te *testEnvelope) Payload() json.RawMessage {
-	return te.payload
+func (te *testEnvelope) GetPayload() json.RawMessage {
+	return te.Payload
 }
 
 func (te *testEnvelope) IsFaling() error {
@@ -49,7 +50,7 @@ func TestUpdate_ErrorShouldBeReturnedWhenInvalidTypePassed(t *testing.T) {
 	}
 
 	for _, envelope := range envelopeTypes {
-		t.Run(envelope.EntityType(), func(t *testing.T) {
+		t.Run(envelope.GetEntityType(), func(t *testing.T) {
 			err := cache.Update(&envelope)
 			if err != nil {
 				if !errors.Is(err, rbac.ErrInvalidType) {
@@ -64,7 +65,7 @@ func TestUpdate_ErrorShouldBeReturnedWhenInvalidTypePassed(t *testing.T) {
 }
 
 func TestUpdate_OkWhenValidTypePassed(t *testing.T) {
-	cache := rbac.Cache {}
+	cache := rbac.Cache{}
 
 	envelopeTypes := []testEnvelope{
 		{
@@ -76,7 +77,7 @@ func TestUpdate_OkWhenValidTypePassed(t *testing.T) {
 	}
 
 	for _, envelope := range envelopeTypes {
-		t.Run(envelope.EntityType(), func(t *testing.T) {
+		t.Run(envelope.GetEntityType(), func(t *testing.T) {
 			err := cache.Update(&envelope)
 			if err != nil {
 				if errors.Is(err, rbac.ErrInvalidType) {
@@ -100,7 +101,7 @@ func TestUpdate_ErrorShouldBeReturnedWhenInvalidOperationPassed(t *testing.T) {
 	}
 
 	for _, envelope := range envelopeOperations {
-		t.Run(envelope.Operation(), func(t *testing.T) {
+		t.Run(envelope.GetOperation(), func(t *testing.T) {
 			err := cache.Update(&envelope)
 			if err != nil {
 				if !errors.Is(err, rbac.ErrInvalidOperation) {
@@ -139,7 +140,7 @@ func TestUpdate_OkWhenValidOperationPassed(t *testing.T) {
 	}
 
 	for _, envelope := range envelopeOperations {
-		t.Run(envelope.Operation(), func(t *testing.T) {
+		t.Run(envelope.GetOperation(), func(t *testing.T) {
 			err := cache.Update(&envelope)
 			if err != nil {
 				if errors.Is(err, rbac.ErrInvalidOperation) {
@@ -177,7 +178,7 @@ func TestUpdate_ErrorShouldBeReturnedWhenInvalidPayloadPassed(t *testing.T) {
 	}
 
 	for _, envelope := range envelopePayload {
-		t.Run(envelope.Operation(), func(t *testing.T) {
+		t.Run(envelope.GetOperation(), func(t *testing.T) {
 			err := cache.Update(&envelope)
 			if err != nil {
 				if !errors.Is(err, rbac.ErrInvalidPayload) {
@@ -194,19 +195,19 @@ func TestUpdate_ErrorShouldBeReturnedWhenInvalidPayloadPassed(t *testing.T) {
 func TestUpdate_OkWhenValidPayloadPassed(t *testing.T) {
 	cache := rbac.Cache{}
 
-	payload := rbac.Role {
-		ID: 1,
+	payload := rbac.Role{
+		ID:   1,
 		Name: "roleName",
-		Entries: []rbac.FeatureEntry {
+		Entries: []rbac.FeatureEntry{
 			{
-				ID: 1,
-				Name: "featureName",
+				ID:          1,
+				Name:        "featureName",
 				Description: "featureDescr",
-				Endpoints: []rbac.Endpoint {
+				Endpoints: []rbac.Endpoint{
 					{
-						ID: 1,
-						Name: "endpointName",
-						Path: "endpointPath",
+						ID:     1,
+						Name:   "endpointName",
+						Path:   "endpointPath",
 						Method: "endpointMethod",
 					},
 				},
@@ -248,7 +249,7 @@ func TestUpdate_OkWhenValidPayloadPassed(t *testing.T) {
 	}
 
 	for _, envelope := range envelopePayload {
-		t.Run(envelope.Operation(), func(t *testing.T) {
+		t.Run(envelope.GetOperation(), func(t *testing.T) {
 			err := cache.Update(&envelope)
 			if err != nil {
 				if errors.Is(err, rbac.ErrInvalidPayload) {
@@ -260,17 +261,17 @@ func TestUpdate_OkWhenValidPayloadPassed(t *testing.T) {
 }
 
 func TestUpdate_OkWhenNotExistingRoleCreated(t *testing.T) {
-	 testCases := []struct{
-		Path string
-		Method string
-		Role int
+	testCases := []struct {
+		Path          string
+		Method        string
+		Role          int
 		ExpectedCache rbac.Cache
 	}{
-		{"/path", "POST", 2, rbac.Cache {
-			[]rbac.Rule {
+		{"/path", "POST", 2, rbac.Cache{
+			[]rbac.Rule{
 				{
 					"^/path$",
-					[]rbac.Method {
+					[]rbac.Method{
 						{
 							"GET",
 							[]int{1},
@@ -282,12 +283,12 @@ func TestUpdate_OkWhenNotExistingRoleCreated(t *testing.T) {
 					},
 				},
 			},
-		} },
-		{"/overPath", "GET", 2, rbac.Cache {
-		[]rbac.Rule {
+		}},
+		{"/overPath", "GET", 2, rbac.Cache{
+			[]rbac.Rule{
 				{
 					"^/path$",
-					[]rbac.Method {
+					[]rbac.Method{
 						{
 							"GET",
 							[]int{1},
@@ -296,7 +297,7 @@ func TestUpdate_OkWhenNotExistingRoleCreated(t *testing.T) {
 				},
 				{
 					"^/overPath$",
-					[]rbac.Method {
+					[]rbac.Method{
 						{
 							"GET",
 							[]int{2},
@@ -304,25 +305,25 @@ func TestUpdate_OkWhenNotExistingRoleCreated(t *testing.T) {
 					},
 				},
 			},
-		} },
-		{"/path", "GET", 2, rbac.Cache {
-			[]rbac.Rule {
+		}},
+		{"/path", "GET", 2, rbac.Cache{
+			[]rbac.Rule{
 				{
 					"^/path$",
-					[]rbac.Method {
+					[]rbac.Method{
 						{
 							"GET",
-							[]int{1,2},
+							[]int{1, 2},
 						},
 					},
 				},
 			},
 		}},
-		{"/overPath", "POST", 2, rbac.Cache {
-			[]rbac.Rule {
+		{"/overPath", "POST", 2, rbac.Cache{
+			[]rbac.Rule{
 				{
 					"^/path$",
-					[]rbac.Method {
+					[]rbac.Method{
 						{
 							"GET",
 							[]int{1},
@@ -331,7 +332,7 @@ func TestUpdate_OkWhenNotExistingRoleCreated(t *testing.T) {
 				},
 				{
 					"^/overPath$",
-					[]rbac.Method {
+					[]rbac.Method{
 						{
 							"POST",
 							[]int{2},
@@ -344,11 +345,11 @@ func TestUpdate_OkWhenNotExistingRoleCreated(t *testing.T) {
 
 	for testCaseIndex, testCase := range testCases {
 		t.Run(fmt.Sprintf("%v, %s", testCaseIndex, testCase.Path), func(t *testing.T) {
-			cache := rbac.Cache {
-				[]rbac.Rule {
+			cache := rbac.Cache{
+				[]rbac.Rule{
 					{
 						"^/path$",
-						[]rbac.Method {
+						[]rbac.Method{
 							{
 								"GET",
 								[]int{1},
@@ -358,19 +359,19 @@ func TestUpdate_OkWhenNotExistingRoleCreated(t *testing.T) {
 				},
 			}
 
-			payload := rbac.Role {
-				ID: testCase.Role,
+			payload := rbac.Role{
+				ID:   testCase.Role,
 				Name: "roleName",
-				Entries: []rbac.FeatureEntry {
+				Entries: []rbac.FeatureEntry{
 					{
-						ID: 1,
-						Name: "featureName",
+						ID:          1,
+						Name:        "featureName",
 						Description: "featureDescr",
-						Endpoints: []rbac.Endpoint {
+						Endpoints: []rbac.Endpoint{
 							{
-								ID: 1,
-								Name: "endpointName",
-								Path: testCase.Path,
+								ID:     1,
+								Name:   "endpointName",
+								Path:   testCase.Path,
 								Method: testCase.Method,
 							},
 						},
@@ -403,10 +404,10 @@ func TestUpdate_OkWhenNotExistingRoleCreated(t *testing.T) {
 }
 
 func TestUpdate_ErrorShouldBeReturnedWhenExistingRoleCreated(t *testing.T) {
-	testCases := []struct{
-		Path string
-		Method string
-		Role int
+	testCases := []struct {
+		Path       string
+		Method     string
+		Role       int
 		PathRegExp string
 	}{
 		{"/path", "POST", 1, "^/path$"},
@@ -417,11 +418,11 @@ func TestUpdate_ErrorShouldBeReturnedWhenExistingRoleCreated(t *testing.T) {
 
 	for testCaseIndex, testCase := range testCases {
 		t.Run(fmt.Sprintf("%v, %s", testCaseIndex, testCase.Path), func(t *testing.T) {
-			cache := rbac.Cache {
-				[]rbac.Rule {
+			cache := rbac.Cache{
+				[]rbac.Rule{
 					{
 						"^/path$",
-						[]rbac.Method {
+						[]rbac.Method{
 							{
 								"GET",
 								[]int{1},
@@ -431,19 +432,19 @@ func TestUpdate_ErrorShouldBeReturnedWhenExistingRoleCreated(t *testing.T) {
 				},
 			}
 
-			payload := rbac.Role {
-				ID: testCase.Role,
+			payload := rbac.Role{
+				ID:   testCase.Role,
 				Name: "roleName",
-				Entries: []rbac.FeatureEntry {
+				Entries: []rbac.FeatureEntry{
 					{
-						ID: 1,
-						Name: "featureName",
+						ID:          1,
+						Name:        "featureName",
 						Description: "featureDescr",
-						Endpoints: []rbac.Endpoint {
+						Endpoints: []rbac.Endpoint{
 							{
-								ID: 1,
-								Name: "endpointName",
-								Path: testCase.Path,
+								ID:     1,
+								Name:   "endpointName",
+								Path:   testCase.Path,
 								Method: testCase.Method,
 							},
 						},
@@ -477,22 +478,22 @@ func TestUpdate_ErrorShouldBeReturnedWhenExistingRoleCreated(t *testing.T) {
 }
 
 func TestUpdate_OkWhenExistingRoleDeleted(t *testing.T) {
-	testCases := []struct{
-		Role int
+	testCases := []struct {
+		Role          int
 		ExpectedCache rbac.Cache
 	}{
-		{ 1, rbac.Cache {
-			[]rbac.Rule {},
+		{1, rbac.Cache{
+			[]rbac.Rule{},
 		}},
 	}
 
 	for _, testCase := range testCases {
 		t.Run(fmt.Sprintf("%v", testCase.Role), func(t *testing.T) {
-			cache := rbac.Cache {
-				[]rbac.Rule {
+			cache := rbac.Cache{
+				[]rbac.Rule{
 					{
 						"^/path$",
-						[]rbac.Method {
+						[]rbac.Method{
 							{
 								"GET",
 								[]int{1},
@@ -531,19 +532,19 @@ func TestUpdate_OkWhenExistingRoleDeleted(t *testing.T) {
 }
 
 func TestUpdate_ErrorShouldBeReturnedWhenNotExistingRoleDeleted(t *testing.T) {
-	testCases := []struct{
+	testCases := []struct {
 		Role int
 	}{
-		{ 2},
+		{2},
 	}
 
 	for _, testCase := range testCases {
 		t.Run(fmt.Sprintf("%v", testCase.Role), func(t *testing.T) {
-			cache := rbac.Cache {
-				[]rbac.Rule {
+			cache := rbac.Cache{
+				[]rbac.Rule{
 					{
 						"^/path$",
-						[]rbac.Method {
+						[]rbac.Method{
 							{
 								"GET",
 								[]int{1},
@@ -560,7 +561,7 @@ func TestUpdate_ErrorShouldBeReturnedWhenNotExistingRoleDeleted(t *testing.T) {
 				t.Fatal("did not marshal payloadRole")
 			}
 
-			envelope := testEnvelope {
+			envelope := testEnvelope{
 				rbac.RoleType,
 				rbac.RoleOperationDelete,
 				payloadRole,
@@ -580,12 +581,11 @@ func TestUpdate_ErrorShouldBeReturnedWhenNotExistingRoleDeleted(t *testing.T) {
 	}
 }
 
-
 func TestUpdate_OkWhenExistingRoleUpdated(t *testing.T) {
-	testCases := []struct{
-		Path string
-		Method string
-		Role int
+	testCases := []struct {
+		Path          string
+		Method        string
+		Role          int
 		ExpectedCache rbac.Cache
 	}{
 		{"/path", "POST", 1, rbac.Cache{
@@ -644,11 +644,11 @@ func TestUpdate_OkWhenExistingRoleUpdated(t *testing.T) {
 
 	for testCaseIndex, testCase := range testCases {
 		t.Run(fmt.Sprintf("%v, %s", testCaseIndex, testCase.Path), func(t *testing.T) {
-			cache := rbac.Cache {
-				[]rbac.Rule {
+			cache := rbac.Cache{
+				[]rbac.Rule{
 					{
 						"^/path$",
-						[]rbac.Method {
+						[]rbac.Method{
 							{
 								"GET",
 								[]int{1},
@@ -658,19 +658,19 @@ func TestUpdate_OkWhenExistingRoleUpdated(t *testing.T) {
 				},
 			}
 
-			payload := rbac.Role {
-				ID: testCase.Role,
+			payload := rbac.Role{
+				ID:   testCase.Role,
 				Name: "roleName",
-				Entries: []rbac.FeatureEntry {
+				Entries: []rbac.FeatureEntry{
 					{
-						ID: 1,
-						Name: "featureName",
+						ID:          1,
+						Name:        "featureName",
 						Description: "featureDescr",
-						Endpoints: []rbac.Endpoint {
+						Endpoints: []rbac.Endpoint{
 							{
-								ID: 1,
-								Name: "endpointName",
-								Path: testCase.Path,
+								ID:     1,
+								Name:   "endpointName",
+								Path:   testCase.Path,
 								Method: testCase.Method,
 							},
 						},
@@ -701,9 +701,3 @@ func TestUpdate_OkWhenExistingRoleUpdated(t *testing.T) {
 		})
 	}
 }
-
-
-
-
-
-
