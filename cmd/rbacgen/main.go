@@ -12,8 +12,10 @@ import (
 	"gopkg.in/yaml.v2"
 
 	"github.com/omc-college/management-system/pkg/config"
+	"github.com/omc-college/management-system/pkg/pubsub"
 	"github.com/omc-college/management-system/pkg/rbac"
 	"github.com/omc-college/management-system/pkg/rbac/repository/postgres"
+	"github.com/omc-college/management-system/pkg/rbac/service"
 	"github.com/omc-college/management-system/pkg/rbacgen"
 )
 
@@ -91,6 +93,27 @@ func main() {
 		err = repository.CreateRoleTmpl(context.Background(), roleTmpl)
 		if err != nil {
 			logrus.Fatalf("cannot create roleTmpl in db: %s", err.Error())
+		}
+
+		retrievedRoleTmpl, err := repository.GetRoleTmpl(context.Background())
+		if err != nil {
+			logrus.Fatalf("cannot get roleTmpl from db: %s", err.Error())
+		}
+
+		client := pubsub.NewClient(serviceConfig.PubSubConfig)
+		err = client.Connection()
+		if err != nil {
+			logrus.Fatalf("cannot initialize Client: %s", err.Error())
+		}
+
+		rolesService := service.NewRolesService(repository, client)
+
+		err = rolesService.CreateRole(context.Background(), rbac.Role{
+			Name:    "superuser",
+			Entries: retrievedRoleTmpl.Entries,
+		})
+		if err != nil {
+			logrus.Fatalf("cannot create superuser role in db: %s", err.Error())
 		}
 	}
 }

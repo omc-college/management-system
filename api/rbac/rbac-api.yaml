@@ -24,6 +24,8 @@ paths:
                   application/json:
                      schema:
                         $ref: '#/components/schemas/Error'
+         x-rbac-features:
+            - rolesManagement
    /roles:
       get:
          description: Returns all roles
@@ -43,6 +45,9 @@ paths:
                   application/json:
                      schema:
                         $ref: '#/components/schemas/Error'
+         x-rbac-features:
+            - rolesReading
+            - rolesManagement
       post:
          description: Creates new role
          operationId: createRole
@@ -61,6 +66,8 @@ paths:
                   application/json:
                      schema:
                         $ref: '#/components/schemas/Error'
+         x-rbac-features:
+            - rolesManagement
    /roles/{id}:
       parameters:
           - name: id 
@@ -85,6 +92,9 @@ paths:
                   application/json:
                      schema:
                         $ref: '#/components/schemas/Error'
+         x-rbac-features:
+            - rolesReading
+            - rolesManagement
       put:
          description: Updates role by id
          operationId: updateRole
@@ -103,6 +113,8 @@ paths:
                   application/json:
                      schema:
                         $ref: '#/components/schemas/Error'
+         x-rbac-features:
+            - rolesManagement
       delete:
          description: Deletes role by id
          operationId: deleteRole
@@ -115,6 +127,8 @@ paths:
                   application/json:
                      schema:
                         $ref: '#/components/schemas/Error'
+         x-rbac-features:
+            - rolesManagement
 components:
    schemas:
       Role:
@@ -189,3 +203,8 @@ components:
                format: int32
             message:
                type: string
+   x-rbac-features:
+      rolesReading:
+         description: Get information about roles
+      rolesManagement:
+         description: Add, update and delete roles

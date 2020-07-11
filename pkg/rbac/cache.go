@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/omc-college/management-system/pkg/pubsub"
+	"github.com/sirupsen/logrus"
 )
 
 type Cache struct {
@@ -15,22 +16,31 @@ type Cache struct {
 }
 
 // NewCache inits Cache based on full history from MQ
-func NewCache() {
+func NewCache() *Cache {
+	return &Cache{}
+}
 
+func (cache *Cache) ListenUpdates(rolesChannel <-chan pubsub.Envelope) {
+	for envelope := range rolesChannel {
+		err := cache.Update(envelope)
+		if err != nil {
+			logrus.Fatalf("cannot update cache: %s", err.Error())
+		}
+	}
 }
 
 func (cache *Cache) Update(envelope pubsub.Envelope) error {
-	if envelope.EntityType() != RoleType {
+	if envelope.GetEntityType() != RoleType {
 		return ErrInvalidType
 	}
 
-	switch envelope.Operation() {
+	switch envelope.GetOperation() {
 	case RoleOperationCreate:
-		return cache.createRole(envelope.Payload())
+		return cache.createRole(envelope.GetPayload())
 	case RoleOperationUpdate:
-		return cache.updateRole(envelope.Payload())
+		return cache.updateRole(envelope.GetPayload())
 	case RoleOperationDelete:
-		return cache.deleteRole(envelope.Payload())
+		return cache.deleteRole(envelope.GetPayload())
 	default:
 		return ErrInvalidOperation
 	}
@@ -49,21 +59,21 @@ func (cache *Cache) createRole(rawNewRole json.RawMessage) error {
 		return err
 	}
 
+	for _, cacheRule := range cache.Rules {
+		for _, cacheMethod := range cacheRule.Methods {
+			for _, cacheRoleID := range cacheMethod.Roles {
+				if newRole.ID == cacheRoleID {
+					return ErrCreateExistingRole
+				}
+			}
+		}
+	}
+
 	for _, newFeature := range newRole.Entries {
 		for _, newEndpoint := range newFeature.Endpoints {
 			var newPathRegExp = fmt.Sprintf("^%s$", paramRegExp.ReplaceAll([]byte(newEndpoint.Path), []byte("\\w+")))
 			var existingCacheRuleIndex int
 			var isPathRegExpExisting bool
-
-			for _, cacheRuleID := range cache.Rules {
-				for _, cacheMethod := range cacheRuleID.Methods {
-					for _, cacheRoleID := range cacheMethod.Roles {
-						if newRole.ID == cacheRoleID {
-							return ErrCreateExistingRole
-						}
-					}
-				}
-			}
 
 			for cacheRuleIndex, cacheRule := range cache.Rules {
 				if newPathRegExp == cacheRule.PathRegExp {

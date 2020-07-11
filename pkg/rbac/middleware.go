@@ -26,7 +26,7 @@ func (middleware *Middleware) Middleware(next http.Handler) http.Handler {
 			Path:   r.URL.Path,
 			Method: r.Method,
 			Token:  r.Header.Get("Authorization"),
-			Cache:  *middleware.cache,
+			Cache:  middleware.cache,
 		}
 
 		err := middleware.decide(r.Context(), requestRegoInput)

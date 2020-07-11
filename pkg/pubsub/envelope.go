@@ -7,17 +7,17 @@ import (
 )
 
 type Envelope interface {
-	EntityType() string
-	Operation() string
-	Payload() json.RawMessage
+	GetEntityType() string
+	GetOperation() string
+	GetPayload() json.RawMessage
 	Ack() error
 }
 
 type envelope struct {
-	entityType string
-	operation string
-	payload json.RawMessage
-	msg *stan.Msg
+	EntityType string
+	Operation  string
+	Payload    json.RawMessage
+	Msg        *stan.Msg
 }
 
 func NewEnvelope(payload interface{}, operation string, entityType string) (*envelope, error) {
@@ -27,14 +27,14 @@ func NewEnvelope(payload interface{}, operation string, entityType string) (*env
 	}
 
 	return &envelope{
-		entityType: entityType,
-		operation: operation,
-		payload:   payloadBytes,
+		EntityType: entityType,
+		Operation:  operation,
+		Payload:    payloadBytes,
 	}, err
 }
 
-func (e *envelope)Ack() error {
-	err := e.msg.Ack()
+func (e *envelope) Ack() error {
+	err := e.Msg.Ack()
 	if err != nil {
 		return err
 	}
@@ -42,14 +42,14 @@ func (e *envelope)Ack() error {
 	return nil
 }
 
-func (e *envelope)EntityType() string {
-	return e.entityType
+func (e *envelope) GetEntityType() string {
+	return e.EntityType
 }
 
-func (e *envelope)Operation() string {
-	return e.operation
+func (e *envelope) GetOperation() string {
+	return e.Operation
 }
 
-func (e *envelope)Payload() json.RawMessage {
-	return e.payload
+func (e *envelope) GetPayload() json.RawMessage {
+	return e.Payload
 }
