@@ -15,6 +15,7 @@ require (
 	github.com/lib/pq v1.5.2 // indirect
 	github.com/nats-io/nats-server/v2 v2.1.7 // indirect
 	github.com/nats-io/nats-streaming-server v0.17.0 // indirect
+	github.com/nats-io/nats.go v1.10.0
 	github.com/nats-io/stan.go v0.6.0
 	github.com/open-policy-agent/opa v0.19.2
 	github.com/pkg/errors v0.9.1 // indirect

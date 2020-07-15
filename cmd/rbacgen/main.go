@@ -100,8 +100,12 @@ func main() {
 			logrus.Fatalf("cannot get roleTmpl from db: %s", err.Error())
 		}
 
+		mqURL := fmt.Sprintf("nats:%s:%s",
+			serviceConfig.MQConnection.Host,
+			serviceConfig.MQConnection.Port)
+
 		client := pubsub.NewClient(serviceConfig.PubSubConfig)
-		err = client.Connection()
+		err = client.Connection(mqURL)
 		if err != nil {
 			logrus.Fatalf("cannot initialize Client: %s", err.Error())
 		}
