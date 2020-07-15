@@ -5,15 +5,21 @@ dbconnection:
   port: '5432'
   database: 'roles'
   sslmode: 'disable'
-rbacgen:
-  specsPaths: 
-    - 'api/ims/ims-api.yaml'
-    - 'api/rbac/rbac-api.yaml'
-    - 'api/timetable/timetable-api.yaml'
-  tmplPath: 'cmd/rbacgen/roleTmpl.yaml'
+
+mqconnection:
+  host: '127.0.0.1'
+  port: '4222'
+
 pubsub:
   clusterid: 'test-cluster'
   clientid: 'client-rbacgen-id'
   queuename: 'new-queue'
   pingsinterval: 20
   maxunsuccessfulpings: 5
+  
+rbacgen:
+  specsPaths: 
+    - 'api/ims/ims-api.yaml'
+    - 'api/rbac/rbac-api.yaml'
+    - 'api/timetable/timetable-api.yaml'
+  tmplPath: 'cmd/rbacgen/roleTmpl.yaml'

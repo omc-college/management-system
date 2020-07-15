@@ -43,8 +43,12 @@ func main() {
 
 	repository := postgres.NewRolesRepository(db)
 
+	mqURL := fmt.Sprintf("nats:%s:%s",
+		serviceConfig.MQConnection.Host,
+		serviceConfig.MQConnection.Port)
+
 	client := pubsub.NewClient(serviceConfig.PubSubConfig)
-	err = client.Connection()
+	err = client.Connection(mqURL)
 	if err != nil {
 		logrus.Fatalf("cannot initialize Client: %s", err.Error())
 	}

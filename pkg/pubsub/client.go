@@ -1,12 +1,13 @@
 package pubsub
 
 import (
+	"github.com/nats-io/nats.go"
 	stan "github.com/nats-io/stan.go"
 )
 
 //Client is a struct that contains stan.Conn and config
 type Client struct {
-	stan stan.Conn
+	stan   stan.Conn
 	config Config
 }
 
@@ -18,8 +19,10 @@ func NewClient(conf Config) *Client {
 }
 
 //Connection connected to stan server
-func (stanConn *Client)Connection() error {
-	sc, err := stan.Connect(stanConn.config.ClusterID, stanConn.config.ClientID, stan.Pings(stanConn.config.PingsInterval, stanConn.config.MaxUnsuccessfulPings))
+func (stanConn *Client) Connection(url string) error {
+	nc, err := nats.Connect(url)
+
+	sc, err := stan.Connect(stanConn.config.ClusterID, stanConn.config.ClientID, stan.NatsConn(nc), stan.Pings(stanConn.config.PingsInterval, stanConn.config.MaxUnsuccessfulPings))
 	if err != nil {
 		return err
 	}

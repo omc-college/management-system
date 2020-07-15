@@ -5,6 +5,11 @@ dbconnection:
   port: '5432'
   database: 'roles'
   sslmode: 'disable'
+
+mqconnection:
+  host: '127.0.0.1'
+  port: '4222'
+  
 pubsub:
   clusterid: 'test-cluster'
   clientid: 'client-id'
