@@ -1,8 +1,8 @@
-webapi_address: ':8080'
+webapi_address: ':8000'
 dbconnection:
   user: 'postgres'
-  password: 'krimyllexadmin'
-  host: 'localhost'
+  password: 'superuser'
+  host: 'ims-db'
   port: '5432'
   database: 'ims'
   sslmode: 'disable'

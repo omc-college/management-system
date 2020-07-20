@@ -1,6 +1,6 @@
 BEGIN;
 
 
-ALTER TABLE user_acsess_tokens RENEME TO user_access_tokens;
+ALTER TABLE user_acsess_tokens RENAME TO user_access_tokens;
 
 COMMIT;

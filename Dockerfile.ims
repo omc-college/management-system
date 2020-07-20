@@ -1,0 +1,13 @@
+FROM golang:1.14
+
+EXPOSE 8000
+
+WORKDIR /go/src/app
+COPY ./go.mod ./go.sum ./
+COPY ./pkg ./pkg
+COPY ./cmd/ims ./cmd/ims
+
+RUN go get -d -v ./...
+RUN go install -v ./...
+
+CMD ["ims"]

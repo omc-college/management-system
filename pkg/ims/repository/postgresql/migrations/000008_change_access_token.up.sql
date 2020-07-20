@@ -1,7 +1,7 @@
 BEGIN;
 
 ALTER TABLE user_access_tokens
-CHANGE COLUMN  acsess_token access_token VARCHAR(255) NOT NULL;
+RENAME COLUMN acsess_token TO access_token;
 
 
 COMMIT;
