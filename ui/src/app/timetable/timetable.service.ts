@@ -5,7 +5,7 @@ import {TimetableHttpService} from './shared/timetable-http.service';
 import {Lesson} from '../models/Lesson';
 import {Group} from '../models/Group';
 import {User} from '../models/User';
-import {iSubject} from '../models/Subject';
+import {ISubject} from '../models/Subject';
 import {Room} from '../models/Room';
 
 @Injectable({
@@ -18,7 +18,7 @@ export class TimetableService {
   private selectedDate$: Subject<Date> = new Subject<Date>();
 
   private lecturers$: Subject<User[]> = new Subject<User[]>();
-  private subjects$: Subject<iSubject[]> = new Subject<iSubject[]>();
+  private subjects$: Subject<ISubject[]> = new Subject<ISubject[]>();
   private groups$: Subject<Group[]> = new Subject<Group[]>();
   private rooms$: Subject<Room[]> = new Subject<Room[]>();
 
@@ -38,11 +38,11 @@ export class TimetableService {
     this.searchResult$.next(result);
   }
 
-  setSubjects(subjects: iSubject[]): void {
+  setSubjects(subjects: ISubject[]): void {
     this.subjects$.next(subjects);
   }
 
-  getSubjects(): Observable<iSubject[]> {
+  getSubjects(): Observable<ISubject[]> {
     return this.subjects$;
   }
 

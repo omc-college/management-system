@@ -46,13 +46,17 @@ export class TimetableHttpService {
     if (filters.startDateFormControl) {
       params = params.append(
         'datefrom',
-        `${filters.startDateFormControl.getFullYear()}-${filters.startDateFormControl.getMonth()}-${filters.startDateFormControl.getDate()}`,
+        `${filters.startDateFormControl.getFullYear()}
+        -${filters.startDateFormControl.getMonth()}
+        -${filters.startDateFormControl.getDate()}`,
       );
     }
     if (filters.endDateFormControl) {
       params = params.append(
         'dateto',
-        `${filters.endDateFormControl.getFullYear()}-${filters.endDateFormControl.getMonth()}-${filters.endDateFormControl.getDate()}`,
+        `${filters.endDateFormControl.getFullYear()}
+        -${filters.endDateFormControl.getMonth()}
+        -${filters.endDateFormControl.getDate()}`,
       );
     }
     if (filters.startTimeFormControl) {
@@ -61,6 +65,6 @@ export class TimetableHttpService {
     if (filters.endTimeFormControl) {
       params = params.append('timeto', filters.endTimeFormControl);
     }
-    return this.http.get<any[]>(url, {params: params});
+    return this.http.get<any[]>(url, {params});
   }
 }

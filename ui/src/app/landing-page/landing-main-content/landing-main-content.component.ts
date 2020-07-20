@@ -1,15 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-landing-main-content',
   templateUrl: './landing-main-content.component.html',
-  styleUrls: ['./landing-main-content.component.sass']
+  styleUrls: ['./landing-main-content.component.sass'],
 })
 export class LandingMainContentComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }
