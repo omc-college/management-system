@@ -1,23 +1,27 @@
 os: linux
-
-language: go
-go:
-  - 1.13.11
-
-env:
-  - GO111MODULE=on
-
-install:
-- curl -L https://github.com/golang-migrate/migrate/releases/download/v4.11.0/migrate.linux-amd64.tar.gz | tar xvz
-
-# Don't email me the results of the test runs.
-notifications:
-  email: false
-
-script:
-  - go build ./cmd/ims
-  - go build ./cmd/rbac
-  - go build ./cmd/rbacgen
-
-after_success:
-  - echo "Process Done."
+matrix:
+  include:
+    - language: go
+      go:
+        - 1.13.11
+      env:
+        - GO111MODULE=on
+      install:
+        - curl -L https://github.com/golang-migrate/migrate/releases/download/v4.11.0/migrate.linux-amd64.tar.gz | tar xvz
+      script:
+        - go build ./cmd/ims
+        - go build ./cmd/rbac
+        - go build ./cmd/rbacgen
+      after_success:
+        - echo "Process Done."
+    - language: node_js
+      node_js:
+        - "14.3.0"
+      before_script:
+        - npm install -g @angular/cli
+        - cd ui
+      script:
+        - npm install
+        - npm run build
+        - npm run prettier
+        - npm run lint
