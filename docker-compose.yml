@@ -32,7 +32,7 @@ services:
   rbac-db:
     image: postgres:12
     ports: 
-      - "9090:5432"
+      - "9001:5432"
     volumes:
       - roles-db:/var/lib/postgresql/data
     environment:
@@ -56,5 +56,42 @@ services:
     ports: 
       - "4222:4222"
     restart: always
+
+  ims-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.ims
+    ports: 
+      - "8011:8000"
+    volumes:
+      - ./cmd/ims/ims-service-example-config.yaml:/go/src/app/cmd/ims/ims-service-example-config.yaml
+    depends_on: 
+      - ims-db
+      - ims-db-migrator
+      - nats-streaming
+    restart: always 
+
+  ims-db:
+    image: postgres:12
+    ports: 
+      - "9011:5432"
+    volumes:
+      - ims-db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: superuser
+      POSTGRES_DB: ims
+    restart: always
+  
+  ims-db-migrator:
+    build:
+      context: .
+      dockerfile: Dockerfile.ims-db-migrator
+    volumes:
+      - ./pkg/ims/repository/postgresql/migrations:/migrations
+    depends_on:
+      - ims-db
+    restart: on-failure
 volumes: 
   roles-db:
+  ims-db:

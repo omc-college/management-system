@@ -1,0 +1,6 @@
+FROM migrate/migrate:v4.11.0
+
+WORKDIR /
+COPY ./pkg/ims/repository/postgresql/migrations ./migrations
+
+CMD ["-path", "/migrations", "-database",  "postgres://postgres:superuser@ims-db:5432/ims?sslmode=disable", "up"]

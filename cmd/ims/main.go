@@ -11,16 +11,16 @@ import (
 
 	"github.com/gorilla/handlers"
 
+	"github.com/omc-college/management-system/pkg/config"
 	"github.com/omc-college/management-system/pkg/ims/api/routers"
 	"github.com/omc-college/management-system/pkg/ims/service"
-	"github.com/omc-college/management-system/pkg/config"
 )
 
 func main() {
 	var conf Config
 	var err error
 
-	configPath := flag.StringP("config", "c", "./ims-service-example-config.yaml", "path to service config")
+	configPath := flag.StringP("config", "c", "./cmd/ims/ims-service-example-config.yaml", "path to service config")
 
 	flag.Parse()
 
