@@ -5,6 +5,8 @@ import "fmt"
 var ErrNoRows = fmt.Errorf("no rows with such id")
 var ErrConvertId = fmt.Errorf("can not convert id")
 var ErrCloseStmt = fmt.Errorf("closing statement error")
+var ErrNotUniqueRole = fmt.Errorf("role is not unique")
+var ErrNonexistentFeature = fmt.Errorf("nonexistent feature")
 
 const queryErrorMessage = "query error"
 const scanErrorMessage = "scanning error"

@@ -2,6 +2,9 @@ package postgres
 
 import "database/sql"
 
+const errCodeForeignKeyViolation = "23503"
+const errCodeUniqueViolation = "23505"
+
 type role struct {
 	ID      int                            `json:"id"`
 	Name    string                         `json:"name"`
