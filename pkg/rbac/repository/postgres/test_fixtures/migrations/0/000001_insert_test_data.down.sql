@@ -1,0 +1,7 @@
+BEGIN;
+
+DELETE FROM roles;
+DELETE FROM features;
+DELETE FROM endpoints;
+
+COMMIT;
