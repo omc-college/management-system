@@ -20,7 +20,7 @@ import (
 )
 
 func main() {
-	configPath := flag.StringP("config", "c", "./cmd/rbacgen/rbacgen-service-example-config.yaml", "path to service config")
+	configPath := flag.StringP("config", "c", "/etc/rbacgen/rbacgen-service-config.yaml", "path to service config")
 
 	isCreateMode := flag.Bool("create", false, "In this mode utility generates and creates new Role Template and saves into roleTmpl.yaml")
 	isFillMode := flag.Bool("fill", false, "In this mode utility fills DB with features and endpoints from existing Role Template")
@@ -34,8 +34,8 @@ func main() {
 		logrus.Fatalf("cannot load config: %s", err.Error())
 	}
 
-	if *isCreateMode == *isFillMode {
-		logrus.Fatalf("exactly one mode should be choosen")
+	if !*isCreateMode && !*isFillMode {
+		logrus.Fatalf("at least one mode should be chosen")
 	}
 
 	if *isCreateMode {

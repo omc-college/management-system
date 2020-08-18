@@ -7,11 +7,21 @@ import (
 	"github.com/open-policy-agent/opa/rego"
 )
 
-func GetDecision(ctx context.Context, requestRegoInput rbac.Input) error {
+type PolicyAgent struct {
+	policyPath string
+}
+
+func NewPolicyAgent(policyPath string) *PolicyAgent {
+	return &PolicyAgent{
+		policyPath: policyPath,
+	}
+}
+
+func (pa PolicyAgent)GetDecision(ctx context.Context, requestRegoInput rbac.Input) error {
 	authorizationRego := rego.New(
 		rego.Query("data.authorization.isAccessGranted"),
 		rego.Input(requestRegoInput),
-		rego.Load([]string{"./pkg/rbac/opa/authorization.rego"}, nil))
+		rego.Load([]string{pa.policyPath}, nil))
 
 	regoResult, err := authorizationRego.Eval(ctx)
 	if err != nil {

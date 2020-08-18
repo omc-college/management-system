@@ -16,3 +16,6 @@ pubsub:
   queuename: 'new-queue'
   pingsinterval: 20
   maxunsuccessfulpings: 5
+
+policyAgent:
+  policyPath: "/etc/rbac/policy/authorization.rego"

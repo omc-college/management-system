@@ -21,7 +21,7 @@ func main() {
 	var serviceConfig Config
 	var err error
 
-	configPath := flag.StringP("config", "c", "./cmd/rbac/rbac-service-example-config.yaml", "path to service config")
+	configPath := flag.StringP("config", "c", "/etc/rbac/rbac-service-config.yaml", "path to service config")
 
 	flag.Parse()
 
@@ -65,5 +65,7 @@ func main() {
 
 	rolesService := service.NewRolesService(repository, client)
 
-	logrus.Fatal(http.ListenAndServe(":8000", api.NewCrudRouter(rolesService, cache, opa.GetDecision)))
+	policyAgent := opa.NewPolicyAgent(serviceConfig.PolicyAgent.PolicyPath)
+
+	logrus.Fatal(http.ListenAndServe(":8000", api.NewCrudRouter(rolesService, cache, policyAgent.GetDecision)))
 }
