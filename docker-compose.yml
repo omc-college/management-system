@@ -7,7 +7,8 @@ services:
     ports: 
       - "8001:8000"
     volumes:
-      - ./cmd/rbac/rbac-service-example-config.yaml:/go/src/app/cmd/rbac/rbac-service-example-config.yaml
+      - ./cmd/rbac/rbac-service-example-config.yaml:/etc/rbac/rbac-service-config.yaml
+      - ./pkg/rbac/opa/authorization.rego:/etc/rbac/policy/authorization.rego
     depends_on: 
       - rbac-db
       - rbac-db-migrator
@@ -22,7 +23,8 @@ services:
     ports: 
       - "8002:8000"
     volumes:
-      - ./cmd/rbacgen/rbacgen-service-example-config.yaml:/go/src/app/cmd/rbacgen/rbacgen-service-example-config.yaml
+      - ./cmd/rbacgen/rbacgen-service-example-config.yaml:/etc/rbacgen/rbacgen-service-config.yaml
+      - ./api:/etc/rbacgen/api
     depends_on:
       - rbac-db
       - rbac-db-migrator
@@ -46,7 +48,7 @@ services:
       context: .
       dockerfile: Dockerfile.rbac-db-migrator
     volumes:
-      - ./pkg/rbac/repository/postgres/migrations:/migrations
+      - ./pkg/rbac/repository/postgres/migrations:/etc/migrations
     depends_on:
       - rbac-db
     restart: on-failure

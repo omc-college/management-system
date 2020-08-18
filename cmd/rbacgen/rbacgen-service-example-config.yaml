@@ -19,7 +19,7 @@ pubsub:
   
 rbacgen:
   specsPaths: 
-    - './api/ims/ims-api.yaml'
-    - './api/rbac/rbac-api.yaml'
-    - './api/timetable/timetable-api.yaml'
-  tmplPath: './cmd/rbacgen/roleTmpl.yaml'
+    - '/etc/rbacgen/api/ims/ims-api.yaml'
+    - '/etc/rbacgen/api/rbac/rbac-api.yaml'
+    - '/etc/rbacgen/api/timetable/timetable-api.yaml'
+  tmplPath: '/etc/rbacgen/roleTmpl.yaml'

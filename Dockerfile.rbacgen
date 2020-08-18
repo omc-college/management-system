@@ -1,15 +1,23 @@
-FROM golang:1.14
+FROM golang:1.14 as builder
+
+ARG ARCH=amd64
+ARG GOPATH="/go"
+ARG GO111MODULE=on
+
+WORKDIR $GOPATH/src/github.com/omc-college/management-system/
+
+COPY go.mod go.sum ./
+COPY pkg ./pkg
+COPY cmd/rbacgen ./cmd/rbacgen
+
+RUN go get -d -v ./...
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=${ARCH} \
+    go build -o $GOPATH/bin/rbacgen -a ./cmd/rbacgen
+
+FROM scratch
 
 EXPOSE 8000
 
-WORKDIR /go/src/app
-COPY ./go.mod ./go.sum ./
-COPY ./pkg ./pkg
-COPY ./cmd/rbacgen ./cmd/rbacgen
-COPY ./api ./api
+COPY --from=builder /go/bin/rbacgen /bin/rbacgen
 
-RUN go get -d -v ./...
-RUN go install -v ./...
-
-CMD rbacgen --create \
- && rbacgen --fill
+ENTRYPOINT ["/bin/rbacgen", "--create", "--fill"]

@@ -1,6 +1,6 @@
 FROM migrate/migrate:v4.11.0
 
 WORKDIR /
-COPY ./pkg/rbac/repository/postgres/migrations ./migrations
+COPY ./pkg/rbac/repository/postgres/migrations /etc/migrations
 
-CMD ["-path", "/migrations", "-database",  "postgres://postgres:superuser@rbac-db:5432/roles?sslmode=disable", "up"]
+CMD ["-path", "/etc/migrations", "-database",  "postgres://postgres:superuser@rbac-db:5432/roles?sslmode=disable", "up"]

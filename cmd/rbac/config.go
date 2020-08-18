@@ -10,4 +10,9 @@ type Config struct {
 	DBConnection db.ConnectionConfig `mapstructure:"dbconnection"`
 	MQConnection mq.ConnectionConfig `mapstructure:"mqconnection"`
 	PubSubConfig pubsub.Config       `mapstructure:"pubsub"`
+	PolicyAgent PolicyAgentConfig	`mapstructure:"policyAgent"`
+}
+
+type PolicyAgentConfig struct {
+	PolicyPath	string	`mapstructure:"policyPath"`
 }
