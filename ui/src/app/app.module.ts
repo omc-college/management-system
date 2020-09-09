@@ -8,6 +8,7 @@ import {TimetableModule} from './timetable/timetable.module';
 import {SignInModule} from './sign-in/sign-in.module';
 import {LandingPageModule} from './landing-page/landing-page.module';
 import {ErrorPageModule} from './error-page/error-page.module';
+import {SignUpModule} from './sign-up/sign-up.module';
 
 import {AdminModule} from './admin/admin.module';
 
@@ -18,6 +19,7 @@ import {AppComponent} from './app.component';
 @NgModule({
   declarations: [AppComponent],
   imports: [
+    SignUpModule,
     SignInModule,
     TimetableModule,
     LandingPageModule,
