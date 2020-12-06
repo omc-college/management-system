@@ -6,8 +6,8 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {MatDialog} from '@angular/material/dialog';
 import {SearchResultComponent} from '../search-result/search-result.component';
 
-import {Group} from '../../models/Group';
-import {User} from '../../models/User';
+import {GroupAsResource} from '../../models/GroupAsResource';
+import {UserAsResource} from '../../models/UserAsResource';
 import {iSubject} from '../../models/Subject';
 import {Room} from '../../models/Room';
 import {Error} from '../../models/Error';
@@ -27,8 +27,8 @@ export class SidebarComponent implements OnInit {
   showProgressBar = false;
   findForm: FormGroup;
 
-  groups: Group[] = [];
-  lecturers: User[] = [];
+  groups: GroupAsResource[] = [];
+  lecturers: UserAsResource[] = [];
   subjects: iSubject[] = [];
   rooms: Room[] = [];
   constructor(

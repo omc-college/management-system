@@ -7,9 +7,13 @@ import {FormsModule} from '@angular/forms';
 import {InMemoryDataService} from '../timetable/in-memory-data.service';
 
 import {AdminComponent} from './admin.component';
-import {RolesComponent} from './roles/roles.component';
-import {SelectFeatureDialogComponent} from './roles/roles.component';
-import {AddRoleDialogComponent} from './roles/roles.component';
+import {RolesComponent, AddRoleDialogComponent, SelectFeatureDialogComponent} from './roles/roles.component';
+import {UsersManagementComponent} from './users-management/users-management.component';
+import {GroupsManagementComponent} from './groups-management/groups-management.component';
+import {
+  ResourcesManagementComponent,
+  MessageDialogComponent,
+} from './resources-management/resources-management.component';
 
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatIconModule} from '@angular/material/icon';
@@ -26,7 +30,16 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @NgModule({
-  declarations: [AdminComponent, RolesComponent, SelectFeatureDialogComponent, AddRoleDialogComponent],
+  declarations: [
+    AdminComponent,
+    RolesComponent,
+    SelectFeatureDialogComponent,
+    AddRoleDialogComponent,
+    UsersManagementComponent,
+    GroupsManagementComponent,
+    ResourcesManagementComponent,
+    MessageDialogComponent,
+  ],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -56,6 +69,10 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     RolesComponent,
     SelectFeatureDialogComponent,
     AddRoleDialogComponent,
+    UsersManagementComponent,
+    GroupsManagementComponent,
+    ResourcesManagementComponent,
+    MessageDialogComponent,
 
     MatTabsModule,
     MatIconModule,
